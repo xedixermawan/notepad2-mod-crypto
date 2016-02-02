@@ -1798,7 +1798,7 @@ void EditTitleCase(HWND hwnd)
               {
                 if (IsCharLowerW(pszTextW[i]))
                 {
-                  pszTextW[i] = LOWORD(CharUpperW((LPWSTR)(SIZE_T)MAKELONG(pszTextW[i],0)));
+                  pszTextW[i] = LOWORD(CharUpperW((LPWSTR)MAKELONG(pszTextW[i],0)));
                   bChanged = TRUE;
                 }
               }
@@ -1806,7 +1806,7 @@ void EditTitleCase(HWND hwnd)
               {
                 if (IsCharUpperW(pszTextW[i]))
                 {
-                  pszTextW[i] = LOWORD(CharLowerW((LPWSTR)(SIZE_T)MAKELONG(pszTextW[i],0)));
+                  pszTextW[i] = LOWORD(CharLowerW((LPWSTR)MAKELONG(pszTextW[i],0)));
                   bChanged = TRUE;
                 }
               }
@@ -2259,7 +2259,7 @@ void EditHex2Char(HWND hwnd) {
           bTrySelExpand = TRUE;
         }
 
-        if (sscanf_s(ch, "%x", &i) == 1) {
+        if (sscanf_s(ch, "%x", &i, sizeof(i)) == 1) {
           int cch;
           if (i == 0) {
             ch[0] = 0;
@@ -2311,7 +2311,7 @@ void EditModifyNumber(HWND hwnd,BOOL bIncrease) {
         if (StrChrIA(chNumber,'-'))
           return;
 
-        if (!StrChrIA(chNumber, 'x') && sscanf_s(chNumber, "%d", &iNumber) == 1) {
+        if (!StrChrIA(chNumber, 'x') && sscanf_s(chNumber, "%d", &iNumber, sizeof(iNumber)) == 1) {
           iWidth = lstrlenA(chNumber);
           if (iNumber >= 0) {
             if (bIncrease && iNumber < INT_MAX)
@@ -2324,7 +2324,7 @@ void EditModifyNumber(HWND hwnd,BOOL bIncrease) {
             SendMessage(hwnd,SCI_SETSEL,iSelStart,iSelStart+lstrlenA(chNumber));
           }
         }
-        else if (sscanf_s(chNumber, "%x", &iNumber) == 1) {
+        else if (sscanf_s(chNumber, "%x", &iNumber, sizeof(iNumber)) == 1) {
           int i;
           BOOL bUppercase = FALSE;
           iWidth = lstrlenA(chNumber) - 2;
@@ -7152,7 +7152,7 @@ BOOL FileVars_ParseInt(char* pszData,char* pszName,int* piValue) {
     *pvEnd = 0;
     StrTrimA(tch," \t:=\"'");
 
-    itok = sscanf_s(tch,"%i",piValue);
+    itok = sscanf_s(tch, "%i", &piValue, sizeof(piValue));
     if (itok == 1)
       return(TRUE);
 
