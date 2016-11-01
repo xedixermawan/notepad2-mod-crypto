@@ -1798,7 +1798,7 @@ void EditTitleCase(HWND hwnd)
               {
                 if (IsCharLowerW(pszTextW[i]))
                 {
-                  pszTextW[i] = LOWORD(CharUpperW((LPWSTR)MAKELONG(pszTextW[i],0)));
+                  pszTextW[i] = LOWORD(CharUpperW((LPWSTR)(LONG_PTR)MAKELONG(pszTextW[i],0)));
                   bChanged = TRUE;
                 }
               }
@@ -1806,7 +1806,7 @@ void EditTitleCase(HWND hwnd)
               {
                 if (IsCharUpperW(pszTextW[i]))
                 {
-                  pszTextW[i] = LOWORD(CharLowerW((LPWSTR)MAKELONG(pszTextW[i],0)));
+                  pszTextW[i] = LOWORD(CharLowerW((LPWSTR)(LONG_PTR)MAKELONG(pszTextW[i],0)));
                   bChanged = TRUE;
                 }
               }

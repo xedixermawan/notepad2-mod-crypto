@@ -325,6 +325,7 @@ class ScintillaWin :
 	virtual void SetTrackMouseLeaveEvent(bool on);
 	virtual bool PaintContains(PRectangle rc);
 	virtual void ScrollText(int linesToMove);
+	virtual void NotifyCaretMove();
 	virtual void UpdateSystemCaret();
 	virtual void SetVerticalScrollPos();
 	virtual void SetHorizontalScrollPos();
@@ -1144,7 +1145,7 @@ UINT CodePageFromCharSet(DWORD characterSet, UINT documentCodePage) {
 	}
 	switch (characterSet) {
 	case SC_CHARSET_ANSI: return 1252;
-	case SC_CHARSET_DEFAULT: return documentCodePage;
+	case SC_CHARSET_DEFAULT: return documentCodePage ? documentCodePage : 1252;
 	case SC_CHARSET_BALTIC: return 1257;
 	case SC_CHARSET_CHINESEBIG5: return 950;
 	case SC_CHARSET_EASTEUROPE: return 1250;
@@ -1836,6 +1837,10 @@ void ScintillaWin::ScrollText(int /* linesToMove */) {
 	//::UpdateWindow(MainHWND());
 	Redraw();
 	UpdateSystemCaret();
+}
+
+void ScintillaWin::NotifyCaretMove() {
+	NotifyWinEvent(EVENT_OBJECT_LOCATIONCHANGE, MainHWND(), OBJID_CARET, CHILDID_SELF);
 }
 
 void ScintillaWin::UpdateSystemCaret() {
