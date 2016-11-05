@@ -113,7 +113,6 @@ extern "C" BOOL EditPrint(HWND hwnd,LPCWSTR pszDocTitle,LPCWSTR pszPageFormat)
   struct RangeToFormat frPrint;
 
   int pageNum;
-  BOOL printPage;
 
   WCHAR pageString[32];
 
@@ -335,7 +334,7 @@ extern "C" BOOL EditPrint(HWND hwnd,LPCWSTR pszDocTitle,LPCWSTR pszPageFormat)
   pageNum = 1;
 
   while (lengthPrinted < lengthDoc) {
-    printPage = (!(pdlg.Flags & PD_PAGENUMS) ||
+      BOOL printPage = (!(pdlg.Flags & PD_PAGENUMS) ||
                  (pageNum >= pdlg.nFromPage) && (pageNum <= pdlg.nToPage));
 
     wsprintf(pageString, pszPageFormat, pageNum);

@@ -30,8 +30,8 @@
 #define STRINGIFY(x)    DO_STRINGIFY(x)
 
 #define VERSION_MAJOR   4
-#define VERSION_MINOR   2
-#define VERSION_BUILD   25
+//#define VERSION_MINOR   2
+//#define VERSION_BUILD   25
 
 #define MY_APPNAME                   L"Notepad2-mod"
 #define VERSION_FILEVERSION_NUM      VERSION_MAJOR,VERSION_MINOR,VERSION_BUILD,VERSION_REV
@@ -72,7 +72,7 @@
     #endif
 #elif defined(_MSC_VER)
     #if _MSC_VER == 1900
-        #if (_MSC_FULL_VER == 190024210)
+        #if (_MSC_FULL_VER >= 190024123)
             #define VERSION_COMPILER    L"MSVC 2015 Update 3"
         #elif (_MSC_FULL_VER == 190023918)
             #define VERSION_COMPILER    L"MSVC 2015 Update 2"
@@ -80,8 +80,50 @@
             #define VERSION_COMPILER    L"MSVC 2015 Update 1"
         #elif (_MSC_FULL_VER == 190023026)
             #define VERSION_COMPILER    L"MSVC 2015"
+        #elif (_MSC_FULL_VER < 190023026)
+            #define VERSION_COMPILER    L"MSVC 2015 Preview/Beta/RC"
         #else
             #define VERSION_COMPILER    L"MSVC 2015"
+        #endif
+    #elif _MSC_VER == 1800
+        #if (_MSC_FULL_VER == 180040629)
+            #define VERSION_COMPILER    L"MSVC 2013 Update 5"
+        #elif (_MSC_FULL_VER == 180031101)
+            #define VERSION_COMPILER    L"MSVC 2013 Update 4"
+        #elif (_MSC_FULL_VER == 180030723)
+            #define VERSION_COMPILER    L"MSVC 2013 Update 3"
+        #elif (_MSC_FULL_VER == 180030501)
+            #define VERSION_COMPILER    L"MSVC 2013 Update 2"
+        #elif (_MSC_FULL_VER < 180021005)
+            #define VERSION_COMPILER    L"MSVC 2013 Preview/Beta/RC"
+        #else
+            #define VERSION_COMPILER    L"MSVC 2013"
+        #endif
+    #elif _MSC_VER == 1700
+        #if (_MSC_FULL_VER == 170061030)
+            #define VERSION_COMPILER    L"MSVC 2012 Update 4"
+        #elif (_MSC_FULL_VER == 170060610)
+            #define VERSION_COMPILER    L"MSVC 2012 Update 3"
+        #elif (_MSC_FULL_VER == 170060315)
+            #define VERSION_COMPILER    L"MSVC 2012 Update 2"
+        #elif (_MSC_FULL_VER == 170051106)
+            #define VERSION_COMPILER    L"MSVC 2012 Update 1"
+        #elif (_MSC_FULL_VER < 170050727)
+            #define VERSION_COMPILER    L"MSVC 2012 Beta/RC/PR"
+        #else
+            #define VERSION_COMPILER    L"MSVC 2012"
+        #endif
+    #elif _MSC_VER == 1600
+        #if (_MSC_FULL_VER >= 160040219)
+            #define VERSION_COMPILER    L"MSVC 2010 SP1"
+        #else
+            #define VERSION_COMPILER    L"MSVC 2010"
+        #endif
+    #elif _MSC_VER == 1500
+        #if (_MSC_FULL_VER >= 150030729)
+            #define VERSION_COMPILER    L"MSVC 2008 SP1"
+        #else
+            #define VERSION_COMPILER    L"MSVC 2008"
         #endif
     #else
         #define VERSION_COMPILER        L"MSVC (version unknown)"

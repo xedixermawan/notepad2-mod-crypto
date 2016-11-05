@@ -967,7 +967,7 @@ HWND InitInstance(HINSTANCE hInstance,LPSTR pszCmdLine,int nCmdShow)
       cpLastFind = cp;
 
       if (flagMatchText & 4)
-        efrData.fuFlags |= SCFIND_REGEXP | SCFIND_POSIX;
+        efrData.fuFlags |= (SCFIND_REGEXP | SCFIND_CXX11REGEX) | SCFIND_POSIX;
       else if (flagMatchText & 8)
         efrData.bTransformBS = TRUE;
 
@@ -3604,7 +3604,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
 
 #ifdef BOOKMARK_EDITION
     // Main Bookmark Functions
-    //case IDM_EDIT_BOOKMARKNEXT:
+    case IDM_EDIT_BOOKMARKNEXT:
      case BME_EDIT_BOOKMARKNEXT:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3628,7 +3628,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    //case IMD_EDIT_BOOKMARKPREV:
+    case IDM_EDIT_BOOKMARKPREV:
     case BME_EDIT_BOOKMARKPREV:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3654,7 +3654,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    //case IDM_EDIT_BOOKMARKTOGGLE:
+    case IDM_EDIT_BOOKMARKTOGGLE:
     case BME_EDIT_BOOKMARKTOGGLE:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3695,7 +3695,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    //case IDM_EDIT_BOOKMARKCLEAR:
+    case IDM_EDIT_BOOKMARKCLEAR:
     case BME_EDIT_BOOKMARKCLEAR:
     {
         SendMessage( hwndEdit , SCI_MARKERDELETEALL , -1 , 0 );
@@ -4357,6 +4357,9 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         hwnd,AboutDlgProc);
       break;
 
+    case IDM_HELP_CMD:
+  DisplayCmdLineHelp();
+  break;
     case IDM_SETPASS:
       GetFileKey(hwndEdit);
       break;
@@ -4543,7 +4546,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         struct tm sst;
 
         UINT cp;
-        EDITFINDREPLACE efrTS = { "", "", "", "", SCFIND_REGEXP, 0, 0, 0, 0, 0, hwndEdit };
+        EDITFINDREPLACE efrTS = { "", "", "", "", (SCFIND_REGEXP | SCFIND_CXX11REGEX), 0, 0, 0, 0, 0, hwndEdit };
 
         IniGetString(L"Settings2",L"TimeStamp",L"\\$Date:[^\\$]+\\$ | $Date: %Y/%m/%d %H:%M:%S $",wchFind,COUNTOF(wchFind));
 
@@ -4703,7 +4706,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           else
             lstrcpyA(efrData.szFindUTF8,mszSelection);
 
-          efrData.fuFlags &= (~(SCFIND_REGEXP|SCFIND_POSIX));
+          efrData.fuFlags &= (~((SCFIND_REGEXP | SCFIND_CXX11REGEX) |SCFIND_POSIX));
           efrData.bTransformBS = FALSE;
 
           switch (LOWORD(wParam)) {
@@ -6921,7 +6924,6 @@ BOOL FileLoad(BOOL bDontSave,BOOL bNew,BOOL bReload,BOOL bNoEncDetect,LPCWSTR lp
                       NULL,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,NULL);
       dwLastIOError = GetLastError();
       if (fSuccess = (hFile != INVALID_HANDLE_VALUE)) {
-        CloseHandle(hFile);
         FileVars_Init(NULL,0,&fvCurFile);
         EditSetNewText(hwndEdit,"",0);
         Style_SetLexer(hwndEdit,NULL);
@@ -6938,6 +6940,9 @@ BOOL FileLoad(BOOL bDontSave,BOOL bNew,BOOL bReload,BOOL bNoEncDetect,LPCWSTR lp
         SendMessage(hwndEdit,SCI_SETCODEPAGE,(iEncoding == CPI_DEFAULT) ? iDefaultCodePage : SC_CP_UTF8,0);
         bReadOnly = FALSE;
         EditSetNewText(hwndEdit,"",0);
+      }
+      if ((hFile != NULL) && (hFile != INVALID_HANDLE_VALUE)) {
+        CloseHandle(hFile);
       }
     }
     else

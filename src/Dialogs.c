@@ -35,6 +35,7 @@
 #include "helpers.h"
 #include "resource.h"
 #include "version.h"
+#include <strsafe.h>
 
 
 extern HWND  hwndMain;
@@ -67,7 +68,8 @@ int MsgBox(int iType,UINT uIdMsg,...)
   if (!GetString(uIdMsg,szBuf,COUNTOF(szBuf)))
     return(0);
 
-  wvsprintf(szText,szBuf,(LPVOID)((PUINT_PTR)&uIdMsg + 1));
+  //wvsprintf(szText,szBuf,(LPVOID)((PUINT_PTR)&uIdMsg + 1));
+  StringCchVPrintf(szText, 1024, szBuf, (LPVOID)((PUINT_PTR)&uIdMsg + 1));
 
   if (uIdMsg == IDS_ERR_LOADFILE || uIdMsg == IDS_ERR_SAVEFILE ||
       uIdMsg == IDS_CREATEINI_FAIL || uIdMsg == IDS_WRITEINI_FAIL ||
@@ -152,8 +154,7 @@ int CALLBACK BFFCallBack(HWND hwnd,UINT umsg,LPARAM lParam,LPARAM lpData)
     SendMessage(hwnd,BFFM_SETSELECTION,TRUE,lpData);
 
   return(0);
-
-  lParam;
+  //lParam;
 }
 
 
@@ -170,13 +171,16 @@ BOOL GetDirectory(HWND hwndParent,int iTitle,LPWSTR pszFolder,LPCWSTR pszBase,BO
   WCHAR szBase[MAX_PATH];
   BOOL fOk = FALSE;
 
-  lstrcpy(szTitle,L"");
+  //lstrcpy(szTitle,L"");
+  StringCchCopy(szTitle, 256, L"");
+
   GetString(iTitle,szTitle,COUNTOF(szTitle));
 
   if (!pszBase || !*pszBase)
     GetCurrentDirectory(MAX_PATH,szBase);
   else
-    lstrcpy(szBase,pszBase);
+    StringCchCopy(szBase, MAX_PATH, pszBase);
+    //lstrcpy(szBase,pszBase);
 
   bi.hwndOwner = hwndParent;
   bi.pidlRoot = NULL;
@@ -207,9 +211,6 @@ BOOL GetDirectory(HWND hwndParent,int iTitle,LPWSTR pszFolder,LPCWSTR pszBase,BO
 //
 INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
 {
-
-  static HFONT hFontTitle;
-
   switch(umsg)
   {
     case WM_INITDIALOG:
@@ -222,6 +223,8 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
         SetDlgItemText(hwnd,IDC_AUTHORNAME,VERSION_AUTHORNAME);
         SetDlgItemText(hwnd,IDC_COMPILER,VERSION_COMPILER);
 
+        static HFONT hFontTitle = NULL;
+        
         if (hFontTitle)
           DeleteObject(hFontTitle);
 
@@ -229,6 +232,9 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           hFontTitle = GetStockObject(DEFAULT_GUI_FONT);
         GetObject(hFontTitle,sizeof(LOGFONT),&lf);
         lf.lfWeight = FW_BOLD;
+		    lf.lfWidth = 8;
+		    lf.lfHeight = 22;
+		    // lf.lfQuality = ANTIALIASED_QUALITY;
         hFontTitle = CreateFontIndirect(&lf);
         SendDlgItemMessage(hwnd,IDC_VERSION,WM_SETFONT,(WPARAM)hFontTitle,TRUE);
 
@@ -237,7 +243,8 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           ShowWindow(GetDlgItem(hwnd,IDC_WEBPAGE2),SW_SHOWNORMAL);
         }
         else {
-          wsprintf(wch,L"<A>%s</A>",VERSION_WEBPAGEDISPLAY);
+          //wsprintf(wch,L"<A>%s</A>",VERSION_WEBPAGEDISPLAY);
+          StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_WEBPAGEDISPLAY);
           SetDlgItemText(hwnd,IDC_WEBPAGE,wch);
         }
 
@@ -246,17 +253,19 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           ShowWindow(GetDlgItem(hwnd,IDC_EMAIL2),SW_SHOWNORMAL);
         }
         else {
-          wsprintf(wch,L"<A>%s</A>",VERSION_EMAILDISPLAY);
+			    //wsprintf(wch, L"<A>%s</A>", VERSION_EMAILDISPLAY);
+          StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_EMAILDISPLAY);
           SetDlgItemText(hwnd,IDC_EMAIL,wch);
         }
 
-        if (GetDlgItem(hwnd,IDC_MOD_PAGE) == NULL) {
-          SetDlgItemText(hwnd,IDC_MOD_PAGE,VERSION_MODPAGEDISPLAY);
-          ShowWindow(GetDlgItem(hwnd,IDC_MOD_PAGE2),SW_SHOWNORMAL);
+		    if (GetDlgItem(hwnd, IDC_MOD_PAGE) == NULL) {
+			    SetDlgItemText(hwnd, IDC_MOD_PAGE, VERSION_MODPAGEDISPLAY);
+			    ShowWindow(GetDlgItem(hwnd, IDC_MOD_PAGE2), SW_SHOWNORMAL);
         }
         else {
-          wsprintf(wch,L"<A>%s</A>",VERSION_MODPAGEDISPLAY);
-          SetDlgItemText(hwnd,IDC_MOD_PAGE,wch);
+			    //wsprintf(wch, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
+          StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
+          SetDlgItemText(hwnd, IDC_MOD_PAGE, wch);
         }
 
         CenterDlgInParent(hwnd);
@@ -363,8 +372,10 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
               PathQuoteSpaces(szFile);
               if (lstrlen(szArg2))
               {
-                lstrcat(szFile,L" ");
-                lstrcat(szFile,szArg2);
+                //lstrcat(szFile,L" ");
+                StringCchCat(szFile, MAX_PATH * 2, L" ");
+                //lstrcat(szFile,szArg2);
+                StringCchCat(szFile, MAX_PATH * 2, szArg2);
               }
               SetDlgItemText(hwnd,IDC_COMMANDLINE,szFile);
             }
@@ -410,7 +421,8 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
               }
 
               if (lstrlen(szCurFile)) {
-                lstrcpy(wchDirectory,szCurFile);
+                //lstrcpy(wchDirectory,szCurFile);
+                StringCchCopy(wchDirectory, MAX_PATH, szCurFile);
                 PathRemoveFileSpec(wchDirectory);
               }
 
@@ -645,7 +657,8 @@ BOOL OpenWithDlg(HWND hwnd,LPCWSTR lpstrFile)
     WCHAR wchDirectory[MAX_PATH] = L"";
 
     if (lstrlen(szCurFile)) {
-      lstrcpy(wchDirectory,szCurFile);
+      //lstrcpy(wchDirectory,szCurFile);
+      StringCchCopy(wchDirectory, MAX_PATH, szCurFile);
       PathRemoveFileSpec(wchDirectory);
     }
 
@@ -661,7 +674,8 @@ BOOL OpenWithDlg(HWND hwnd,LPCWSTR lpstrFile)
 
     // resolve links and get short path name
     if (!(PathIsLnkFile(lpstrFile) && PathGetLnkPath(lpstrFile,szParam,COUNTOF(szParam))))
-      lstrcpy(szParam,lpstrFile);
+      StringCchCopy(szParam, MAX_PATH, lpstrFile);
+      //lstrcpy(szParam,lpstrFile);
     //GetShortPathName(szParam,szParam,sizeof(WCHAR)*COUNTOF(szParam));
     PathQuoteSpaces(szParam);
 
@@ -843,7 +857,8 @@ BOOL FavoritesDlg(HWND hwnd,LPWSTR lpstrFile)
   if (IDOK == ThemedDialogBoxParam(g_hInstance,MAKEINTRESOURCE(IDD_FAVORITES),
                              hwnd,FavoritesDlgProc,(LPARAM)&dliFavorite))
   {
-    lstrcpyn(lpstrFile,dliFavorite.szFileName,MAX_PATH);
+    //lstrcpyn(lpstrFile,dliFavorite.szFileName,MAX_PATH);
+    StringCchCopy(lpstrFile, MAX_PATH, dliFavorite.szFileName);
     return(TRUE);
   }
 
@@ -921,7 +936,8 @@ BOOL AddToFavDlg(HWND hwnd,LPCWSTR lpszName,LPCWSTR lpszTarget)
   INT_PTR iResult;
 
   WCHAR pszName[MAX_PATH];
-  lstrcpy(pszName,lpszName);
+  //lstrcpy(pszName,lpszName);
+  StringCchCopy(pszName, MAX_PATH, lpszName);
 
   iResult = ThemedDialogBoxParam(
               g_hInstance,
@@ -1054,6 +1070,7 @@ DWORD WINAPI FileMRUIconThread(LPVOID lpParam) {
 
 INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
 {
+  HANDLE hThread = INVALID_HANDLE_VALUE;
 
   switch(umsg)
   {
@@ -1279,7 +1296,7 @@ INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
             ListView_SetItemState(GetDlgItem(hwnd,IDC_FILEMRU),0,LVIS_FOCUSED,LVIS_FOCUSED);
             ListView_SetColumnWidth(GetDlgItem(hwnd,IDC_FILEMRU),0,LVSCW_AUTOSIZE_USEHEADER);
 
-            CreateThread(NULL,0,FileMRUIconThread,(LPVOID)lpit,0,&dwtid);
+            hThread = CreateThread(NULL,0,FileMRUIconThread,(LPVOID)lpit,0,&dwtid);
           }
           break;
 
@@ -1330,7 +1347,8 @@ INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
               }
 
               else {
-                lstrcpy((LPWSTR)GetWindowLongPtr(hwnd,DWLP_USER),tch);
+                //lstrcpy((LPWSTR)GetWindowLongPtr(hwnd,DWLP_USER),tch);
+                StringCchCopy((LPWSTR)GetWindowLongPtr(hwnd, DWLP_USER), MAX_PATH, tch);
                 EndDialog(hwnd,IDOK);
               }
             }
@@ -1344,7 +1362,7 @@ INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
 
       }
 
-      return TRUE;
+      return ((hThread != NULL) && (hThread != INVALID_HANDLE_VALUE)) ? TRUE : FALSE;
 
   }
 
@@ -1554,13 +1572,13 @@ INT_PTR CALLBACK WordWrapSettingsDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
       {
 
         WCHAR tch[512];
-        WCHAR *p1, *p2;
         int i;
 
         for (i = 0; i < 4; i++) {
           GetDlgItemText(hwnd,200+i,tch,COUNTOF(tch));
-          lstrcat(tch,L"|");
-          p1 = tch;
+          //lstrcat(tch,L"|");
+          StringCchCat(tch, 512, L"|");
+          WCHAR *p1 = tch, *p2;
           while (p2 = StrChr(p1,L'|')) {
             *p2++ = L'\0';
             if (*p1)
@@ -2320,7 +2338,8 @@ INT_PTR InfoBox(int iType,LPCWSTR lpstrSetting,int uidMessage,...)
     return(-1);
 
   ib.lpstrMessage = LocalAlloc(LPTR,1024 * sizeof(WCHAR));
-  wvsprintf(ib.lpstrMessage,wchFormat,(LPVOID)((PUINT_PTR)&uidMessage + 1));
+  //wvsprintf(ib.lpstrMessage,wchFormat,(LPVOID)((PUINT_PTR)&uidMessage + 1));
+  StringCchPrintf(ib.lpstrMessage, 1024, wchFormat, (LPVOID)((PUINT_PTR)&uidMessage + 1));
   ib.lpstrSetting = (LPWSTR)lpstrSetting;
   ib.bDisableCheckBox = (lstrlen(szIniFile) == 0 || lstrlen(lpstrSetting) == 0 || iMode == 2) ? TRUE : FALSE;
 

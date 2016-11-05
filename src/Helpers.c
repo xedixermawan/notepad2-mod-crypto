@@ -443,8 +443,6 @@ BOOL SetWindowTitle(HWND hwnd,UINT uIDAppName,BOOL bIsElevated,UINT uIDUntitled,
 void SetWindowTransparentMode(HWND hwnd,BOOL bTransparentMode)
 {
   FARPROC fp;
-  int  iAlphaPercent;
-  BYTE bAlpha;
 
   if (bTransparentMode) {
     if (fp = GetProcAddress(GetModuleHandle(L"User32"),"SetLayeredWindowAttributes")) {
@@ -452,10 +450,10 @@ void SetWindowTransparentMode(HWND hwnd,BOOL bTransparentMode)
         GetWindowLongPtr(hwnd,GWL_EXSTYLE) | WS_EX_LAYERED);
 
       // get opacity level from registry
-      iAlphaPercent = IniGetInt(L"Settings2",L"OpacityLevel",75);
+      int iAlphaPercent = IniGetInt(L"Settings2",L"OpacityLevel",75);
       if (iAlphaPercent < 0 || iAlphaPercent > 100)
         iAlphaPercent = 75;
-      bAlpha = iAlphaPercent * 255 / 100;
+      BYTE bAlpha = iAlphaPercent * 255 / 100;
 
       fp(hwnd,0,bAlpha,LWA_ALPHA);
     }
@@ -1043,9 +1041,6 @@ BOOL PathIsLnkFile(LPCWSTR pszPath)
 {
 
   //WCHAR *pszExt;
-
-  WCHAR tchResPath[256];
-
   if (!pszPath || !*pszPath)
     return FALSE;
 
@@ -1066,6 +1061,8 @@ BOOL PathIsLnkFile(LPCWSTR pszPath)
   //else
   //  return FALSE;
 
+  WCHAR tchResPath[256];
+  
   if (lstrcmpi(PathFindExtension(pszPath),L".lnk"))
     return FALSE;
 
@@ -1142,10 +1139,9 @@ BOOL PathGetLnkPath(LPCWSTR pszLnkFile,LPWSTR pszResPath,int cchResPath)
 //
 BOOL PathIsLnkToDirectory(LPCWSTR pszPath,LPWSTR pszResPath,int cchResPath)
 {
+  if (PathIsLnkFile(pszPath)) {
 
   WCHAR tchResPath[MAX_PATH];
-
-  if (PathIsLnkFile(pszPath)) {
 
     if (PathGetLnkPath(pszPath,tchResPath,sizeof(WCHAR)*COUNTOF(tchResPath))) {
 
@@ -1664,6 +1660,9 @@ BOOL MRU_AddFile(LPMRULIST pmru,LPCWSTR pszFile,BOOL bRelativePath,BOOL bUnexpan
   for (i = 0; i < pmru->iSize; i++) {
     if (lstrcmpi(pmru->pszItems[i],pszFile) == 0) {
       LocalFree(pmru->pszItems[i]);
+      break;
+    }
+    else if (pmru->pszItems[i] == NULL) {
       break;
     }
     else {

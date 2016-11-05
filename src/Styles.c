@@ -2608,7 +2608,7 @@ void Style_Load()
   LoadIniSection(L"Custom Colors",pIniSection,cchIniSection);
   for (i = 0; i < 16; i++) {
     int itok;
-    int irgb;
+    unsigned int irgb;
     WCHAR wch[32];
     wsprintf(tch,L"%02i",i+1);
     if (IniSectionGetString(pIniSection,tch,L"",wch,COUNTOF(wch))) {
@@ -3781,7 +3781,7 @@ BOOL Style_StrGetColor(BOOL bFore,LPCWSTR lpszStyle,int *rgb)
 {
   WCHAR tch[256];
   WCHAR *p;
-  int  iValue;
+  unsigned int  iValue;
   int  itok;
   WCHAR *pItem = (bFore) ? L"fore:" : L"back:";
 
@@ -4111,7 +4111,6 @@ void Style_SetStyles(HWND hwnd,int iStyle,LPCWSTR lpszStyle)
 {
 
   WCHAR tch[256];
-  WCHAR *p;
   int  iValue;
 
   // Font
@@ -4134,25 +4133,25 @@ void Style_SetStyles(HWND hwnd,int iStyle,LPCWSTR lpszStyle)
     SendMessage(hwnd,SCI_STYLESETBACK,iStyle,(LPARAM)iValue);
 
   // Bold
-  if (p = StrStrI(lpszStyle,L"bold"))
+  if (StrStrI(lpszStyle,L"bold") != NULL)
     SendMessage(hwnd,SCI_STYLESETBOLD,iStyle,(LPARAM)TRUE);
   else
     SendMessage(hwnd,SCI_STYLESETBOLD,iStyle,(LPARAM)FALSE);
 
   // Italic
-  if (p = StrStrI(lpszStyle,L"italic"))
+  if (StrStrI(lpszStyle,L"italic") != NULL)
     SendMessage(hwnd,SCI_STYLESETITALIC,iStyle,(LPARAM)TRUE);
   else
     SendMessage(hwnd,SCI_STYLESETITALIC,iStyle,(LPARAM)FALSE);
 
   // Underline
-  if (p = StrStrI(lpszStyle,L"underline"))
+  if (StrStrI(lpszStyle,L"underline") != NULL)
     SendMessage(hwnd,SCI_STYLESETUNDERLINE,iStyle,(LPARAM)TRUE);
   else
     SendMessage(hwnd,SCI_STYLESETUNDERLINE,iStyle,(LPARAM)FALSE);
 
   // EOL Filled
-  if (p = StrStrI(lpszStyle,L"eolfilled"))
+  if (StrStrI(lpszStyle,L"eolfilled") != NULL)
     SendMessage(hwnd,SCI_STYLESETEOLFILLED,iStyle,(LPARAM)TRUE);
   else
     SendMessage(hwnd,SCI_STYLESETEOLFILLED,iStyle,(LPARAM)FALSE);
@@ -4336,8 +4335,8 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lP
   static PEDITLEXER pCurrentLexer;
   static PEDITSTYLE pCurrentStyle;
   static HFONT hFontTitle;
-  static HBRUSH hbrFore;
-  static HBRUSH hbrBack;
+  //static HBRUSH hbrFore;
+  //static HBRUSH hbrBack;
 
   switch(umsg)
   {
