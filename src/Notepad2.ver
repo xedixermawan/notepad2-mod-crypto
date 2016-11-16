@@ -12,12 +12,11 @@
 * See License.txt for details about distribution and modification.
 *
 *                                              (c) Florian Balmer 1996-2011
-*                                                  florian.balmer@gmail.com
-*                                               http://www.flos-freeware.ch
+*                                              mailto:florian.balmer@gmail.com
+*                                              http://www.flos-freeware.ch
 *
 *
 ******************************************************************************/
-
 
 #include "version.h"
 
@@ -50,8 +49,12 @@ BEGIN
       VALUE "CompanyName",      VERSION_COMPANYNAME
       VALUE "FileVersion",      VERSION_FILEVERSION
       VALUE "ProductVersion",   VERSION_FILEVERSION
-      VALUE "LegalCopyright",   VERSION_LEGALCOPYRIGHT_LONG
-      VALUE "OriginalFilename", "Notepad2.exe"
+      VALUE "LegalCopyright",   VERSION_LEGALCOPYRIGHT
+#ifdef _WIN64
+      VALUE "OriginalFilename", "Notepad2Cryptx64.exe"
+#else
+      VALUE "OriginalFilename", "Notepad2Crypt.exe"
+#endif
     END
   END
   BLOCK "VarFileInfo"

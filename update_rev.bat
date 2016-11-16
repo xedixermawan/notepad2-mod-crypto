@@ -1,32 +1,24 @@
-@ECHO OFF
-SETLOCAL
+@echo OFF
+setlocal
+pushd %~dp0
 
-PUSHD %~dp0
+set VERREV_H="src\VersionRev.h"
 
-IF EXIST "build.user.bat" (CALL "build.user.bat")
+set /p SCI_BUILD=<.\scintilla\version.txt
+set /p VERSION_BUILD=<.\build_no.txt
+set /a "VERSION_BUILD+=1"
+@echo.%VERSION_BUILD%>.\build_no.txt
 
-SET PATH=%MSYS%\bin;%PATH%
+@echo. #define VERSION_MAJOR 4.2 > %VERREV_H%
+@echo. #define VERSION_MINOR 25 >> %VERREV_H%
+:: notepad2-mod version
+@echo. #define VERSION_REV 985 >> %VERREV_H%
 
-FOR %%G IN (bash.exe) DO (SET FOUND=%%~$PATH:G)
-IF NOT DEFINED FOUND GOTO MissingVar
-
-bash.exe ./version.sh
-
+@echo. #define VERSION_BUILD %VERSION_BUILD% >> %VERREV_H%
+@echo. #define VERSION_HASH _T("( SciTE %SCI_BUILD% )") >> %VERREV_H%
+@echo. #define SCINTILLA_BUILD L"( SciTE v.%SCI_BUILD%ß )" >> %VERREV_H%
 
 :END
-POPD
-ENDLOCAL
-EXIT /B
-
-
-:MissingVar
-COLOR 0C
-TITLE ERROR
-ECHO MSYS (bash.exe) wasn't found. Create a file build.user.bat and set the variable there.
-ECHO.
-ECHO SET "MSYS=H:\progs\MSYS"
-ECHO. & ECHO.
-ECHO Press any key to exit...
-PAUSE >NUL
-ENDLOCAL
-EXIT /B
+popd
+endlocal
+exit /B

@@ -59,7 +59,7 @@ public:
 	bool SetHeight(int lineDoc, int height);
 
 	void ShowAll();
-	void Check() const;
+	static void Check();
 };
 
 #ifdef SCI_NAMESPACE

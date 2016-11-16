@@ -38,7 +38,6 @@
 #include "SciCall.h"
 #include "../crypto/crypto.h"
 
-
 extern HWND  hwndMain;
 extern HWND  hwndEdit;
 extern HINSTANCE g_hInstance;
@@ -70,6 +69,8 @@ extern BOOL bLoadASCIIasUTF8;
 extern BOOL bLoadNFOasOEM;
 extern int iSrcEncoding;
 extern int iWeakSrcEncoding;
+
+extern DWORD dwSCI_FIND_REGEXP;
 
 int g_DOSEncoding;
 
@@ -547,7 +548,8 @@ BOOL EditCopyAppend(HWND hwnd)
         (int)SendMessage(hwnd,SCI_GETSELECTIONEND,0,0) -
         (int)SendMessage(hwnd,SCI_GETSELECTIONSTART,0,0);
 
-      pszText = LocalAlloc(LPTR,iSelCount + 1);
+      // fixing 64bit issue #37
+      pszText = LocalAlloc(LPTR,iSelCount + 4);
       (int)SendMessage(hwnd,SCI_GETSELTEXT,0,(LPARAM)pszText);
     }
   }
@@ -1567,9 +1569,9 @@ BOOL EditSaveFile(
         MoveMemory(&lpData[bomoffset], lpData, cbData);
         CopyMemory(lpData, bom, bomoffset);
         cbData += bomoffset;
-    }
-      bWriteSuccess = //WriteFile(hFile,lpData,cbData,&dwBytesWritten,NULL);
-        EncryptAndWriteFile(hwnd, hFile, lpData, cbData, &dwBytesWritten);
+      }
+      //bWriteSuccess = WriteFile(hFile,lpData,cbData,&dwBytesWritten,NULL);
+      bWriteSuccess = EncryptAndWriteFile(hwnd, hFile, lpData, cbData, &dwBytesWritten);
       dwLastIOError = GetLastError();
 
       /* notepad2-mod custom code end */
@@ -1672,8 +1674,8 @@ void EditInvertCase(HWND hwnd)
       int iSelCount = (int)SendMessage(hwnd,SCI_GETSELECTIONEND,0,0) -
                         (int)SendMessage(hwnd,SCI_GETSELECTIONSTART,0,0);
 
-      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+2);
-      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+2);
+      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+4);
+      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+8);
 
       if (pszText == NULL || pszTextW == NULL) {
         GlobalFree(pszText);
@@ -1748,8 +1750,8 @@ void EditTitleCase(HWND hwnd)
       int iSelCount = (int)SendMessage(hwnd,SCI_GETSELECTIONEND,0,0) -
                         (int)SendMessage(hwnd,SCI_GETSELECTIONSTART,0,0);
 
-      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+2);
-      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+2);
+      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+4);
+      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+8);
 
       if (pszText == NULL || pszTextW == NULL) {
         GlobalFree(pszText);
@@ -1781,7 +1783,6 @@ void EditTitleCase(HWND hwnd)
       }
 
       else {
-
 
 #ifdef BOOKMARK_EDITION
       //Slightly enhanced function to make Title Case: Added some '-characters and bPrevWasSpace makes it better (for example "'Don't'" will now work)
@@ -1886,8 +1887,8 @@ void EditSentenceCase(HWND hwnd)
       int iSelCount = (int)SendMessage(hwnd,SCI_GETSELECTIONEND,0,0) -
                         (int)SendMessage(hwnd,SCI_GETSELECTIONSTART,0,0);
 
-      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+2);
-      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+2);
+      char*  pszText  = GlobalAlloc(GPTR,(iSelCount)+4);
+      LPWSTR pszTextW = GlobalAlloc(GPTR,(iSelCount*2)+8);
 
       if (pszText == NULL || pszTextW == NULL) {
         GlobalFree(pszText);
@@ -1973,12 +1974,12 @@ void EditURLEncode(HWND hwnd)
       DWORD  cchEscapedW;
       LPWSTR pszEscapedW;
 
-      pszText = LocalAlloc(LPTR,(iSelCount)+2);
+      pszText = LocalAlloc(LPTR,(iSelCount)+4);
       if (pszText == NULL) {
         return;
       }
 
-      pszTextW = LocalAlloc(LPTR,(iSelCount*2)+2);
+      pszTextW = LocalAlloc(LPTR,(iSelCount*2)+8);
       if (pszTextW == NULL) {
         LocalFree(pszText);
         return;
@@ -2059,12 +2060,12 @@ void EditURLDecode(HWND hwnd)
       DWORD  cchUnescapedW;
       LPWSTR pszUnescapedW;
 
-      pszText = LocalAlloc(LPTR,(iSelCount)+2);
+      pszText = LocalAlloc(LPTR,(iSelCount)+4);
       if (pszText == NULL) {
         return;
       }
 
-      pszTextW = LocalAlloc(LPTR,(iSelCount*2)+2);
+      pszTextW = LocalAlloc(LPTR,(iSelCount*2)+8);
       if (pszTextW == NULL) {
         LocalFree(pszText);
         return;
@@ -3838,7 +3839,7 @@ void EditStripTrailingBlanks(HWND hwnd,BOOL bIgnoreSelection)
   {
     if (SC_SEL_RECTANGLE != SendMessage(hwnd,SCI_GETSELECTIONMODE,0,0))
     {
-      EDITFINDREPLACE efrTrim = { "[ \t]+$", "", "", "", (SCFIND_REGEXP | SCFIND_CXX11REGEX), 0, 0, 0, 0, 0, hwnd };
+      EDITFINDREPLACE efrTrim = { "[ \t]+$", "", "", "", dwSCI_FIND_REGEXP, 0, 0, 0, 0, 0, hwnd };
       EditReplaceAllInSelection(hwnd,&efrTrim,FALSE);
     }
     else
@@ -4981,13 +4982,13 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
           CheckDlgButton(hwnd,IDC_FINDCASE,BST_CHECKED);
 
         if (lpefr->fuFlags & SCFIND_WHOLEWORD)
-          CheckDlgButton(hwnd,IDC_FINDWORD,BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_FINDWORD, BST_CHECKED);
 
         if (lpefr->fuFlags & SCFIND_WORDSTART)
-          CheckDlgButton(hwnd,IDC_FINDSTART,BST_CHECKED);
+            CheckDlgButton(hwnd, IDC_FINDSTART, BST_CHECKED);
 
-        if (lpefr->fuFlags & (SCFIND_REGEXP|SCFIND_CXX11REGEX))
-          CheckDlgButton(hwnd,IDC_FINDREGEXP,BST_CHECKED);
+        if (lpefr->fuFlags & dwSCI_FIND_REGEXP)
+            CheckDlgButton(hwnd, IDC_FINDREGEXP, BST_CHECKED);
 
         if (lpefr->bTransformBS)
           CheckDlgButton(hwnd,IDC_FINDTRANSFORMBS,BST_CHECKED);
@@ -5072,6 +5073,16 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
           }
           break;
 
+        case IDC_FINDWORD:
+          if (IsDlgButtonChecked(hwnd, IDC_FINDWORD) == BST_CHECKED)
+            CheckDlgButton(hwnd, IDC_FINDREGEXP, BST_UNCHECKED);
+          break;
+
+        case IDC_FINDSTART:
+          if (IsDlgButtonChecked(hwnd, IDC_FINDSTART) == BST_CHECKED)
+            CheckDlgButton(hwnd, IDC_FINDREGEXP, BST_UNCHECKED); 
+          break;
+
         case IDC_FINDREGEXP:
           if (IsDlgButtonChecked(hwnd,IDC_FINDREGEXP) == BST_CHECKED)
           {
@@ -5079,6 +5090,8 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
 #ifdef BOOKMARK_EDITION
             CheckDlgButton(hwnd,IDC_WILDCARDSEARCH,BST_UNCHECKED); // Can not use wildcard search together with regexp
 #endif
+            CheckDlgButton(hwnd, IDC_FINDWORD, BST_UNCHECKED);
+            CheckDlgButton(hwnd, IDC_FINDSTART, BST_UNCHECKED);
           }
           break;
 
@@ -5150,8 +5163,12 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
           if (IsDlgButtonChecked(hwnd,IDC_FINDSTART) == BST_CHECKED)
             lpefr->fuFlags |= SCFIND_WORDSTART;
 
-          if (IsDlgButtonChecked(hwnd,IDC_FINDREGEXP) == BST_CHECKED)
-            lpefr->fuFlags |= (SCFIND_REGEXP | SCFIND_CXX11REGEX) | SCFIND_POSIX;
+          if (IsDlgButtonChecked(hwnd, IDC_FINDREGEXP) == BST_CHECKED)
+          {
+              lpefr->fuFlags |= dwSCI_FIND_REGEXP | SCFIND_POSIX;
+              // reset conflicting flags
+              lpefr->fuFlags &= ~(SCFIND_WHOLEWORD | SCFIND_WORDSTART);
+          }
 
           lpefr->bTransformBS =
             (IsDlgButtonChecked(hwnd,IDC_FINDTRANSFORMBS) == BST_CHECKED) ? TRUE : FALSE;
@@ -5257,7 +5274,7 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd,UINT umsg,WPARAM wParam,LPARA
 
 #ifdef BOOKMARK_EDITION
           // Wildcard search will enable regexp, so I turn it off again otherwise it will be on in the gui
-          if( lpefr->bWildcardSearch  &&  (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)) ) lpefr->fuFlags ^= (SCFIND_REGEXP | SCFIND_CXX11REGEX);
+          if( lpefr->bWildcardSearch  &&  (lpefr->fuFlags & dwSCI_FIND_REGEXP) ) lpefr->fuFlags ^= dwSCI_FIND_REGEXP;
 #endif
 
           break;
@@ -5397,7 +5414,7 @@ HWND EditFindReplaceDlg(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bReplace)
         int iSource = 0;
         int iDest = 0;
 
-        lpefr->fuFlags |= (SCFIND_REGEXP | SCFIND_CXX11REGEX);
+        lpefr->fuFlags |= dwSCI_FIND_REGEXP;
 
         while( szFind2[iSource] )
         {
@@ -5442,7 +5459,7 @@ BOOL EditFindNext(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL fExtendSelection)
 
   lstrcpynA(szFind2,lpefr->szFind,COUNTOF(szFind2));
   if (lpefr->bTransformBS)
-    TransformBackslashes(szFind2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+    TransformBackslashes(szFind2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
       (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
 
   if (lstrlenA(szFind2) == 0)
@@ -5512,7 +5529,7 @@ BOOL EditFindPrev(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL fExtendSelection)
 
   lstrcpynA(szFind2,lpefr->szFind,COUNTOF(szFind2));
   if (lpefr->bTransformBS)
-    TransformBackslashes(szFind2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+    TransformBackslashes(szFind2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
       (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
 
   if (lstrlenA(szFind2) == 0)
@@ -5575,7 +5592,8 @@ BOOL EditReplace(HWND hwnd,LPCEDITFINDREPLACE lpefr)
   int iPos;
   int iSelStart;
   int iSelEnd;
-  int iReplaceMsg = (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
+  BOOL bRegExSearch = (lpefr->fuFlags & dwSCI_FIND_REGEXP);
+  int iReplaceMsg = bRegExSearch ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
   char szFind2[512];
   char *pszReplace2;
   BOOL bSuppressNotFound = FALSE;
@@ -5585,8 +5603,7 @@ BOOL EditReplace(HWND hwnd,LPCEDITFINDREPLACE lpefr)
 
   lstrcpynA(szFind2,lpefr->szFind,COUNTOF(szFind2));
   if (lpefr->bTransformBS)
-    TransformBackslashes(szFind2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
-      (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
+    TransformBackslashes(szFind2, bRegExSearch, (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
 
   if (lstrlenA(szFind2) == 0)
   {
@@ -5606,8 +5623,7 @@ BOOL EditReplace(HWND hwnd,LPCEDITFINDREPLACE lpefr)
     //lstrcpyA(szReplace2,lpefr->szReplace);
     pszReplace2 = StrDupA(lpefr->szReplace);
     if (lpefr->bTransformBS)
-      TransformBackslashes(pszReplace2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
-        (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
+      TransformBackslashes(pszReplace2, bRegExSearch, (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
   }
 
   if (!pszReplace2)
@@ -5918,7 +5934,7 @@ BOOL EditReplaceAll(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo)
   struct TextToFind ttf;
   int iPos;
   int iCount = 0;
-  int iReplaceMsg = (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
+  int iReplaceMsg = (lpefr->fuFlags & dwSCI_FIND_REGEXP) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
   char szFind2[512];
   char *pszReplace2;
   BOOL bRegexStartOfLine;
@@ -5932,7 +5948,7 @@ BOOL EditReplaceAll(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo)
 
   lstrcpynA(szFind2,lpefr->szFind,COUNTOF(szFind2));
   if (lpefr->bTransformBS)
-    TransformBackslashes(szFind2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+    TransformBackslashes(szFind2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
       (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
 
   if (lstrlenA(szFind2) == 0)
@@ -5948,7 +5964,7 @@ BOOL EditReplaceAll(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo)
   bRegexStartOfLine =
     (szFind2[0] == '^');
   bRegexStartOrEndOfLine =
-    (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX) &&
+    (lpefr->fuFlags & dwSCI_FIND_REGEXP &&
       (!lstrcmpA(szFind2,"$") || !lstrcmpA(szFind2,"^") || !lstrcmpA(szFind2,"^$")));
 
   if (lstrcmpA(lpefr->szReplace,"^c") == 0) {
@@ -5959,7 +5975,7 @@ BOOL EditReplaceAll(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo)
     //lstrcpyA(szReplace2,lpefr->szReplace);
     pszReplace2 = StrDupA(lpefr->szReplace);
     if (lpefr->bTransformBS)
-      TransformBackslashes(pszReplace2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+      TransformBackslashes(pszReplace2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
   }
 
@@ -6043,7 +6059,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo
   struct TextToFind ttf;
   int iPos;
   int iCount = 0;
-  int iReplaceMsg = (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
+  int iReplaceMsg = (lpefr->fuFlags & dwSCI_FIND_REGEXP) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
   BOOL fCancel = FALSE;
   char szFind2[512];
   char *pszReplace2;
@@ -6064,7 +6080,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo
 
   lstrcpynA(szFind2,lpefr->szFind,COUNTOF(szFind2));
   if (lpefr->bTransformBS)
-    TransformBackslashes(szFind2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+    TransformBackslashes(szFind2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
       (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
 
   if (lstrlenA(szFind2) == 0)
@@ -6080,7 +6096,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo
   bRegexStartOfLine =
     (szFind2[0] == '^');
   bRegexStartOrEndOfLine =
-    (lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX) &&
+    (lpefr->fuFlags & dwSCI_FIND_REGEXP &&
       (!lstrcmpA(szFind2,"$") || !lstrcmpA(szFind2,"^") || !lstrcmpA(szFind2,"^$")));
 
   if (lstrcmpA(lpefr->szReplace,"^c") == 0) {
@@ -6091,7 +6107,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd,LPCEDITFINDREPLACE lpefr,BOOL bShowInfo
     //lstrcpyA(szReplace2,lpefr->szReplace);
     pszReplace2 = StrDupA(lpefr->szReplace);
     if (lpefr->bTransformBS)
-      TransformBackslashes(pszReplace2,(lpefr->fuFlags & (SCFIND_REGEXP | SCFIND_CXX11REGEX)),
+      TransformBackslashes(pszReplace2,(lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0));
   }
 
@@ -7152,7 +7168,7 @@ BOOL FileVars_ParseInt(char* pszData,char* pszName,int* piValue) {
     *pvEnd = 0;
     StrTrimA(tch," \t:=\"'");
 
-    itok = sscanf_s(tch, "%d", piValue);
+    itok = sscanf_s(tch,"%i",piValue);
     if (itok == 1)
       return(TRUE);
 

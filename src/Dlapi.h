@@ -137,7 +137,7 @@ BOOL DirList_SelectItem(HWND,LPCWSTR,LPCWSTR);
 
 //==== DlCreateFilter() and DlMatchFilter() ===================================
 
-#define DL_FILTER_BUFSIZE 128
+#define DL_FILTER_BUFSIZE 256
 
 typedef struct tagDL_FILTER { //dlf
   int   nCount;

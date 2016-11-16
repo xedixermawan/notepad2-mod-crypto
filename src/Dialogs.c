@@ -36,6 +36,7 @@
 #include "resource.h"
 #include "version.h"
 #include <strsafe.h>
+#include <stdarg.h>
 
 
 extern HWND  hwndMain;
@@ -64,12 +65,16 @@ int MsgBox(int iType,UINT uIdMsg,...)
   WCHAR szTitle[64];
   int iIcon = 0;
   HWND hwnd;
+  va_list argList;
+  va_start(argList, uIdMsg);
 
-  if (!GetString(uIdMsg,szBuf,COUNTOF(szBuf)))
+  if (!GetString(uIdMsg,szBuf,COUNTOF(szBuf))) {
+    va_end(argList);
     return(0);
-
+  }
   //wvsprintf(szText,szBuf,(LPVOID)((PUINT_PTR)&uIdMsg + 1));
-  StringCchVPrintf(szText, 1024, szBuf, (LPVOID)((PUINT_PTR)&uIdMsg + 1));
+  StringCchVPrintf(szText, 1024, szBuf, argList);
+  va_end(argList);
 
   if (uIdMsg == IDS_ERR_LOADFILE || uIdMsg == IDS_ERR_SAVEFILE ||
       uIdMsg == IDS_CREATEINI_FAIL || uIdMsg == IDS_WRITEINI_FAIL ||
@@ -154,7 +159,6 @@ int CALLBACK BFFCallBack(HWND hwnd,UINT umsg,LPARAM lParam,LPARAM lpData)
     SendMessage(hwnd,BFFM_SETSELECTION,TRUE,lpData);
 
   return(0);
-  //lParam;
 }
 
 
@@ -179,8 +183,8 @@ BOOL GetDirectory(HWND hwndParent,int iTitle,LPWSTR pszFolder,LPCWSTR pszBase,BO
   if (!pszBase || !*pszBase)
     GetCurrentDirectory(MAX_PATH,szBase);
   else
-    StringCchCopy(szBase, MAX_PATH, pszBase);
     //lstrcpy(szBase,pszBase);
+    StringCchCopy(szBase, MAX_PATH, pszBase);
 
   bi.hwndOwner = hwndParent;
   bi.pidlRoot = NULL;
@@ -219,7 +223,7 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
         LOGFONT lf;
 
         SetDlgItemText(hwnd,IDC_VERSION,VERSION_FILEVERSION_LONG);
-        SetDlgItemText(hwnd,IDC_COPYRIGHT,VERSION_LEGALCOPYRIGHT_SHORT);
+        SetDlgItemText(hwnd,IDC_COPYRIGHT,VERSION_LEGALCOPYRIGHT);
         SetDlgItemText(hwnd,IDC_AUTHORNAME,VERSION_AUTHORNAME);
         SetDlgItemText(hwnd,IDC_COMPILER,VERSION_COMPILER);
 
@@ -232,9 +236,9 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           hFontTitle = GetStockObject(DEFAULT_GUI_FONT);
         GetObject(hFontTitle,sizeof(LOGFONT),&lf);
         lf.lfWeight = FW_BOLD;
-		    lf.lfWidth = 8;
-		    lf.lfHeight = 22;
-		    // lf.lfQuality = ANTIALIASED_QUALITY;
+            lf.lfWidth = 8;
+            lf.lfHeight = 22;
+            // lf.lfQuality = ANTIALIASED_QUALITY;
         hFontTitle = CreateFontIndirect(&lf);
         SendDlgItemMessage(hwnd,IDC_VERSION,WM_SETFONT,(WPARAM)hFontTitle,TRUE);
 
@@ -248,24 +252,24 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           SetDlgItemText(hwnd,IDC_WEBPAGE,wch);
         }
 
-        if (GetDlgItem(hwnd,IDC_EMAIL) == NULL) {
-          SetDlgItemText(hwnd,IDC_EMAIL2,VERSION_EMAILDISPLAY);
-          ShowWindow(GetDlgItem(hwnd,IDC_EMAIL2),SW_SHOWNORMAL);
+        if (GetDlgItem(hwnd, IDC_MODWEBPAGE) == NULL) {
+            SetDlgItemText(hwnd, IDC_MODWEBPAGE2, VERSION_MODPAGEDISPLAY);
+            ShowWindow(GetDlgItem(hwnd, IDC_MODWEBPAGE2), SW_SHOWNORMAL);
         }
         else {
-			    //wsprintf(wch, L"<A>%s</A>", VERSION_EMAILDISPLAY);
-          StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_EMAILDISPLAY);
-          SetDlgItemText(hwnd,IDC_EMAIL,wch);
+            //wsprintf(wch, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
+            StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
+            SetDlgItemText(hwnd, IDC_MODWEBPAGE, wch);
         }
 
-		    if (GetDlgItem(hwnd, IDC_MOD_PAGE) == NULL) {
-			    SetDlgItemText(hwnd, IDC_MOD_PAGE, VERSION_MODPAGEDISPLAY);
-			    ShowWindow(GetDlgItem(hwnd, IDC_MOD_PAGE2), SW_SHOWNORMAL);
+        if (GetDlgItem(hwnd, IDC_NOTE2WEBPAGE) == NULL) {
+            SetDlgItemText(hwnd, IDC_NOTE2WEBPAGE2, VERSION_WEBPAGE2DISPLAY);
+            ShowWindow(GetDlgItem(hwnd, IDC_NOTE2WEBPAGE2), SW_SHOWNORMAL);
         }
         else {
-			    //wsprintf(wch, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
-          StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_MODPAGEDISPLAY);
-          SetDlgItemText(hwnd, IDC_MOD_PAGE, wch);
+            //wsprintf(wch, L"<A>%s</A>", VERSION_WEBPAGE2DISPLAY);
+            StringCchPrintf(wch, 256, L"<A>%s</A>", VERSION_WEBPAGE2DISPLAY);
+            SetDlgItemText(hwnd, IDC_NOTE2WEBPAGE, wch);
         }
 
         CenterDlgInParent(hwnd);
@@ -281,13 +285,13 @@ INT_PTR CALLBACK AboutDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
           case NM_RETURN:
             {
               if (pnmhdr->idFrom == IDC_WEBPAGE) {
-                ShellExecute(hwnd,L"open",L"http://www.flos-freeware.ch",NULL,NULL,SW_SHOWNORMAL);
+                ShellExecute(hwnd,L"open",L"https://rizonesoft.com",NULL,NULL,SW_SHOWNORMAL);
               }
-              else if (pnmhdr->idFrom == IDC_EMAIL) {
-                ShellExecute(hwnd,L"open",L"mailto:florian.balmer@gmail.com",NULL,NULL,SW_SHOWNORMAL);
-              }
-              else if (pnmhdr->idFrom == IDC_MOD_PAGE) {
+              else if (pnmhdr->idFrom == IDC_MODWEBPAGE) {
                 ShellExecute(hwnd,L"open",L"https://xhmikosr.github.io/notepad2-mod/",NULL,NULL,SW_SHOWNORMAL);
+              }
+              else if (pnmhdr->idFrom == IDC_NOTE2WEBPAGE) {
+                ShellExecute(hwnd,L"open",L"http://www.flos-freeware.ch",NULL,NULL,SW_SHOWNORMAL);
               }
             }
             break;
@@ -414,8 +418,11 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
               ExpandEnvironmentStringsEx(arg1,COUNTOF(arg1));
               ExtractFirstArgument(arg1,arg1,arg2);
 
-              if (lstrcmpi(arg1,L"notepad2") == 0 ||
-                  lstrcmpi(arg1,L"notepad2.exe") == 0) {
+              if ((lstrcmpi(arg1,L"notepad2crypt") == 0) ||
+                  (lstrcmpi(arg1, L"notepad2cryptx64") == 0) ||
+                  (lstrcmpi(arg1,L"notepad2crypt.exe") == 0) ||
+                  (lstrcmpi(arg1, L"notepad2cryptx64.exe") == 0))
+              {
                 GetModuleFileName(NULL,arg1,COUNTOF(arg1));
                 bQuickExit = TRUE;
               }
@@ -673,9 +680,10 @@ BOOL OpenWithDlg(HWND hwnd,LPCWSTR lpstrFile)
     sei.nShow = SW_SHOWNORMAL;
 
     // resolve links and get short path name
-    if (!(PathIsLnkFile(lpstrFile) && PathGetLnkPath(lpstrFile,szParam,COUNTOF(szParam))))
-      StringCchCopy(szParam, MAX_PATH, lpstrFile);
+    if (!(PathIsLnkFile(lpstrFile) && PathGetLnkPath(lpstrFile,szParam,COUNTOF(szParam)))) {
       //lstrcpy(szParam,lpstrFile);
+      StringCchCopy(szParam, MAX_PATH, lpstrFile);
+    }
     //GetShortPathName(szParam,szParam,sizeof(WCHAR)*COUNTOF(szParam));
     PathQuoteSpaces(szParam);
 
@@ -701,9 +709,6 @@ extern int cyFavoritesDlg;
 
 INT_PTR CALLBACK FavoritesDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
 {
-
-  static HWND hwndLV;
-
   switch(umsg)
   {
 
@@ -1071,7 +1076,7 @@ DWORD WINAPI FileMRUIconThread(LPVOID lpParam) {
 INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd,UINT umsg,WPARAM wParam,LPARAM lParam)
 {
   HANDLE hThread = INVALID_HANDLE_VALUE;
-
+ 
   switch(umsg)
   {
 
@@ -2328,18 +2333,24 @@ INT_PTR InfoBox(int iType,LPCWSTR lpstrSetting,int uidMessage,...)
   INFOBOX ib;
   WCHAR wchFormat[512];
   int iMode;
+  va_list argList;
+  va_start(argList, uidMessage);
 
   iMode = IniGetInt(L"Suppressed Messages",lpstrSetting,0);
 
-  if (lstrlen(lpstrSetting) > 0 && iMode == 1)
+  if (lstrlen(lpstrSetting) > 0 && iMode == 1) {
+    va_end(argList);
     return (iType == MBYESNO) ? IDYES : IDOK;
-
-  if (!GetString(uidMessage,wchFormat,COUNTOF(wchFormat)))
+  }
+  if (!GetString(uidMessage,wchFormat,COUNTOF(wchFormat))) {
+    va_end(argList);
     return(-1);
-
+  }
   ib.lpstrMessage = LocalAlloc(LPTR,1024 * sizeof(WCHAR));
   //wvsprintf(ib.lpstrMessage,wchFormat,(LPVOID)((PUINT_PTR)&uidMessage + 1));
-  StringCchPrintf(ib.lpstrMessage, 1024, wchFormat, (LPVOID)((PUINT_PTR)&uidMessage + 1));
+  StringCchVPrintf(ib.lpstrMessage, 1024, wchFormat, argList);
+  va_end(argList);
+
   ib.lpstrSetting = (LPWSTR)lpstrSetting;
   ib.bDisableCheckBox = (lstrlen(szIniFile) == 0 || lstrlen(lpstrSetting) == 0 || iMode == 2) ? TRUE : FALSE;
 

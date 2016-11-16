@@ -46,7 +46,7 @@ KEYWORDLIST KeyWords_NULL = {
 "", "", "", "", "", "", "", "", "" };
 
 
-EDITLEXER lexDefault = { SCLEX_NULL, 63000, L"Default Text", L"txt; text; wtx; log; asc; doc", L"", &KeyWords_NULL, {
+EDITLEXER lexDefault =   { SCLEX_NULL, 63000, L"Default Text", L"txt; text; wtx; log; asc; doc", L"", &KeyWords_NULL, {
                 /*  0 */ { STYLE_DEFAULT, 63100, L"Default Style", L"font:Default; size:10", L"" },
                 /*  1 */ { STYLE_LINENUMBER, 63101, L"Margins and Line Numbers", L"size:-2; fore:#FF0000", L"" },
                 /*  2 */ { STYLE_BRACELIGHT, 63102, L"Matching Braces", L"size:+1; bold; fore:#FF0000", L"" },
@@ -298,7 +298,7 @@ KEYWORDLIST KeyWords_CSS = {
 "" };
 
 
-EDITLEXER lexCSS = { SCLEX_CSS, 63003, L"CSS Style Sheets", L"css", L"", &KeyWords_CSS, {
+EDITLEXER lexCSS = { SCLEX_CSS, 63003, L"CSS Style Sheets", L"css; less; sass; scss", L"", &KeyWords_CSS, {
                      { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
                      //{ SCE_CSS_DEFAULT, L"Default", L"", L"" },
                      { SCE_CSS_COMMENT, 63127, L"Comment", L"fore:#646464", L"" },
@@ -620,7 +620,7 @@ KEYWORDLIST KeyWords_JS = {
 "", "", "", "", "", "", "", "" };
 
 
-EDITLEXER lexJS = { SCLEX_CPP, 63010, L"JavaScript", L"js; jse; jsm; json; as", L"", &KeyWords_JS, {
+EDITLEXER lexJS = { SCLEX_CPP, 63010, L"JavaScript", L"js; jse; jsm; as", L"", &KeyWords_JS, {
                     { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
                     //{ SCE_C_DEFAULT, L"Default", L"", L"" },
                     { SCE_C_COMMENT, 63127, L"Comment", L"fore:#646464", L"" },
@@ -636,6 +636,51 @@ EDITLEXER lexJS = { SCLEX_CPP, 63010, L"JavaScript", L"js; jse; jsm; json; as", 
                     //{ SCE_C_GLOBALCLASS, L"Global Class", L"", L"" },
                     { -1, 00000, L"", L"", L"" } } };
 
+
+KEYWORDLIST KeyWords_JSON = {
+"false true null",
+"@id @context @type @value @language @container @list @set @reverse @index @base @vocab @graph",
+"", "", "", "", "", "", "" };
+
+
+EDITLEXER lexJSON = { SCLEX_JSON, 63382, L"JSON", L"json; eslintrc; jshintrc; jsonld", L"", &KeyWords_JSON, {
+                    { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
+                    //{ SCE_C_DEFAULT, L"Default", L"", L"" },
+                    { SCE_C_COMMENT, 63127, L"Comment", L"fore:#646464", L"" },
+                    { SCE_C_WORD, 63128, L"Keyword", L"bold; fore:#A46000", L"" },
+                    { SCE_C_IDENTIFIER, 63129, L"Identifier", L"", L"" },
+                    { SCE_JSON_STRING, 63131, L"String", L"fore:#008000", L"" },
+                    { SCE_C_REGEX, 63135, L"Regex", L"fore:#006633; back:#FFF1A8", L"" },
+                    { SCE_JSON_NUMBER, 63130, L"Number", L"fore:#FF0000", L"" },
+                    { SCE_C_OPERATOR, 63132, L"Operator", L"fore:#B000B0", L"" },
+                    { -1, 00000, L"", L"", L"" } } };
+
+/*
+# String
+style.json.2=fore:#7F0000
+# Unclosed string       SCE_JSON_STRINGEOL
+style.json.3=fore:#FFFFFF,back:#FF0000,eolfilled
+# Property name         SCE_JSON_PROPERTYNAME
+style.json.4=fore:#880AE8
+# Escape sequence       SCE_JSON_ESCAPESEQUENCE
+style.json.5=fore:#0B982E
+# Line comment          SCE_JSON_LINECOMMENT
+style.json.6=fore:#05BBAE,italics
+# Block comment         SCE_JSON_BLOCKCOMMENT
+style.json.7=$(style.json.6)
+# Operator              SCE_JSON_OPERATOR
+style.json.8=fore:#18644A
+# URL/IRI               SCE_JSON_URI
+style.json.9=fore:#0000FF
+# JSON-LD compact IRI   SCE_JSON_COMPACTIRI
+style.json.10=fore:#D137C1
+# JSON keyword          SCE_JSON_KEYWORD
+style.json.11=fore:#0BCEA7,bold
+# JSON-LD keyword       SCE_JSON_LDKEYWORD
+style.json.12=fore:#EC2806
+# Parsing error         SCE_JSON_ERROR
+style.json.13=fore:#FFFFFF,back:#FF0000
+*/
 
 KEYWORDLIST KeyWords_JAVA = {
 "@interface abstract assert boolean break byte case catch char class const "
@@ -862,11 +907,11 @@ EDITLEXER lexPL = { SCLEX_PERL, 63014, L"Perl Script", L"pl; pm; cgi; pod", L"",
                     { -1, 00000, L"", L"", L"" } } };
 
 
-KEYWORDLIST KeyWords_INI = {
+KEYWORDLIST KeyWords_PROPS = {
 "", "", "", "", "", "", "", "", "" };
 
 
-EDITLEXER lexINI = { SCLEX_PROPERTIES, 63015, L"Configuration Files", L"ini; inf; reg; cfg; properties; oem; sif; url; sed; theme", L"", &KeyWords_INI, {
+EDITLEXER lexPROPS = { SCLEX_PROPERTIES, 63015, L"Configuration Files", L"ini; inf; cfg; properties; oem; sif; url; sed; theme", L"", &KeyWords_PROPS, {
                      { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
                      //{ SCE_PROPS_DEFAULT, L"Default", L"", L"" },
                      { SCE_PROPS_COMMENT, 63127, L"Comment", L"fore:#008000", L"" },
@@ -2491,6 +2536,26 @@ EDITLEXER lexVHDL = { SCLEX_VHDL, 63370, L"VHDL", L"vhdl; vhd", L"", &KeyWords_V
                        { -1, 00000, L"", L"", L"" } } };
 
 
+KEYWORDLIST KeyWords_Registry = {
+"", "", "", "", "", "", "", "", "" };
+
+EDITLEXER lexRegistry = { SCLEX_REGISTRY, 63370, L"Windows Registry Files", L"reg", L"", &KeyWords_Registry, {
+                       { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
+                       //{ SCE_REG_DEFAULT, 63126, L"Default", L"", L"" },
+                       { SCE_REG_COMMENT, 63127, L"Comment", L"fore:#008800", L"" },
+                       { SCE_REG_VALUENAME, 63376, L"Value Name", L"", L"" },
+                       { MULTI_STYLE(SCE_REG_STRING,SCE_REG_STRING_GUID,0,0), 63131, L"String", L"fore:#008000", L"" },
+                       { SCE_REG_VALUETYPE, 63377, L"Value Type", L"bold; fore:#00007F", L"" },
+                       { SCE_REG_HEXDIGIT, 63378, L"Hex", L"fore:#7F0B0C", L"" },
+                       { SCE_REG_ADDEDKEY, 63379, L"Added Key", L"fore:#000000; back:#FF8040; bold; eolfilled", L"" }, //fore:#530155
+                       { SCE_REG_DELETEDKEY, 63380, L"Deleted Key", L"fore:#FF0000", L"" },
+                       { SCE_REG_ESCAPED, 63381, L"Escaped", L"bold; fore:#7D8187", L"" },
+                       { SCE_REG_KEYPATH_GUID, 63382, L"GUID in Key Path", L"fore:#7B5F15", L"" },
+                       { SCE_REG_PARAMETER, 63294, L"Parameter", L"fore:#0B6561", L"" },
+                       { SCE_REG_OPERATOR, 63132, L"Operator", L"bold", L"" },
+                       { -1, 00000, L"", L"", L"" } } };
+
+
 KEYWORDLIST KeyWords_COFFEESCRIPT = {
 "", "", "", "", "", "", "", "", "" };
 
@@ -2513,6 +2578,25 @@ EDITLEXER lexCOFFEESCRIPT = { SCLEX_COFFEESCRIPT, 63362, L"Coffeescript", L"coff
                        { -1, 00000, L"", L"", L"" } } };
 
 
+KEYWORDLIST KeyWords_MATLAB = {
+"break case catch continue else elseif end for function global if otherwise "
+"persistent return switch try while",
+"", "", "", "", "", "", "", "" };
+
+
+EDITLEXER lexMATLAB = { SCLEX_MATLAB, 63360, L"MATLAB", L"matlab", L"", &KeyWords_MATLAB, {
+                        { STYLE_DEFAULT, 63126, L"Default", L"", L"" },
+                        //{ SCE_MATLAB_DEFAULT, L"Default", L"", L"" },
+                        { SCE_MATLAB_COMMENT, 63127, L"Comment", L"fore:#008000", L"" },
+                        { SCE_MATLAB_COMMAND, 63236, L"Command", L"bold", L"" },
+                        { SCE_MATLAB_NUMBER, 63130, L"Number", L"fore:#FF8000", L"" },
+                        { SCE_MATLAB_KEYWORD, 63128, L"Keyword", L"fore:#00007F; bold", L"" },
+                        { MULTI_STYLE(SCE_MATLAB_STRING,SCE_MATLAB_DOUBLEQUOTESTRING,0,0), 63131, L"String", L"fore:#7F007F", L"" },
+                        { SCE_MATLAB_OPERATOR, 63132, L"Operator", L"", L"" },
+                        { SCE_MATLAB_IDENTIFIER, 63129, L"Identifier", L"", L"" },
+                        { -1, 00000, L"", L"", L"" } } };
+
+
 // This array holds all the lexers...
 // Don't forget to change the number of the lexer for HTML and XML
 // in Notepad2.c ParseCommandLine() if you change this array!
@@ -2520,42 +2604,45 @@ PEDITLEXER pLexArray[NUMLEXERS] =
 {
   &lexDefault,
   &lexANSI,
-  &lexAVS,
-  &lexCONF, //Apache Config Scripts
-  &lexASM,
   &lexAHK,
+  &lexASM,
   &lexAU3,
+  &lexAVS,
+  &lexBASH,
   &lexBAT,
   &lexCOFFEESCRIPT,
-  &lexINI,
+  &lexCONF, //Apache Config Scripts
   &lexCPP,
   &lexCS,
-  &lexCmake,
   &lexCSS,
+  &lexCmake,
   &lexDIFF,
+  &lexHTML,
   &lexINNO,
   &lexJAVA,
   &lexJS,
-  &lexMAK,
-  &lexMARKDOWN,
+  &lexJSON,
   &lexLATEX,
   &lexLUA,
+  &lexMAK,
+  &lexMARKDOWN,
+  &lexMATLAB,
   &lexNSIS,
   &lexPAS,
   &lexPL,
+  &lexPROPS,
   &lexPS,
   &lexPY,
   &lexRC,
   &lexRUBY,
-  &lexBASH,
+  &lexRegistry,
   &lexSQL,
   &lexTCL,
-  &lexVBS,
   &lexVB,
-  &lexHTML,
+  &lexVBS,
+  &lexVHDL,
   &lexXML,
-  &lexYAML,
-  &lexVHDL
+  &lexYAML
 };
 
 
@@ -2613,7 +2700,7 @@ void Style_Load()
     wsprintf(tch,L"%02i",i+1);
     if (IniSectionGetString(pIniSection,tch,L"",wch,COUNTOF(wch))) {
       if (wch[0] == L'#') {
-        itok = swscanf_s(CharNext(wch), L"%x", &irgb);
+        itok = swscanf_s(CharNext(wch),L"%x",&irgb);
         if (itok == 1)
           crCustom[i] = RGB((irgb&0xFF0000) >> 16,(irgb&0xFF00) >> 8,irgb&0xFF);
       }
@@ -2857,6 +2944,14 @@ void Style_SetLexer(HWND hwnd,PEDITLEXER pLexNew)
   }
   else if (pLexNew->iLexer == SCLEX_NSIS)
     SciCall_SetProperty("nsis.ignorecase", "1");
+  else if (pLexNew->iLexer == SCLEX_CSS) {
+    SciCall_SetProperty("lexer.css.scss.language", "1");
+    SciCall_SetProperty("lexer.css.less.language", "1");
+  }
+  else if (pLexNew->iLexer == SCLEX_JSON) {
+    SciCall_SetProperty("json.allow.comments", "1");
+    SciCall_SetProperty("json.escape.sequence", "1");
+  }
 
   // Code folding
   SciCall_SetProperty("fold", "1");
@@ -3698,7 +3793,7 @@ BOOL Style_StrGetCharSet(LPCWSTR lpszStyle,int *i)
     if (p = StrChr(tch,L';'))
       *p = L'\0';
     TrimString(tch);
-    itok = swscanf_s(tch, L"%i", &iValue);
+    itok = swscanf_s(tch,L"%i",&iValue);
     if (itok == 1)
     {
       *i = iValue;
@@ -3737,7 +3832,7 @@ BOOL Style_StrGetSize(LPCWSTR lpszStyle,int *i)
     if (p = StrChr(tch,L';'))
       *p = L'\0';
     TrimString(tch);
-    itok = swscanf_s(tch, L"%i", &iValue);
+    itok = swscanf_s(tch,L"%i",&iValue);
     if (itok == 1)
     {
       if (iSign == 0)
@@ -3793,7 +3888,7 @@ BOOL Style_StrGetColor(BOOL bFore,LPCWSTR lpszStyle,int *rgb)
     if (p = StrChr(tch,L';'))
       *p = L'\0';
     TrimString(tch);
-    itok = swscanf_s(tch, L"%x", &iValue);
+    itok = swscanf_s(tch,L"%x",&iValue);
     if (itok == 1)
     {
       *rgb = RGB((iValue&0xFF0000) >> 16,(iValue&0xFF00) >> 8,iValue&0xFF);
@@ -3849,7 +3944,7 @@ BOOL Style_StrGetAlpha(LPCWSTR lpszStyle,int *i)
     if (p = StrChr(tch,L';'))
       *p = L'\0';
     TrimString(tch);
-    itok = swscanf_s(tch, L"%i", &iValue);
+    itok = swscanf_s(tch,L"%i",&iValue);
     if (itok == 1)
     {
       *i = min(max(SC_ALPHA_TRANSPARENT,iValue),SC_ALPHA_OPAQUE);

@@ -265,7 +265,7 @@ void ContractionState::ShowAll() {
 
 // Debugging checks
 
-void ContractionState::Check() const {
+void ContractionState::Check() {
 #ifdef CHECK_CORRECTNESS
 	for (int vline = 0; vline < LinesDisplayed(); vline++) {
 		const int lineDoc = DocFromDisplay(vline);

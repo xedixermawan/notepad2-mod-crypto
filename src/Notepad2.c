@@ -176,6 +176,8 @@ BOOL      bTransparentModeAvailable;
 BOOL      bShowToolbar;
 BOOL      bShowStatusbar;
 
+const DWORD dwSCI_FIND_REGEXP = (SCFIND_REGEXP | SCFIND_CXX11REGEX);
+
 typedef struct _wi
 {
   int x;
@@ -611,7 +613,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInst,LPSTR lpCmdLine,int n
         (LPWSTR)&lpMsgBuf,
         0,
         NULL);
-    MessageBox(NULL,(LPCWSTR)lpMsgBuf,L"Notepad2-mod",MB_OK|MB_ICONEXCLAMATION);
+    MessageBox(NULL,(LPCWSTR)lpMsgBuf,L"Notepad2Crypt",MB_OK|MB_ICONEXCLAMATION);
     LocalFree(lpMsgBuf);
     return(0);
   }
@@ -834,7 +836,7 @@ HWND InitInstance(HINSTANCE hInstance,LPSTR pszCmdLine,int nCmdShow)
   hwndMain = CreateWindowEx(
                0,
                wchWndClass,
-               L"Notepad2",
+               L"Notepad2Crypt",
                WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
                wi.x,
                wi.y,
@@ -967,7 +969,7 @@ HWND InitInstance(HINSTANCE hInstance,LPSTR pszCmdLine,int nCmdShow)
       cpLastFind = cp;
 
       if (flagMatchText & 4)
-        efrData.fuFlags |= (SCFIND_REGEXP | SCFIND_CXX11REGEX) | SCFIND_POSIX;
+        efrData.fuFlags |= dwSCI_FIND_REGEXP | SCFIND_POSIX;
       else if (flagMatchText & 8)
         efrData.bTransformBS = TRUE;
 
@@ -2174,13 +2176,13 @@ void MsgInitMenu(HWND hwnd,WPARAM wParam,LPARAM lParam)
 
   i = (int)SendMessage(hwndEdit,SCI_GETLEXER,0,0);
   EnableCmd(hmenu,IDM_EDIT_LINECOMMENT,
-    !(i == SCLEX_NULL || i == SCLEX_CSS || i == SCLEX_DIFF));
+    !(i == SCLEX_NULL || i == SCLEX_CSS || i == SCLEX_DIFF || SCLEX_MARKDOWN));
   EnableCmd(hmenu,IDM_EDIT_STREAMCOMMENT,
     !(i == SCLEX_NULL || i == SCLEX_VBSCRIPT || i == SCLEX_MAKEFILE || i == SCLEX_VB || i == SCLEX_ASM ||
       i == SCLEX_SQL || i == SCLEX_PERL || i == SCLEX_PYTHON || i == SCLEX_PROPERTIES ||i == SCLEX_CONF ||
       i == SCLEX_POWERSHELL || i == SCLEX_BATCH || i == SCLEX_DIFF || i == SCLEX_BASH || i == SCLEX_TCL ||
       i == SCLEX_AU3 || i == SCLEX_LATEX || i == SCLEX_AHK || i == SCLEX_RUBY || i == SCLEX_CMAKE || i == SCLEX_MARKDOWN ||
-      i == SCLEX_YAML));
+      i == SCLEX_YAML || i == SCLEX_REGISTRY));
 
   EnableCmd(hmenu,IDM_EDIT_INSERT_ENCODING,*mEncoding[iEncoding].pszParseNames);
 
@@ -2373,7 +2375,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
       break;
 
 
-    case IDM_FILE_READONLY:
+  case IDM_FILE_READONLY:
       //bReadOnly = (bReadOnly) ? FALSE : TRUE;
       //SendMessage(hwndEdit,SCI_SETREADONLY,bReadOnly,0);
       //UpdateToolbar();
@@ -2409,12 +2411,16 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         WCHAR tchParam[MAX_PATH+4] = L"";
         WCHAR tchExeFile[MAX_PATH+4];
         WCHAR tchTemp[MAX_PATH+4];
-
+#ifdef _WIN64
+#define MINIPATH_EXE_NAME L"minipath_x64.exe"
+#else
+#define MINIPATH_EXE_NAME L"minipath_x86.exe"
+#endif
         if (!IniGetString(L"Settings2",L"filebrowser.exe",L"",tchTemp,COUNTOF(tchTemp))) {
-          if (!SearchPath(NULL,L"metapath.exe",NULL,COUNTOF(tchExeFile),tchExeFile,NULL)) {
+          if (!SearchPath(NULL,MINIPATH_EXE_NAME,NULL,COUNTOF(tchExeFile),tchExeFile,NULL)) {
             GetModuleFileName(NULL,tchExeFile,COUNTOF(tchExeFile));
             PathRemoveFileSpec(tchExeFile);
-            PathAppend(tchExeFile,L"metapath.exe");
+            PathAppend(tchExeFile,MINIPATH_EXE_NAME);
           }
         }
 
@@ -2477,7 +2483,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
 
         GetModuleFileName(NULL,szModuleName,COUNTOF(szModuleName));
 
-        wsprintf(tch,L"\"-appid=%s\"",g_wchAppUserModelID);
+    wsprintf(tch,L"\"-appid=%s\"",g_wchAppUserModelID);
         lstrcpy(szParameters,tch);
 
         wsprintf(tch,L" \"-sysmru=%i\"",(flagUseSystemMRU == 2) ? 1 : 0);
@@ -3384,12 +3390,35 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
       break;
 
 
+    case IDM_EDIT_INSERT_GUID:
+      {
+        UINT uCP;
+        GUID guid;
+        WCHAR wszGuid[40];
+        WCHAR *pwszGuid;
+        char mszGuid[40 * 4]; // UTF-8 max of 4 bytes per char
+
+        if (SUCCEEDED(CoCreateGuid(&guid))) {          
+          if (StringFromGUID2(&guid,wszGuid,COUNTOF(wszGuid))) {
+            pwszGuid = wszGuid + 1; // trim first brace char
+            wszGuid[wcslen(wszGuid) - 1] = L'\0'; // trim last brace char 
+            uCP = (SendMessage(hwndEdit,SCI_GETCODEPAGE,0,0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;            
+            if (WideCharToMultiByte(uCP,0,pwszGuid,-1,mszGuid,COUNTOF(mszGuid),NULL,NULL)) {
+              SendMessage(hwndEdit,SCI_REPLACESEL,0,(LPARAM)mszGuid);
+            }
+          }
+        }
+      }
+      break;
+
+
     case IDM_EDIT_LINECOMMENT:
       switch (SendMessage(hwndEdit,SCI_GETLEXER,0,0)) {
         case SCLEX_NULL:
         case SCLEX_CSS:
         case SCLEX_DIFF:
         case SCLEX_MARKDOWN:
+        case SCLEX_JSON:
           break;
         case SCLEX_HTML:
         case SCLEX_XML:
@@ -3431,6 +3460,11 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           EditToggleLineComments(hwndEdit,L";",TRUE);
           EndWaitCursor();
           break;
+        case SCLEX_REGISTRY:
+          BeginWaitCursor();
+          EditToggleLineComments(hwndEdit,L";;",TRUE);
+          EndWaitCursor();
+          break;
         case SCLEX_SQL:
         case SCLEX_LUA:
         case SCLEX_VHDL:
@@ -3444,6 +3478,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           EndWaitCursor();
           break;
         case SCLEX_LATEX:
+        case SCLEX_MATLAB:
           BeginWaitCursor();
           EditToggleLineComments(hwndEdit,L"%",TRUE);
           EndWaitCursor();
@@ -3476,6 +3511,8 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         case SCLEX_CMAKE:
         case SCLEX_MARKDOWN:
         case SCLEX_YAML:
+        case SCLEX_JSON:
+        case SCLEX_REGISTRY:
           break;
         case SCLEX_HTML:
         case SCLEX_XML:
@@ -3495,6 +3532,9 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           break;
         case SCLEX_COFFEESCRIPT:
           EditEncloseSelection(hwndEdit,L"###",L"###");
+          break;
+        case SCLEX_MATLAB:
+          EditEncloseSelection(hwndEdit,L"%{",L"%}");
       }
       break;
 
@@ -3605,7 +3645,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
 #ifdef BOOKMARK_EDITION
     // Main Bookmark Functions
     case IDM_EDIT_BOOKMARKNEXT:
-     case BME_EDIT_BOOKMARKNEXT:
+    case BME_EDIT_BOOKMARKNEXT:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
         int iLine = (int)SendMessage( hwndEdit , SCI_LINEFROMPOSITION , iPos , 0 );
@@ -4357,12 +4397,13 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         hwnd,AboutDlgProc);
       break;
 
-    case IDM_HELP_CMD:
-  DisplayCmdLineHelp();
-  break;
     case IDM_SETPASS:
       GetFileKey(hwndEdit);
       break;
+
+      case IDM_HELP_CMD:
+          DisplayCmdLineHelp();
+          break;
 
     case CMD_ESCAPE:
       //close the autocomplete box
@@ -4546,7 +4587,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         struct tm sst;
 
         UINT cp;
-        EDITFINDREPLACE efrTS = { "", "", "", "", (SCFIND_REGEXP | SCFIND_CXX11REGEX), 0, 0, 0, 0, 0, hwndEdit };
+        EDITFINDREPLACE efrTS = { "", "", "", "", dwSCI_FIND_REGEXP, 0, 0, 0, 0, 0, hwndEdit };
 
         IniGetString(L"Settings2",L"TimeStamp",L"\\$Date:[^\\$]+\\$ | $Date: %Y/%m/%d %H:%M:%S $",wchFind,COUNTOF(wchFind));
 
@@ -4706,7 +4747,7 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           else
             lstrcpyA(efrData.szFindUTF8,mszSelection);
 
-          efrData.fuFlags &= (~((SCFIND_REGEXP | SCFIND_CXX11REGEX) |SCFIND_POSIX));
+          efrData.fuFlags &= (~(dwSCI_FIND_REGEXP | SCFIND_POSIX));
           efrData.bTransformBS = FALSE;
 
           switch (LOWORD(wParam)) {
@@ -5621,7 +5662,7 @@ void LoadSettings()
 
   iDefaultEncoding = IniSectionGetInt(pIniSection,L"DefaultEncoding",0);
   iDefaultEncoding = Encoding_MapIniSetting(TRUE,iDefaultEncoding);
-  if (!Encoding_IsValid(iDefaultEncoding)) iDefaultEncoding = CPI_DEFAULT;
+  if (!Encoding_IsValid(iDefaultEncoding)) iDefaultEncoding = CPI_UTF8;
 
   bSkipUnicodeDetection = IniSectionGetInt(pIniSection,L"SkipUnicodeDetection",0);
   if (bSkipUnicodeDetection) bSkipUnicodeDetection = 1;
@@ -5747,7 +5788,7 @@ void LoadSettings()
   IniSectionGetString(pIniSection,L"DefaultDirectory",L"",
     tchDefaultDir,COUNTOF(tchDefaultDir));
 
-  ZeroMemory(tchFileDlgFilters,sizeof(WCHAR)*COUNTOF(tchFileDlgFilters));
+  ZeroMemory(tchFileDlgFilters, sizeof(WCHAR) * COUNTOF(tchFileDlgFilters));
   IniSectionGetString(pIniSection,L"FileDlgFilters",L"",
     tchFileDlgFilters,COUNTOF(tchFileDlgFilters)-2);
 
@@ -6033,7 +6074,7 @@ void ParseCommandLine()
         StrCpyN(g_wchAppUserModelID,lp1+CSTRLEN(L"appid="),COUNTOF(g_wchAppUserModelID));
         StrTrim(g_wchAppUserModelID,L" ");
         if (lstrlen(g_wchAppUserModelID) == 0)
-          lstrcpy(g_wchAppUserModelID,L"(default)");
+          lstrcpy(g_wchAppUserModelID,L"Notepad2Crypt");
       }
       else if (StrCmpNI(lp1,L"sysmru=",CSTRLEN(L"sysmru=")) == 0) {
         WCHAR wch[8];
@@ -6146,7 +6187,7 @@ void ParseCommandLine()
             }
             else if (ExtractFirstArgument(lp2,lp1,lp2)) {
               int itok =
-                swscanf_s(lp1, L"%i,%i,%i,%i,%i", &wi.x, &wi.y, &wi.cx,  &wi.cy, &wi.max);
+                swscanf_s(lp1,L"%i,%i,%i,%i,%i",&wi.x,&wi.y,&wi.cx,&wi.cy,&wi.max);
               if (itok == 4 || itok == 5) { // scan successful
                 flagPosParam = 1;
                 flagDefaultPos = 0;
@@ -6185,7 +6226,7 @@ void ParseCommandLine()
         case L'G':
           if (ExtractFirstArgument(lp2,lp1,lp2)) {
             int itok =
-              swscanf_s(lp1, L"%i,%i", &iInitialLine, &iInitialColumn);
+              swscanf_s(lp1,L"%i,%i",&iInitialLine,&iInitialColumn);
             if (itok == 1 || itok == 2) { // scan successful
               flagJumpTo = 1;
             }
@@ -6261,7 +6302,7 @@ void ParseCommandLine()
             LocalFree(lpSchemeArg);
             lpSchemeArg = NULL;
           }
-          iInitialLexer = 34;
+          iInitialLexer = 35;
           flagLexerSpecified = 1;
           break;
 
@@ -6270,7 +6311,7 @@ void ParseCommandLine()
             LocalFree(lpSchemeArg);
             lpSchemeArg = NULL;
           }
-          iInitialLexer = 35;
+          iInitialLexer = 36;
           flagLexerSpecified = 1;
           break;
 
@@ -6395,7 +6436,7 @@ void LoadFlags()
     fNoFileVariables = 1;
 
   if (lstrlen(g_wchAppUserModelID) == 0) {
-    IniSectionGetString(pIniSection,L"ShellAppUserModelID",L"(default)",
+    IniSectionGetString(pIniSection,L"ShellAppUserModelID",L"Notepad2Crypt",
       g_wchAppUserModelID,COUNTOF(g_wchAppUserModelID));
   }
 
@@ -6453,7 +6494,7 @@ int CheckIniFile(LPWSTR lpszFile,LPCWSTR lpszModule)
 int CheckIniFileRedirect(LPWSTR lpszFile,LPCWSTR lpszModule)
 {
   WCHAR tch[MAX_PATH];
-  if (GetPrivateProfileString(L"Notepad2",L"Notepad2.ini",L"",tch,COUNTOF(tch),lpszFile)) {
+  if (GetPrivateProfileString(L"Notepad2Crypt",L"Notepad2Crypt.ini",L"",tch,COUNTOF(tch),lpszFile)) {
     if (CheckIniFile(tch,lpszModule)) {
       lstrcpy(lpszFile,tch);
       return(1);
@@ -6504,7 +6545,7 @@ int FindIniFile() {
   bFound = CheckIniFile(tchTest,tchModule);
 
   if (!bFound) {
-    lstrcpy(tchTest,L"Notepad2.ini");
+    lstrcpy(tchTest,L"Notepad2Crypt.ini");
     bFound = CheckIniFile(tchTest,tchModule);
   }
 
@@ -6538,7 +6579,7 @@ int TestIniFile() {
     PathAppend(szIniFile,PathFindFileName(wchModule));
     PathRenameExtension(szIniFile,L".ini");
     if (!PathFileExists(szIniFile)) {
-      lstrcpy(PathFindFileName(szIniFile),L"Notepad2.ini");
+      lstrcpy(PathFindFileName(szIniFile),L"Notepad2Crypt.ini");
       if (!PathFileExists(szIniFile)) {
         lstrcpy(PathFindFileName(szIniFile),PathFindFileName(wchModule));
         PathRenameExtension(szIniFile,L".ini");
@@ -6582,7 +6623,7 @@ int CreateIniFileEx(LPCWSTR lpszIniFile) {
     if (hFile != INVALID_HANDLE_VALUE) {
       if (GetFileSize(hFile,NULL) == 0) {
         DWORD dw;
-        WriteFile(hFile,(LPCVOID)L"\xFEFF[Notepad2]\r\n",26,&dw,NULL);
+        WriteFile(hFile,(LPCVOID)L"\xFEFF[Notepad2Crypt]\r\n",32,&dw,NULL);
       }
       CloseHandle(hFile);
       return(1);
@@ -7704,7 +7745,7 @@ void ShowNotifyIcon(HWND hwnd,BOOL bAdd)
   nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
   nid.uCallbackMessage = WM_TRAYMESSAGE;
   nid.hIcon = hIcon;
-  lstrcpy(nid.szTip,L"Notepad2");
+  lstrcpy(nid.szTip,L"Notepad2Crypt");
 
   if(bAdd)
     Shell_NotifyIcon(NIM_ADD,&nid);

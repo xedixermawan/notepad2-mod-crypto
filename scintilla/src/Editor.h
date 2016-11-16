@@ -176,6 +176,7 @@ protected:	// ScintillaBase subclass needs access to much of Editor
 
 	bool hasFocus;
 	bool mouseDownCaptures;
+	bool mouseWheelCaptures;
 
 	int xCaretMargin;	///< Ensure this many pixels visible on both sides of caret
 	bool horizontalScrollBarVisible;
@@ -360,7 +361,7 @@ protected:	// ScintillaBase subclass needs access to much of Editor
 	XYScrollPosition XYScrollToMakeVisible(const SelectionRange &range, const XYScrollOptions options);
 	void SetXYScroll(XYScrollPosition newXY);
 	void EnsureCaretVisible(bool useMargin=true, bool vert=true, bool horiz=true);
-	void ScrollRange(SelectionRange range);
+	void ScrollRange(const SelectionRange& range);
 	void ShowCaretAtCurrentPosition();
 	void DropCaret();
 	void CaretSetPeriod(int period);
@@ -570,6 +571,7 @@ protected:	// ScintillaBase subclass needs access to much of Editor
 	void AddStyledText(char *buffer, int appendLength);
 
 	virtual sptr_t DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) = 0;
+	bool ValidMargin(uptr_t wParam);
 	void StyleSetMessage(unsigned int iMessage, uptr_t wParam, sptr_t lParam);
 	sptr_t StyleGetMessage(unsigned int iMessage, uptr_t wParam, sptr_t lParam);
 

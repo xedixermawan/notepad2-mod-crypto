@@ -14,14 +14,17 @@
     "lmCoffeeScript",
     "lmConf",
     "lmCPP",
+    "lmCPPNoCase",
     "lmCss",
     "lmDiff",
     "lmHTML",
     "lmInno",
+    "lmJSON",
     "lmLatex",
     "lmLua",
     "lmMake",
     "lmMarkdown",
+    "lmMatlab",
     "lmNsis",
     "lmNull",
     "lmPascal",
@@ -29,14 +32,15 @@
     "lmPowerShell",
     "lmProps",
     "lmPython",
+    "lmRegistry",
     "lmRuby",
     "lmSQL",
     "lmTCL",
     "lmVB",
     "lmVBScript",
+    "lmVHDL",
     "lmXML",
-    "lmYAML",
-    "lmVHDL"
+    "lmYAML"
   );
 
   var fso = new ActiveXObject("Scripting.FileSystemObject");

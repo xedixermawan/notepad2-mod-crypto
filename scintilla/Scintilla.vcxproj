@@ -23,6 +23,7 @@
     <ProjectGuid>{5877B917-512B-49F5-B514-1B4159E7A9CA}</ProjectGuid>
     <ProjectName>Scintilla</ProjectName>
     <RootNamespace>Scintilla</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,38 +78,38 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\VS2012\$(Configuration)_x86\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\$(PlatformToolset)\$(Configuration)_x86\obj\scintilla\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\bin\VS2012\$(Configuration)_x64\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\bin\$(PlatformToolset)\$(Configuration)_x64\obj\scintilla\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\VS2012\$(Configuration)_x86\obj\scintilla\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\$(PlatformToolset)\$(Configuration)_x86\obj\scintilla\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\bin\VS2012\$(Configuration)_x64\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\bin\$(PlatformToolset)\$(Configuration)_x64\obj\scintilla\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x64\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x64\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x64\obj\scintilla\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\VS2012\$(Configuration)_x86\obj\scintilla\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\$(PlatformToolset)\$(Configuration)_x86\obj\scintilla\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x86\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\bin\VS2012\$(Configuration)_x64\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\bin\$(PlatformToolset)\$(Configuration)_x64\obj\scintilla\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x64\obj\scintilla\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\VS2012\$(Configuration)_x86\obj\scintilla\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\$(PlatformToolset)\$(Configuration)_x86\obj\scintilla\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x86\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\bin\VS2012\$(Configuration)_x64\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\bin\$(PlatformToolset)\$(Configuration)_x64\obj\scintilla\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='10.0'">..\bin\VS2010\$(Configuration)_x64\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\VS2013\$(Configuration)_x64\obj\scintilla\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\VS2015\$(Configuration)_x64\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\scintilla\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64' And '$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
@@ -120,9 +121,10 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;SCI_OWNREGEX;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,9 +135,10 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_WIN64;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_WIN64;SCI_OWNREGEX;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
     </ClCompile>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
@@ -147,11 +150,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet Condition="'$(VisualStudioVersion)'&gt;'10.0'">NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;WIN32;SCI_OWNREGEX;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -159,17 +165,22 @@
       <AdditionalIncludeDirectories>include;lexlib;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>_WIN64;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_WIN64;SCI_OWNREGEX;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES;STATIC_BUILD;SCI_LEXER;USE_D2D;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="deelx\DeelxRegexSearch.cxx" />
     <ClCompile Include="lexers\LexAHK.cxx" />
     <ClCompile Include="lexers\LexAsm.cxx" />
     <ClCompile Include="lexers\LexAU3.cxx" />
@@ -185,10 +196,12 @@
     <ClCompile Include="lexers\LexErrorList.cxx" />
     <ClCompile Include="lexers\LexHTML.cxx" />
     <ClCompile Include="lexers\LexInno.cxx" />
+    <ClCompile Include="lexers\LexJSON.cxx" />
     <ClCompile Include="lexers\LexLaTeX.cxx" />
     <ClCompile Include="lexers\LexLua.cxx" />
     <ClCompile Include="lexers\LexMake.cxx" />
     <ClCompile Include="lexers\LexMarkdown.cxx" />
+    <ClCompile Include="lexers\LexMatlab.cxx" />
     <ClCompile Include="lexers\LexNsis.cxx" />
     <ClCompile Include="lexers\LexNull.cxx" />
     <ClCompile Include="lexers\LexPascal.cxx" />
@@ -196,6 +209,7 @@
     <ClCompile Include="lexers\LexPowerShell.cxx" />
     <ClCompile Include="lexers\LexProps.cxx" />
     <ClCompile Include="lexers\LexPython.cxx" />
+    <ClCompile Include="lexers\LexRegistry.cxx" />
     <ClCompile Include="lexers\LexRuby.cxx" />
     <ClCompile Include="lexers\LexSQL.cxx" />
     <ClCompile Include="lexers\LexTCL.cxx" />
@@ -245,6 +259,7 @@
     <ClCompile Include="win32\ScintillaWin.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deelx\deelx64.h" />
     <ClInclude Include="include\ILexer.h" />
     <ClInclude Include="include\Platform.h" />
     <ClInclude Include="include\SciLexer.h" />

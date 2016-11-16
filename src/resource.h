@@ -34,7 +34,6 @@
 #define IDC_RESIZEGRIP4                 101
 #define IDC_NOUNICODEDETECTION          101
 #define IDC_COPYRIGHT                   101
-#define IDC_MOD_PAGE                    112
 #define IDC_STYLEEDIT                   102
 #define IDC_FINDCASE                    102
 #define IDC_OPENWITHDESCR               102
@@ -56,12 +55,17 @@
 #define IDC_AUTOSTRIPBLANKS             103
 #define IDC_ENCODINGFROMFILEVARS        103
 #define IDC_WEBPAGE2                    103
+#define IDC_MODWEBPAGE                  105
+#define IDC_MODWEBPAGE2					104
+#define IDC_NOTE2WEBPAGE				106
+#define IDC_NOTE2WEBPAGE2				107
 #define IDD_ENCODING                    104
 #define IDC_MOD_PAGE2                   104
 #define IDC_FINDSTART                   104
 #define IDB_PICK                        104
 #define IDC_STYLEBACK                   104
 #define IDC_AUTHORNAME                  104
+#define IDC_WEBPAGE4                    104
 #define IDD_RECODE                      105
 #define IDC_FINDREGEXP                  105
 #define IDC_STYLEFONT                   105
@@ -77,6 +81,7 @@
 #define IDD_ADDTOFAV                    108
 #define IDC_PREVSTYLE                   108
 #define IDC_FINDCLOSE                   108
+#define IDC_EMAIL3                      108
 #define IDD_FILEMRU                     109
 #define IDC_FINDPREV                    109
 #define IDC_NEXTSTYLE                   109
@@ -84,9 +89,11 @@
 #define IDC_IMPORT                      110
 #define IDD_MODIFYLINES                 111
 #define IDC_EXPORT                      111
+#define IDC_MOD_PAGE                    112
 #define IDC_REPLACE                     112
 #define IDC_TITLE                       112
 #define IDD_ALIGN                       112
+#define IDC_WEBPAGE3                    112
 #define IDD_ENCLOSESELECTION            113
 #define IDC_REPLACEALL                  113
 #define IDC_STYLELABELS                 113
@@ -437,14 +444,15 @@
 #define IDS_SETTINGSNOTSAVED            50039
 #define IDS_EXPORT_FAIL                 50040
 #define IDS_CMDLINEHELP                 60000
+#define IDM_EDIT_INSERT_GUID            60001
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        0
-#define _APS_NEXT_COMMAND_VALUE         0
+#define _APS_NEXT_COMMAND_VALUE         5
 #define _APS_NEXT_CONTROL_VALUE         0
 #define _APS_NEXT_SYMED_VALUE           0
 #endif

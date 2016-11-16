@@ -17,6 +17,7 @@
 *
 *
 ******************************************************************************/
+
 #if !defined(_WIN32_WINNT)
 #define _WIN32_WINNT 0x501
 #endif
@@ -249,8 +250,7 @@ int DirList_Fill(HWND hwnd,LPCWSTR lpszDir,DWORD grfFlags,LPCWSTR lpszFileSpec,
     return(-1);
 
   //lstrcpy(lpdl->szPath,lpszDir);
-  if (lpszDir)
-    StringCchCopy(lpdl->szPath,MAX_PATH,lpszDir);
+  StringCchCopy(lpdl->szPath,MAX_PATH,lpszDir);
 
   // Init ListView
   SendMessage(hwnd,WM_SETREDRAW,0,0);
@@ -275,8 +275,7 @@ int DirList_Fill(HWND hwnd,LPCWSTR lpszDir,DWORD grfFlags,LPCWSTR lpszFileSpec,
                       wszDir,
                       MAX_PATH);*/
   //lstrcpy(wszDir,lpszDir);
-  if (lpszDir)
-    StringCchCopy(wszDir, ARRAYSIZE(wszDir), lpszDir);
+  StringCchCopy(wszDir, ARRAYSIZE(wszDir), lpszDir);
 
 
   // Get Desktop Folder
@@ -929,10 +928,10 @@ BOOL DirList_SelectItem(HWND hwnd,LPCWSTR lpszDisplayName,LPCWSTR lpszFullPath)
 
   if (!lpszDisplayName || !lstrlen(lpszDisplayName))
     SHGetFileInfo(lpszFullPath,0,&shfi,sizeof(SHFILEINFO),SHGFI_DISPLAYNAME);
-  else
-    StringCchCopy(shfi.szDisplayName, MAX_PATH, lpszDisplayName);
+  else {
     //lstrcpyn(shfi.szDisplayName,lpszDisplayName,MAX_PATH);
-
+    StringCchCopy(shfi.szDisplayName, MAX_PATH, lpszDisplayName);
+  }
   lvfi.flags = LVFI_STRING;
   lvfi.psz   = shfi.szDisplayName;
 
@@ -966,7 +965,7 @@ BOOL DirList_SelectItem(HWND hwnd,LPCWSTR lpszDisplayName,LPCWSTR lpszFullPath)
 //
 //  Create a valid DL_FILTER structure
 //
-void DirList_CreateFilter(PDL_FILTER pdlf,LPCWSTR lpszFileSpec,
+void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
                           BOOL bExcludeFilter)
 {
 
@@ -1195,10 +1194,10 @@ int DriveBox_Fill(HWND hwnd)
                   {
                     LPDC_ITEMDATA lpdcid2 = (LPDC_ITEMDATA)cbei2.lParam;
                     HRESULT hr = (lpdcid->lpsf->lpVtbl->CompareIDs(
-                                lpdcid->lpsf,
-                                0,
-                                lpdcid->pidl,
-                                lpdcid2->pidl));
+                                    lpdcid->lpsf,
+                                    0,
+                                    lpdcid->pidl,
+                                    lpdcid2->pidl));
 
                     if ((short)(SCODE_CODE(GetScode(hr))) < 0)
                       break;
