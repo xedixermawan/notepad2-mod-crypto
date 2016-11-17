@@ -3413,12 +3413,6 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
 
     case IDM_EDIT_LINECOMMENT:
       switch (SendMessage(hwndEdit,SCI_GETLEXER,0,0)) {
-        case SCLEX_NULL:
-        case SCLEX_CSS:
-        case SCLEX_DIFF:
-        case SCLEX_MARKDOWN:
-        case SCLEX_JSON:
-          break;
         case SCLEX_HTML:
         case SCLEX_XML:
         case SCLEX_CPP:
@@ -3482,12 +3476,41 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
           EditToggleLineComments(hwndEdit,L"%",TRUE);
           EndWaitCursor();
           break;
+        case SCLEX_NULL:
+        case SCLEX_CSS:
+        case SCLEX_DIFF:
+        case SCLEX_MARKDOWN:
+        case SCLEX_JSON:
+        default:
+            break;
       }
       break;
 
 
     case IDM_EDIT_STREAMCOMMENT:
       switch (SendMessage(hwndEdit,SCI_GETLEXER,0,0)) {
+        case SCLEX_HTML:
+        case SCLEX_XML:
+        case SCLEX_CSS:
+        case SCLEX_CPP:
+        case SCLEX_NSIS:
+        case SCLEX_AVS:
+        case SCLEX_VHDL:
+          EditEncloseSelection(hwndEdit,L"/*",L"*/");
+          break;
+        case SCLEX_PASCAL:
+        case SCLEX_INNOSETUP:
+          EditEncloseSelection(hwndEdit,L"{",L"}");
+          break;
+        case SCLEX_LUA:
+          EditEncloseSelection(hwndEdit,L"--[[",L"]]");
+          break;
+        case SCLEX_COFFEESCRIPT:
+          EditEncloseSelection(hwndEdit,L"###",L"###");
+          break;
+        case SCLEX_MATLAB:
+          EditEncloseSelection(hwndEdit,L"%{",L"%}");
+          break;
         case SCLEX_NULL:
         case SCLEX_VBSCRIPT:
         case SCLEX_MAKEFILE:
@@ -3512,28 +3535,8 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         case SCLEX_YAML:
         case SCLEX_JSON:
         case SCLEX_REGISTRY:
-          break;
-        case SCLEX_HTML:
-        case SCLEX_XML:
-        case SCLEX_CSS:
-        case SCLEX_CPP:
-        case SCLEX_NSIS:
-        case SCLEX_AVS:
-        case SCLEX_VHDL:
-          EditEncloseSelection(hwndEdit,L"/*",L"*/");
-          break;
-        case SCLEX_PASCAL:
-        case SCLEX_INNOSETUP:
-          EditEncloseSelection(hwndEdit,L"{",L"}");
-          break;
-        case SCLEX_LUA:
-          EditEncloseSelection(hwndEdit,L"--[[",L"]]");
-          break;
-        case SCLEX_COFFEESCRIPT:
-          EditEncloseSelection(hwndEdit,L"###",L"###");
-          break;
-        case SCLEX_MATLAB:
-          EditEncloseSelection(hwndEdit,L"%{",L"%}");
+        default:
+            break;
       }
       break;
 
@@ -3643,7 +3646,6 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
 
 #ifdef BOOKMARK_EDITION
     // Main Bookmark Functions
-    case IDM_EDIT_BOOKMARKNEXT:
     case BME_EDIT_BOOKMARKNEXT:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3667,7 +3669,6 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    case IDM_EDIT_BOOKMARKPREV:
     case BME_EDIT_BOOKMARKPREV:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3693,7 +3694,6 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    case IDM_EDIT_BOOKMARKTOGGLE:
     case BME_EDIT_BOOKMARKTOGGLE:
     {
         int iPos = (int)SendMessage( hwndEdit , SCI_GETCURRENTPOS , 0 , 0);
@@ -3734,7 +3734,6 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         break;
     }
 
-    case IDM_EDIT_BOOKMARKCLEAR:
     case BME_EDIT_BOOKMARKCLEAR:
     {
         SendMessage( hwndEdit , SCI_MARKERDELETEALL , -1 , 0 );
