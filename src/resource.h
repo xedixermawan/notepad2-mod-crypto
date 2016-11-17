@@ -55,10 +55,12 @@
 #define IDC_AUTOSTRIPBLANKS             103
 #define IDC_ENCODINGFROMFILEVARS        103
 #define IDC_WEBPAGE2                    103
-#define IDC_MODWEBPAGE                  105
-#define IDC_MODWEBPAGE2					104
-#define IDC_NOTE2WEBPAGE				106
-#define IDC_NOTE2WEBPAGE2				107
+#define IDC_SCIWEBPAGE                  104
+#define IDC_SCIWEBPAGE2					105
+#define IDC_MODWEBPAGE                  106
+#define IDC_MODWEBPAGE2					107
+#define IDC_DEELXWEBPAGE				108
+#define IDC_DEELXWEBPAGE2				109
 #define IDD_ENCODING                    104
 #define IDC_MOD_PAGE2                   104
 #define IDC_FINDSTART                   104

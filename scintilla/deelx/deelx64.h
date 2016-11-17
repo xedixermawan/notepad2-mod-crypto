@@ -43,8 +43,8 @@ extern "C" {
 template <class ELT> class CBufferRefT
 {
 public:
-    CBufferRefT(const ELT * pcsz, index_t length);
-    CBufferRefT(const ELT * pcsz);
+    explicit CBufferRefT(const ELT * pcsz, index_t length);
+    explicit CBufferRefT(const ELT * pcsz);
 
 public:
     int nCompare(const ELT * pcsz) const;
@@ -158,8 +158,8 @@ template <class ELT> CBufferRefT <ELT> :: ~CBufferRefT()
 template <class ELT> class CBufferT : public CBufferRefT <ELT>
 {
 public:
-    CBufferT(const ELT * pcsz, index_t length);
-    CBufferT(const ELT * pcsz);
+    explicit CBufferT(const ELT * pcsz, index_t length);
+    explicit CBufferT(const ELT * pcsz);
     CBufferT();
 
 public:
@@ -470,8 +470,8 @@ template <class ELT> CBufferT <ELT> :: ~CBufferT()
 template <class T> class CSortedBufferT : public CBufferT <T>
 {
 public:
-    CSortedBufferT(int reverse = 0);
-    CSortedBufferT(int(*)(const void *, const void *));
+    explicit CSortedBufferT(int reverse = 0);
+    explicit CSortedBufferT(int(*)(const void *, const void *));
 
 public:
     void Add(const T & rT);
@@ -616,7 +616,7 @@ public:
 class CContextShot
 {
 public:
-    CContextShot(CContext * pContext)
+    explicit CContextShot(CContext * pContext)
     {
         m_nCurrentPos = pContext->m_nCurrentPos;
         nsize = pContext->m_stack.GetSize();
@@ -1098,7 +1098,7 @@ public:
     int MatchNext(CContext * pContext) const;
 
 public:
-    CDelegateElxT(int ndata = 0);
+    explicit CDelegateElxT(int ndata = 0);
 
 public:
     ElxInterface * m_pelx;
@@ -1244,7 +1244,7 @@ public:
     int MatchNext(CContext * pContext) const;
 
 public:
-    CIndependentElxT(ElxInterface * pelx);
+    explicit CIndependentElxT(ElxInterface * pelx);
 
 public:
     ElxInterface * m_pelx;
@@ -1262,7 +1262,7 @@ public:
     int MatchNext(CContext * pContext) const;
 
 public:
-    CListElxT(int brightleft);
+    explicit CListElxT(int brightleft);
 
 public:
     CBufferT <ElxInterface *> m_elxlist;
@@ -1822,8 +1822,8 @@ protected:
 
     public:
         CHART_INFO(CHART c, int t, int p = 0, int l = 0) { ch = c; type = t; pos = p; len = l; }
-        inline int operator == (const CHART_INFO & ci) { return ch == ci.ch && type == ci.type; }
-        inline int operator != (const CHART_INFO & ci) { return !operator == (ci); }
+        inline int operator == (const CHART_INFO & ci) const { return ch == ci.ch && type == ci.type; }
+        inline int operator != (const CHART_INFO & ci) const { return !operator == (ci); }
     };
 
 protected:
@@ -2937,28 +2937,28 @@ template <class CHART> ElxInterface * CBuilderT <CHART> ::BuildCharset(int & fla
     {
     case RCHART('.'):
         return GetStockElx(
-            flags & RIGHTTOLEFT ?
+            (flags & RIGHTTOLEFT) ?
             ((flags & SINGLELINE) ? STOCKELX_DOT_ALL_RIGHTLEFT : STOCKELX_DOT_NOT_ALL_RIGHTLEFT) :
             ((flags & SINGLELINE) ? STOCKELX_DOT_ALL : STOCKELX_DOT_NOT_ALL)
             );
 
     case RCHART('w'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_WORD_RIGHTLEFT : STOCKELX_WORD);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_WORD_RIGHTLEFT : STOCKELX_WORD);
 
     case RCHART('W'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_WORD_RIGHTLEFT_NOT : STOCKELX_WORD_NOT);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_WORD_RIGHTLEFT_NOT : STOCKELX_WORD_NOT);
 
     case RCHART('s'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_SPACE_RIGHTLEFT : STOCKELX_SPACE);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_SPACE_RIGHTLEFT : STOCKELX_SPACE);
 
     case RCHART('S'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_SPACE_RIGHTLEFT_NOT : STOCKELX_SPACE_NOT);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_SPACE_RIGHTLEFT_NOT : STOCKELX_SPACE_NOT);
 
     case RCHART('d'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_DIGITAL_RIGHTLEFT : STOCKELX_DIGITAL);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_DIGITAL_RIGHTLEFT : STOCKELX_DIGITAL);
 
     case RCHART('D'):
-        return GetStockElx(flags & RIGHTTOLEFT ? STOCKELX_DIGITAL_RIGHTLEFT_NOT : STOCKELX_DIGITAL_NOT);
+        return GetStockElx((flags & RIGHTTOLEFT) ? STOCKELX_DIGITAL_RIGHTLEFT_NOT : STOCKELX_DIGITAL_NOT);
 
     case RCHART('['):
         {
@@ -3144,8 +3144,8 @@ template <class CHART> ElxInterface * CBuilderT <CHART> ::BuildRecursive(int & f
             MoveNext(); // skip '<' or '\''
             {
                 CListElx    * pList = (CListElx    *)Keep(new CListElx(flags & RIGHTTOLEFT));
-                CBracketElx * pleft = (CBracketElx *)Keep(new CBracketElx(-1, flags & RIGHTTOLEFT ? 1 : 0));
-                CBracketElx * pright = (CBracketElx *)Keep(new CBracketElx(-1, flags & RIGHTTOLEFT ? 0 : 1));
+                CBracketElx * pleft = (CBracketElx *)Keep(new CBracketElx(-1, (flags & RIGHTTOLEFT) ? 1 : 0));
+                CBracketElx * pright = (CBracketElx *)Keep(new CBracketElx(-1, (flags & RIGHTTOLEFT) ? 0 : 1));
 
                 // save name
                 CBufferT <CHART> & name = pleft->m_szNamed, &balancing_name = pleft->m_szBalancing, *pname = &name;
@@ -3443,9 +3443,9 @@ template <class CHART> ElxInterface * CBuilderT <CHART> ::BuildRecursive(int & f
         index_t nThisBackref = ++m_nMaxNumber;
 
         // left, center, right
-        pList->m_elxlist.Push(Keep(new CBracketElx(nThisBackref, flags & RIGHTTOLEFT ? 1 : 0)));
+        pList->m_elxlist.Push(Keep(new CBracketElx(nThisBackref, (flags & RIGHTTOLEFT) ? 1 : 0)));
         pList->m_elxlist.Push(BuildAlternative(flags));
-        pList->m_elxlist.Push(Keep(new CBracketElx(nThisBackref, flags & RIGHTTOLEFT ? 0 : 1)));
+        pList->m_elxlist.Push(Keep(new CBracketElx(nThisBackref, (flags & RIGHTTOLEFT) ? 0 : 1)));
 
         // for recursive
         m_grouplist.Prepare(nThisBackref);

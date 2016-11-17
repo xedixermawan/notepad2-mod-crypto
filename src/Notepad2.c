@@ -2412,15 +2412,15 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
         WCHAR tchExeFile[MAX_PATH+4];
         WCHAR tchTemp[MAX_PATH+4];
 #ifdef _WIN64
-#define MINIPATH_EXE_NAME L"minipath_x64.exe"
+#define METAPATH_EXE_NAME L"metapathx64.exe"
 #else
-#define MINIPATH_EXE_NAME L"minipath_x86.exe"
+#define METAPATH_EXE_NAME L"metapath.exe"
 #endif
         if (!IniGetString(L"Settings2",L"filebrowser.exe",L"",tchTemp,COUNTOF(tchTemp))) {
-          if (!SearchPath(NULL,MINIPATH_EXE_NAME,NULL,COUNTOF(tchExeFile),tchExeFile,NULL)) {
+          if (!SearchPath(NULL, METAPATH_EXE_NAME, NULL, COUNTOF(tchExeFile), tchExeFile, NULL)) {
             GetModuleFileName(NULL,tchExeFile,COUNTOF(tchExeFile));
             PathRemoveFileSpec(tchExeFile);
-            PathAppend(tchExeFile,MINIPATH_EXE_NAME);
+            PathAppend(tchExeFile, METAPATH_EXE_NAME);
           }
         }
 
@@ -2882,10 +2882,9 @@ LRESULT MsgCommand(HWND hwnd,WPARAM wParam,LPARAM lParam)
     case IDM_EDIT_SWAP:
       if (SendMessage(hwndEdit,SCI_GETSELECTIONEND,0,0) -
           SendMessage(hwndEdit,SCI_GETSELECTIONSTART,0,0) == 0) {
-        int iNewPos = -1;
         int iPos = (int)SendMessage(hwndEdit,SCI_GETCURRENTPOS,0,0);
         SendMessage(hwndEdit,SCI_PASTE,0,0);
-        iNewPos = (int)SendMessage(hwndEdit,SCI_GETCURRENTPOS,0,0);
+        int iNewPos = (int)SendMessage(hwndEdit,SCI_GETCURRENTPOS,0,0);
         SendMessage(hwndEdit,SCI_SETSEL,iPos,iNewPos);
         SendMessage(hwnd,WM_COMMAND,MAKELONG(IDM_EDIT_CLEARCLIPBOARD,1),0);
       }
@@ -5856,7 +5855,6 @@ void LoadSettings()
 void SaveSettings(BOOL bSaveSettingsNow)
 {
   WCHAR *pIniSection = NULL;
-  int   cchIniSection = 0;
 
   WCHAR wchTmp[MAX_PATH];
 
@@ -5871,7 +5869,7 @@ void SaveSettings(BOOL bSaveSettingsNow)
   }
 
   pIniSection = LocalAlloc(LPTR,sizeof(WCHAR)*32*1024);
-  cchIniSection = (int)LocalSize(pIniSection)/sizeof(WCHAR);
+  //int cchIniSection = (int)LocalSize(pIniSection)/sizeof(WCHAR);
 
   IniSectionSetInt(pIniSection,L"SaveSettings",bSaveSettings);
   IniSectionSetInt(pIniSection,L"SaveRecentFiles",bSaveRecentFiles);

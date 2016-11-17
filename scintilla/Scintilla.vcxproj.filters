@@ -413,9 +413,11 @@
     <ClInclude Include="win32\PlatWin.h">
       <Filter>win32</Filter>
     </ClInclude>
-    <ClInclude Include="include\Sci_Position.h" />
     <ClInclude Include="deelx\deelx64.h">
       <Filter>deelx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sci_Position.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

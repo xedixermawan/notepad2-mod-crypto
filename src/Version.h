@@ -33,14 +33,15 @@
 #define VERSION_FILEVERSION_NUM      VERSION_MAJOR,VERSION_MINOR,VERSION_REV,VERSION_BUILD
 #define VERSION_FILEVERSION          STRINGIFY(VERSION_MAJOR) L"." STRINGIFY(VERSION_MINOR) L"." \
                                      STRINGIFY(VERSION_REV) L"." STRINGIFY(VERSION_BUILD)
-#define VERSION_LEGALCOPYRIGHT       L"Copyright © 2008-2016 Florian Balmer"
+#define VERSION_LEGALCOPYRIGHT       L"Copyright © 2008-2016 Florian Balmer (Notepad2)"
 //#define VERSION_LEGALCOPYRIGHT_LONG  L"© Florian Balmer 2008-2016"
 #define VERSION_AUTHORNAME           L"Florian Balmer"
 #define VERSION_WEBPAGEDISPLAY       L"flo's freeware - http://www.flos-freeware.ch"
 #define VERSION_EMAILDISPLAY         L"florian.balmer@gmail.com"
 #define VERSION_COMPANYNAME          L"Florian Balmer et al."
+#define VERSION_SCIPAGEDISPLAY       L"http://www.scintilla.org/"
 #define VERSION_MODPAGEDISPLAY       L"https://xhmikosr.github.io/notepad2-mod/"
-#define VERSION_WEBPAGE2DISPLAY      L"http://www.flos-freeware.ch"
+#define VERSION_WEBPAGE2DISPLAY      L"http://www.regexlab.com/deelx/"
 
 #if defined(_WIN64)
    #define VERSION_FILEVERSION_LONG  L"Notepad2Crypt (64-bit) " VERSION_FILEVERSION L"\n" SCINTILLA_BUILD

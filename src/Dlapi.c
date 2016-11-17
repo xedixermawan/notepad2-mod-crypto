@@ -63,13 +63,8 @@ static const WCHAR *pDirListProp = L"DirListData";
 //
 //  Initializes the DLDATA structure and sets up the listview control
 //
-BOOL DirList_Init(HWND hwnd,LPCWSTR pszHeader)
+BOOL DirList_Init(HWND hwnd, LPCWSTR pszHeader)
 {
-
-  HIMAGELIST hil;
-  SHFILEINFO shfi;
-  LV_COLUMN  lvc;
-
   // Allocate DirListData Property
   LPDLDATA lpdl = (LPVOID)GlobalAlloc(GPTR,sizeof(DLDATA));
   SetProp(hwnd,pDirListProp,(HANDLE)lpdl);
@@ -83,7 +78,8 @@ BOOL DirList_Init(HWND hwnd,LPCWSTR pszHeader)
   StringCchCopy(lpdl->szPath,MAX_PATH,L"");
 
   // Add Imagelists
-  hil = (HIMAGELIST)SHGetFileInfo(L"C:\\",0,&shfi,sizeof(SHFILEINFO),
+  SHFILEINFO shfi;
+  HIMAGELIST hil = (HIMAGELIST)SHGetFileInfo(L"C:\\",0,&shfi,sizeof(SHFILEINFO),
                     SHGFI_SMALLICON | SHGFI_SYSICONINDEX);
 
   ListView_SetImageList(hwnd,hil,LVSIL_SMALL);
@@ -109,11 +105,7 @@ BOOL DirList_Init(HWND hwnd,LPCWSTR pszHeader)
   lpdl->hExitThread = CreateEvent(NULL,TRUE,FALSE,NULL);
   lpdl->hTerminatedThread = CreateEvent(NULL,TRUE,TRUE,NULL);
 
-  lvc;
-  pszHeader;
-
   return TRUE;
-
 }
 
 

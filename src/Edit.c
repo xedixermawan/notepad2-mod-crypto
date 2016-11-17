@@ -1951,7 +1951,6 @@ void EditSentenceCase(HWND hwnd)
 //
 void EditURLEncode(HWND hwnd)
 {
-  int cchTextW;
   int iCurPos;
   int iAnchorPos;
   UINT cpEdit;
@@ -1987,7 +1986,7 @@ void EditURLEncode(HWND hwnd)
 
       SendMessage(hwnd,SCI_GETSELTEXT,0,(LPARAM)pszText);
       cpEdit = (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0);
-      cchTextW = MultiByteToWideChar(cpEdit,0,pszText,iSelCount,pszTextW,(int)LocalSize(pszTextW)/sizeof(WCHAR));
+      //int cchTextW = MultiByteToWideChar(cpEdit,0,pszText,iSelCount,pszTextW,(int)LocalSize(pszTextW)/sizeof(WCHAR));
 
       pszEscaped = LocalAlloc(LPTR,LocalSize(pszText) * 3);
       if (pszEscaped == NULL) {
@@ -2037,7 +2036,6 @@ void EditURLEncode(HWND hwnd)
 //
 void EditURLDecode(HWND hwnd)
 {
-  int cchTextW;
   int iCurPos;
   int iAnchorPos;
   UINT cpEdit;
@@ -2073,7 +2071,7 @@ void EditURLDecode(HWND hwnd)
 
       SendMessage(hwnd,SCI_GETSELTEXT,0,(LPARAM)pszText);
       cpEdit = (UINT)SendMessage(hwnd,SCI_GETCODEPAGE,0,0);
-      cchTextW = MultiByteToWideChar(cpEdit,0,pszText,iSelCount,pszTextW,(int)LocalSize(pszTextW)/sizeof(WCHAR));
+      //int cchTextW = MultiByteToWideChar(cpEdit,0,pszText,iSelCount,pszTextW,(int)LocalSize(pszTextW)/sizeof(WCHAR));
 
       pszUnescaped = LocalAlloc(LPTR,LocalSize(pszText) * 3);
       if (pszUnescaped == NULL) {
@@ -2442,7 +2440,7 @@ void EditTabsToSpaces(HWND hwnd,int nTabWidth,BOOL bOnlyIndentingWS)
   for (iTextW = 0; iTextW < cchTextW; iTextW++)
   {
     WCHAR w = pszTextW[iTextW];
-    if (w == L'\t' && (!bOnlyIndentingWS || bOnlyIndentingWS && bIsLineStart)) {
+    if (w == L'\t' && (!bOnlyIndentingWS || bIsLineStart)) {
       for (j = 0; j < nTabWidth - i % nTabWidth; j++)
         pszConvW[cchConvW++] = L' ';
       i = 0;
@@ -2578,7 +2576,7 @@ void EditSpacesToTabs(HWND hwnd,int nTabWidth,BOOL bOnlyIndentingWS)
   for (iTextW = 0; iTextW < cchTextW; iTextW++)
   {
     WCHAR w = pszTextW[iTextW];
-    if ((w == L' ' || w == L'\t') && (!bOnlyIndentingWS || bOnlyIndentingWS && bIsLineStart)) {
+    if ((w == L' ' || w == L'\t') && (!bOnlyIndentingWS || bIsLineStart)) {
       space[j++] = w;
       if (j == nTabWidth - i % nTabWidth || w == L'\t') {
         if (j > 1 || pszTextW[iTextW+1] == L' ' || pszTextW[iTextW+1] == L'\t')

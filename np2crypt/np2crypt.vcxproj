@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
     <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_$(PlatformTarget)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
@@ -93,7 +93,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
     <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_$(PlatformTarget)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</OutDir>
