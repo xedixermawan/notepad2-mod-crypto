@@ -19,9 +19,9 @@
 ******************************************************************************/
 
 
-int  ErrorMessage(int,UINT,...);
-BOOL GetDirectory(HWND,int,LPWSTR,LPCWSTR,BOOL);
-BOOL GetDirectory2(HWND,int,LPWSTR,int);
+int  ErrorMessage(int, UINT, ...);
+BOOL GetDirectory(HWND, int, LPWSTR, LPCWSTR, BOOL);
+BOOL GetDirectory2(HWND, int, LPWSTR, int);
 
 INT_PTR CALLBACK RunDlgProc(HWND, UINT, WPARAM, LPARAM);
 void RunDlg(HWND);
@@ -29,7 +29,7 @@ void RunDlg(HWND);
 INT_PTR CALLBACK GotoDlgProc(HWND, UINT, WPARAM, LPARAM);
 void GotoDlg(HWND);
 
-INT_PTR CALLBACK AboutDlgProc(HWND,UINT,WPARAM,LPARAM);
+INT_PTR CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR OptionsPropSheet(HWND, HINSTANCE);
 
 INT_PTR CALLBACK GetFilterDlgProc(HWND, UINT, WPARAM, LPARAM);
@@ -45,7 +45,7 @@ INT_PTR CALLBACK OpenWithDlgProc(HWND, UINT, WPARAM, LPARAM);
 BOOL OpenWithDlg(HWND, LPDLITEM);
 
 INT_PTR CALLBACK NewDirDlgProc(HWND, UINT, WPARAM, LPARAM);
-BOOL NewDirDlg(HWND,LPWSTR);
+BOOL NewDirDlg(HWND, LPWSTR);
 
 INT_PTR CALLBACK FindWinDlgProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK FindTargetDlgProc(HWND, UINT, WPARAM, LPARAM);

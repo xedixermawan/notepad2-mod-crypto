@@ -18,10 +18,9 @@
 *
 ******************************************************************************/
 
-
+#include <versionhelpers.h>
 
 extern HINSTANCE g_hInstance;
-extern UINT16 g_uWinVer;
 
 #define COUNTOF(ar) (sizeof(ar)/sizeof(ar[0]))
 
@@ -34,49 +33,54 @@ extern WCHAR szIniFile[MAX_PATH];
   WritePrivateProfileString(lpSection,lpName,lpString,szIniFile)
 #define IniDeleteSection(lpSection) \
   WritePrivateProfileSection(lpSection,NULL,szIniFile)
-__inline BOOL IniSetInt(LPCWSTR lpSection,LPCWSTR lpName,int i) {
-  WCHAR tch[32]; wsprintf(tch,L"%i",i); return WritePrivateProfileString(lpSection,lpName,tch,szIniFile);
+__inline BOOL IniSetInt(LPCWSTR lpSection, LPCWSTR lpName, int i)
+{
+    WCHAR tch[32]; wsprintf(tch, L"%i", i); return WritePrivateProfileString(lpSection, lpName, tch, szIniFile);
 }
 #define LoadIniSection(lpSection,lpBuf,cchBuf) \
   GetPrivateProfileSection(lpSection,lpBuf,cchBuf,szIniFile);
 #define SaveIniSection(lpSection,lpBuf) \
   WritePrivateProfileSection(lpSection,lpBuf,szIniFile)
-int IniSectionGetString(LPCWSTR,LPCWSTR,LPCWSTR,LPWSTR,int);
-int IniSectionGetInt(LPCWSTR,LPCWSTR,int);
-BOOL IniSectionSetString(LPWSTR,LPCWSTR,LPCWSTR);
-__inline BOOL IniSectionSetInt(LPWSTR lpCachedIniSection,LPCWSTR lpName,int i) {
-  WCHAR tch[32]; wsprintf(tch,L"%i",i); return IniSectionSetString(lpCachedIniSection,lpName,tch);
+int IniSectionGetString(LPCWSTR, LPCWSTR, LPCWSTR, LPWSTR, int);
+int IniSectionGetInt(LPCWSTR, LPCWSTR, int);
+BOOL IniSectionSetString(LPWSTR, LPCWSTR, LPCWSTR);
+__inline BOOL IniSectionSetInt(LPWSTR lpCachedIniSection, LPCWSTR lpName, int i)
+{
+    WCHAR tch[32]; wsprintf(tch, L"%i", i); return IniSectionSetString(lpCachedIniSection, lpName, tch);
 }
 
 void BeginWaitCursor();
 void EndWaitCursor();
 
-#define Is2k()    (g_uWinVer >= 0x0500)
-#define IsXP()    (g_uWinVer >= 0x0501)
-#define IsVista() (g_uWinVer >= 0x0600)
-#define IsW7()    (g_uWinVer >= 0x0601)
+#define Is2k     IsWindowsXPOrGreater
+#define IsXP     IsWindowsXPSP3OrGreater
+#define IsVista  IsWindowsVistaOrGreater
+#define IsW7     IsWindows7OrGreater
+#define IsW8     IsWindows8OrGreater
+#define IsW81    IsWindows8Point1OrGreater
+#define IsW10    IsWindows10OrGreater
 
-BOOL ExeNameFromWnd(HWND,LPWSTR,int);
+BOOL ExeNameFromWnd(HWND, LPWSTR, int);
 //BOOL Is32bitExe(LPCWSTR);
 BOOL PrivateIsAppThemed();
 //BOOL SetExplorerTheme(HWND);
-BOOL SetTheme(HWND,LPCWSTR);
-BOOL BitmapMergeAlpha(HBITMAP,COLORREF);
-BOOL BitmapAlphaBlend(HBITMAP,COLORREF,BYTE);
+BOOL SetTheme(HWND, LPCWSTR);
+BOOL BitmapMergeAlpha(HBITMAP, COLORREF);
+BOOL BitmapAlphaBlend(HBITMAP, COLORREF, BYTE);
 BOOL BitmapGrayScale(HBITMAP);
 
-BOOL SetWindowPathTitle(HWND,LPCWSTR);
+BOOL SetWindowPathTitle(HWND, LPCWSTR);
 void CenterDlgInParent(HWND);
-void MakeBitmapButton(HWND,int,HINSTANCE,UINT);
-void DeleteBitmapButton(HWND,int);
-void SetWindowTransparentMode(HWND,BOOL);
+void MakeBitmapButton(HWND, int, HINSTANCE, UINT);
+void DeleteBitmapButton(HWND, int);
+void SetWindowTransparentMode(HWND, BOOL);
 
 #define StatusSetSimple(hwnd,b) SendMessage(hwnd,SB_SIMPLE,(WPARAM)b,0)
-BOOL StatusSetText(HWND,UINT,LPCWSTR);
+BOOL StatusSetText(HWND, UINT, LPCWSTR);
 
-int Toolbar_GetButtons(HWND,int,LPWSTR,int);
-int Toolbar_SetButtons(HWND,int,LPCWSTR,void*,int);
-void Toolbar_SetButtonImage(HWND,int,int);
+int Toolbar_GetButtons(HWND, int, LPWSTR, int);
+int Toolbar_SetButtons(HWND, int, LPCWSTR, void*, int);
+void Toolbar_SetButtonImage(HWND, int, int);
 
 LRESULT SendWMSize(HWND);
 
@@ -90,15 +94,15 @@ LRESULT SendWMSize(HWND);
 
 #define StrEnd(pStart) (pStart + lstrlen(pStart))
 
-int FormatString(LPWSTR,int,UINT,...);
+int FormatString(LPWSTR, int, UINT, ...);
 
-void PathRelativeToApp(LPWSTR,LPWSTR,int,BOOL,BOOL,BOOL);
-void PathAbsoluteFromApp(LPWSTR,LPWSTR,int,BOOL);
+void PathRelativeToApp(LPWSTR, LPWSTR, int, BOOL, BOOL, BOOL);
+void PathAbsoluteFromApp(LPWSTR, LPWSTR, int, BOOL);
 
 BOOL PathIsLnkFile(LPCWSTR);
-BOOL PathGetLnkPath(LPCWSTR,LPWSTR,int);
-BOOL PathIsLnkToDirectory(LPCWSTR,LPWSTR,int);
-BOOL PathCreateLnk(LPCWSTR,LPCWSTR);
+BOOL PathGetLnkPath(LPCWSTR, LPWSTR, int);
+BOOL PathIsLnkToDirectory(LPCWSTR, LPWSTR, int);
+BOOL PathCreateLnk(LPCWSTR, LPCWSTR);
 
 BOOL TrimString(LPWSTR);
 BOOL ExtractFirstArgument(LPCWSTR, LPWSTR, LPWSTR);
@@ -108,87 +112,89 @@ LPWSTR GetFilenameStr(LPWSTR);
 
 void PrepareFilterStr(LPWSTR);
 void StrTab2Space(LPWSTR);
-void ExpandEnvironmentStringsEx(LPWSTR,DWORD);
+void ExpandEnvironmentStringsEx(LPWSTR, DWORD);
 void PathCanonicalizeEx(LPWSTR);
-DWORD SearchPathEx(LPCWSTR,LPCWSTR,LPCWSTR,DWORD,LPWSTR,LPWSTR*);
+DWORD SearchPathEx(LPCWSTR, LPCWSTR, LPCWSTR, DWORD, LPWSTR, LPWSTR*);
 int  FormatNumberStr(LPWSTR);
 
-void GetDefaultFavoritesDir(LPWSTR,int);
-void GetDefaultOpenWithDir(LPWSTR,int);
+void GetDefaultFavoritesDir(LPWSTR, int);
+void GetDefaultOpenWithDir(LPWSTR, int);
 
 HDROP CreateDropHandle(LPCWSTR);
 
 BOOL DirList_IsFileSelected(HWND);
 
-BOOL ExecDDECommand(LPCWSTR,LPCWSTR,LPCWSTR,LPCWSTR);
+BOOL ExecDDECommand(LPCWSTR, LPCWSTR, LPCWSTR, LPCWSTR);
 
 //==== History Functions ======================================================
 #define HISTORY_ITEMS 50
 
 typedef struct tagHISTORY
 {
-  WCHAR *psz[HISTORY_ITEMS]; // Strings
-  int  iCurItem;            // Current Item
+    WCHAR *psz[HISTORY_ITEMS]; // Strings
+    int  iCurItem;            // Current Item
 
 } HISTORY, *PHISTORY;
 
 BOOL History_Init(PHISTORY);
 BOOL History_Uninit(PHISTORY);
-BOOL History_Add(PHISTORY,LPCWSTR);
-BOOL History_Forward(PHISTORY,LPWSTR,int);
-BOOL History_Back(PHISTORY,LPWSTR,int);
+BOOL History_Add(PHISTORY, LPCWSTR);
+BOOL History_Forward(PHISTORY, LPWSTR, int);
+BOOL History_Back(PHISTORY, LPWSTR, int);
 BOOL History_CanForward(PHISTORY);
 BOOL History_CanBack(PHISTORY);
-void History_UpdateToolbar(PHISTORY,HWND,int,int);
+void History_UpdateToolbar(PHISTORY, HWND, int, int);
 
 //==== MRU Functions ==========================================================
 #define MRU_MAXITEMS 24
 #define MRU_NOCASE    1
 #define MRU_UTF8      2
 
-typedef struct _mrulist {
+typedef struct _mrulist
+{
 
-  WCHAR  szRegKey[256];
-  int   iFlags;
-  int   iSize;
-  LPWSTR pszItems[MRU_MAXITEMS];
+    WCHAR  szRegKey[256];
+    int   iFlags;
+    int   iSize;
+    LPWSTR pszItems[MRU_MAXITEMS];
 
 } MRULIST, *PMRULIST, *LPMRULIST;
 
-LPMRULIST MRU_Create(LPCWSTR,int,int);
+LPMRULIST MRU_Create(LPCWSTR, int, int);
 BOOL      MRU_Destroy(LPMRULIST);
-BOOL      MRU_Add(LPMRULIST,LPCWSTR);
-BOOL      MRU_Delete(LPMRULIST,int);
+BOOL      MRU_Add(LPMRULIST, LPCWSTR);
+BOOL      MRU_Delete(LPMRULIST, int);
 BOOL      MRU_Empty(LPMRULIST);
-int       MRU_Enum(LPMRULIST,int,LPWSTR,int);
+int       MRU_Enum(LPMRULIST, int, LPWSTR, int);
 BOOL      MRU_Load(LPMRULIST);
 BOOL      MRU_Save(LPMRULIST);
-void      MRU_LoadToCombobox(HWND,LPCWSTR);
-void      MRU_AddOneItem(LPCWSTR,LPCWSTR);
+void      MRU_LoadToCombobox(HWND, LPCWSTR);
+void      MRU_AddOneItem(LPCWSTR, LPCWSTR);
 
 //==== Themed Dialogs =========================================================
 #ifndef DLGTEMPLATEEX
 #pragma pack(push, 1)
-typedef struct {
-  WORD      dlgVer;
-  WORD      signature;
-  DWORD     helpID;
-  DWORD     exStyle;
-  DWORD     style;
-  WORD      cDlgItems;
-  short     x;
-  short     y;
-  short     cx;
-  short     cy;
+typedef struct
+{
+    WORD      dlgVer;
+    WORD      signature;
+    DWORD     helpID;
+    DWORD     exStyle;
+    DWORD     style;
+    WORD      cDlgItems;
+    short     x;
+    short     y;
+    short     cx;
+    short     cy;
 } DLGTEMPLATEEX;
 #pragma pack(pop)
 #endif
 
-BOOL GetThemedDialogFont(LPWSTR,WORD*);
-DLGTEMPLATE* LoadThemedDialogTemplate(LPCTSTR,HINSTANCE);
+BOOL GetThemedDialogFont(LPWSTR, WORD*);
+DLGTEMPLATE* LoadThemedDialogTemplate(LPCTSTR, HINSTANCE);
 #define ThemedDialogBox(hInstance,lpTemplate,hWndParent,lpDialogFunc) \
   ThemedDialogBoxParam(hInstance,lpTemplate,hWndParent,lpDialogFunc,0)
-INT_PTR ThemedDialogBoxParam(HINSTANCE,LPCTSTR,HWND,DLGPROC,LPARAM);
+INT_PTR ThemedDialogBoxParam(HINSTANCE, LPCTSTR, HWND, DLGPROC, LPARAM);
 
 //==== MinimizeToTray Functions - see comments in Helpers.c ===================
 BOOL GetDoAnimateMinimize(VOID);

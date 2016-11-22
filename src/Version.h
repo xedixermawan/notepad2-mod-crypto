@@ -26,6 +26,9 @@
 #endif
 #endif
 
+#define STR_HLP(x) #x
+#define STR(x) STR_HLP(x)
+
 #define DO_STRINGIFY(x) _T(#x)
 #define STRINGIFY(x)    DO_STRINGIFY(x)
 
@@ -44,86 +47,90 @@
 #define VERSION_WEBPAGE2DISPLAY      L"http://www.regexlab.com/deelx/"
 
 #if defined(_WIN64)
-   #define VERSION_FILEVERSION_LONG  L"Notepad2Crypt (64-bit) " VERSION_FILEVERSION L"\n" SCINTILLA_BUILD
+#define VERSION_FILEVERSION_LONG  L"Notepad2Crypt (64-bit) " VERSION_FILEVERSION L"\n" SCINTILLA_BUILD
 #else
-   #define VERSION_FILEVERSION_LONG  L"Notepad2Crypt " VERSION_FILEVERSION L"\n" SCINTILLA_BUILD
+#define VERSION_FILEVERSION_LONG  L"Notepad2Crypt " VERSION_FILEVERSION L"\n" SCINTILLA_BUILD
 #endif
 
 // Compiler specific
 #if defined(WDK_BUILD)
-    #if _MSC_VER == 1600
-        #if (_MSC_FULL_VER >= 160040219)
-            #define VERSION_COMPILER    L"WDK (MSVC 2010 SP1)"
-        #else
-            #define VERSION_COMPILER    L"WDK (MSVC 2010)"
-        #endif
-    #elif _MSC_VER == 1500
-        #if (_MSC_FULL_VER == 150030729)
-            #define VERSION_COMPILER    L"WDK"
-        #else
-            #define VERSION_COMPILER    L"WDK (version unknown)"
-        #endif
-    #endif
-#elif defined(_MSC_VER)
-    #if _MSC_VER == 1900
-        #if (_MSC_FULL_VER == 190024210)
-            #define VERSION_COMPILER    L"MSVC 2015 Update 3"
-        #elif (_MSC_FULL_VER == 190023918)
-            #define VERSION_COMPILER    L"MSVC 2015 Update 2"
-        #elif (_MSC_FULL_VER == 190023506)
-            #define VERSION_COMPILER    L"MSVC 2015 Update 1"
-        #elif (_MSC_FULL_VER == 190023026)
-            #define VERSION_COMPILER    L"MSVC 2015"
-        #elif (_MSC_FULL_VER < 190023026)
-            #define VERSION_COMPILER    L"MSVC 2015 Preview/Beta/RC"
-        #else
-            #define VERSION_COMPILER    L"MSVC 2015"
-        #endif
-    #elif _MSC_VER == 1800
-        #if (_MSC_FULL_VER == 180040629)
-            #define VERSION_COMPILER    L"MSVC 2013 Update 5"
-        #elif (_MSC_FULL_VER == 180031101)
-            #define VERSION_COMPILER    L"MSVC 2013 Update 4"
-        #elif (_MSC_FULL_VER == 180030723)
-            #define VERSION_COMPILER    L"MSVC 2013 Update 3"
-        #elif (_MSC_FULL_VER == 180030501)
-            #define VERSION_COMPILER    L"MSVC 2013 Update 2"
-        #elif (_MSC_FULL_VER < 180021005)
-            #define VERSION_COMPILER    L"MSVC 2013 Preview/Beta/RC"
-        #else
-            #define VERSION_COMPILER    L"MSVC 2013"
-        #endif
-    #elif _MSC_VER == 1700
-        #if (_MSC_FULL_VER == 170061030)
-            #define VERSION_COMPILER    L"MSVC 2012 Update 4"
-        #elif (_MSC_FULL_VER == 170060610)
-            #define VERSION_COMPILER    L"MSVC 2012 Update 3"
-        #elif (_MSC_FULL_VER == 170060315)
-            #define VERSION_COMPILER    L"MSVC 2012 Update 2"
-        #elif (_MSC_FULL_VER == 170051106)
-            #define VERSION_COMPILER    L"MSVC 2012 Update 1"
-        #elif (_MSC_FULL_VER < 170050727)
-            #define VERSION_COMPILER    L"MSVC 2012 Beta/RC/PR"
-        #else
-            #define VERSION_COMPILER    L"MSVC 2012"
-        #endif
-    #elif _MSC_VER == 1600
-        #if (_MSC_FULL_VER >= 160040219)
-            #define VERSION_COMPILER    L"MSVC 2010 SP1"
-        #else
-            #define VERSION_COMPILER    L"MSVC 2010"
-        #endif
-    #elif _MSC_VER == 1500
-        #if (_MSC_FULL_VER >= 150030729)
-            #define VERSION_COMPILER    L"MSVC 2008 SP1"
-        #else
-            #define VERSION_COMPILER    L"MSVC 2008"
-        #endif
-    #else
-        #define VERSION_COMPILER        L"MSVC (version unknown)"
-    #endif
+#if _MSC_VER == 1600
+#if (_MSC_FULL_VER >= 160040219)
+#define VER_CPL    L"WDK (MSVC 2010 SP1)"
 #else
-    #define VERSION_COMPILER            L"(Unknown compiler)"
+#define VER_CPL    L"WDK (MSVC 2010)"
 #endif
+#elif _MSC_VER == 1500
+#if (_MSC_FULL_VER == 150030729)
+#define VER_CPL    L"WDK"
+#else
+#define VER_CPL    L"WDK (version unknown)"
+#endif
+#endif
+#elif defined(_MSC_VER)
+#if _MSC_VER == 1900
+#if (_MSC_FULL_VER >= 190024210)
+#define VER_CPL    "MSVC 2015 Update 3"
+#elif (_MSC_FULL_VER == 190023918)
+#define VER_CPL    "MSVC 2015 Update 2"
+#elif (_MSC_FULL_VER == 190023506)
+#define VER_CPL    "MSVC 2015 Update 1"
+#elif (_MSC_FULL_VER == 190023026)
+#define VER_CPL    "MSVC 2015"
+#elif (_MSC_FULL_VER < 190023026)
+#define VER_CPL    "MSVC 2015 Preview/Beta/RC"
+#else
+#define VER_CPL    "MSVC 2015"
+#endif
+#elif _MSC_VER == 1800
+#if (_MSC_FULL_VER == 180040629)
+#define VER_CPL    "MSVC 2013 Update 5"
+#elif (_MSC_FULL_VER == 180031101)
+#define VER_CPL    "MSVC 2013 Update 4"
+#elif (_MSC_FULL_VER == 180030723)
+#define VER_CPL    "MSVC 2013 Update 3"
+#elif (_MSC_FULL_VER == 180030501)
+#define VER_CPL    "MSVC 2013 Update 2"
+#elif (_MSC_FULL_VER < 180021005)
+#define VER_CPL    "MSVC 2013 Preview/Beta/RC"
+#else
+#define VER_CPL    "MSVC 2013"
+#endif
+#elif _MSC_VER == 1700
+#if (_MSC_FULL_VER == 170061030)
+#define VER_CPL    "MSVC 2012 Update 4"
+#elif (_MSC_FULL_VER == 170060610)
+#define VER_CPL    "MSVC 2012 Update 3"
+#elif (_MSC_FULL_VER == 170060315)
+#define VER_CPL    "MSVC 2012 Update 2"
+#elif (_MSC_FULL_VER == 170051106)
+#define VER_CPL    "MSVC 2012 Update 1"
+#elif (_MSC_FULL_VER < 170050727)
+#define VER_CPL    "MSVC 2012 Beta/RC/PR"
+#else
+#define VER_CPL    "MSVC 2012"
+#endif
+#elif _MSC_VER == 1600
+#if (_MSC_FULL_VER >= 160040219)
+#define VER_CPL    "MSVC 2010 SP1"
+#else
+#define VER_CPL    "MSVC 2010"
+#endif
+#elif _MSC_VER == 1500
+#if (_MSC_FULL_VER >= 150030729)
+#define VER_CPL    "MSVC 2008 SP1"
+#else
+#define VER_CPL    "MSVC 2008"
+#endif
+#else
+#define VER_CPL    "MSVC (version unknown)"
+#endif
+#else
+#define VER_CPL    "(Unknown compiler)"
+#endif
+
+#define VERSION_COMPILER STRINGIFY(VER_CPL)
+
+#pragma message("Compiler Version: " VER_CPL "  (#" STR(_MSC_FULL_VER) ")")
 
 #endif // NOTEPAD2_VERSION_H

@@ -27,8 +27,8 @@ set VREV=985
 @echo. #define SCINTILLA_BUILD L"( Scintilla %SCI_BUILD%* )" >> %VERREV_H%
 
 :: patch manifest file
-set MANIFEST_SRC=.\res\Notepad2.exe.manifest.conf
-set MANIFEST_DST=.\res\Notepad2.exe.manifest
+set MANIFEST_SRC=.\res\Notepad2Crypt.exe.manifest.conf
+set MANIFEST_DST=.\res\Notepad2Crypt.exe.manifest
 .\tools\far.exe -o "%MANIFEST_SRC%" "%MANIFEST_DST%" "$VERSION$" "%VMAJ%.%VMIN%.%VREV%"
 
 :END

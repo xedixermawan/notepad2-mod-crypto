@@ -21,8 +21,9 @@
 //
 extern HANDLE g_hScintilla;
 
-__forceinline void InitScintillaHandle(HWND hwnd) {
-  g_hScintilla = (HANDLE)SendMessage(hwnd, SCI_GETDIRECTPOINTER, 0, 0);
+__forceinline void InitScintillaHandle(HWND hwnd)
+{
+    g_hScintilla = (HANDLE)SendMessage(hwnd, SCI_GETDIRECTPOINTER, 0, 0);
 }
 
 
@@ -145,3 +146,19 @@ DeclareSciCallV1(EnsureVisible, ENSUREVISIBLE, int, line);
 //
 //
 DeclareSciCallV2(SetProperty, SETPROPERTY, const char *, key, const char *, value);
+
+
+//=============================================================================
+//
+//  SetTechnology
+//
+//
+DeclareSciCallV1(SetTechnology, SETTECHNOLOGY, int, technology);
+
+
+//=============================================================================
+//
+//  SetFontQuality
+//
+//
+DeclareSciCallV1(SetFontQuality, SETFONTQUALITY, int, quality);

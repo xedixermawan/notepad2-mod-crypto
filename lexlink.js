@@ -1,6 +1,7 @@
 /*
   Comment lexer modules from "scintilla\src\Catalogue.cxx" not used by Notepad2
   (c) Florian Balmer 2011
+  cmd>  Cscript.exe "lexlink.js" //Nologo 
 */
 
   var lex = new Array(
