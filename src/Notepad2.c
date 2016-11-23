@@ -4609,8 +4609,8 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
     {
         BOOL  bCmdEnabled;
         LPWSTR lpszTemplateName;
-        WCHAR  szCmdTemplate[256];
-        char  mszSelection[512] = { 0 };
+        WCHAR  szCmdTemplate[256] = { L'\0' };
+        char  mszSelection[512] = { '\0' };
         DWORD cchSelection;
         char  *lpsz;
         LPWSTR lpszCommand;
@@ -4627,9 +4627,9 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
             cchSelection = (int)SendMessage(hwndEdit, SCI_GETSELECTIONEND, 0, 0) -
                 (int)SendMessage(hwndEdit, SCI_GETSELECTIONSTART, 0, 0);
 
-            if (cchSelection > 0 && cchSelection <= 500 && SendMessage(hwndEdit, SCI_GETSELTEXT, 0, 0) < COUNTOF(mszSelection)) {
+            if ((cchSelection > 0) && (cchSelection <= 500) && (SendMessage(hwndEdit, SCI_GETSELTEXT, 0, 0) < COUNTOF(mszSelection))) {
                 SendMessage(hwndEdit, SCI_GETSELTEXT, 0, (LPARAM)mszSelection);
-                mszSelection[cchSelection] = 0; // zero terminate
+                mszSelection[cchSelection] = '\0'; // zero terminate
 
                 // Check lpszSelection and truncate bad WCHARs
                 lpsz = StrChrA(mszSelection, 13);
@@ -4694,12 +4694,12 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                 (int)SendMessage(hwndEdit, SCI_GETSELECTIONSTART, 0, 0);
         }
 
-        if (cchSelection > 0 && cchSelection <= 500 && SendMessage(hwndEdit, SCI_GETSELTEXT, 0, 0) < 512) {
+        if ((cchSelection > 0) && (cchSelection <= 500) && (SendMessage(hwndEdit, SCI_GETSELTEXT, 0, 0) < 512)) {
             char  mszSelection[512];
             char  *lpsz;
 
             SendMessage(hwndEdit, SCI_GETSELTEXT, 0, (LPARAM)mszSelection);
-            mszSelection[cchSelection] = 0; // zero terminate
+            mszSelection[cchSelection] = '\0'; // zero terminate
 
             // Check lpszSelection and truncate newlines
             lpsz = StrChrA(mszSelection, '\n');

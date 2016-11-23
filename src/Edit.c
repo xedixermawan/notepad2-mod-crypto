@@ -559,8 +559,9 @@ BOOL EditCopyAppend(HWND hwnd)
                 (int)SendMessage(hwnd, SCI_GETSELECTIONEND, 0, 0) -
                 (int)SendMessage(hwnd, SCI_GETSELECTIONSTART, 0, 0);
 
-            // fixing 64bit issue #37
-            pszText = LocalAlloc(LPTR, iSelCount + 4);
+
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+            pszText = LocalAlloc(LPTR, pszTextLen);
             if (pszText)
                 (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, (LPARAM)pszText);
         }
@@ -1721,8 +1722,9 @@ void EditInvertCase(HWND hwnd)
             int iSelCount = (int)SendMessage(hwnd, SCI_GETSELECTIONEND, 0, 0) -
                 (int)SendMessage(hwnd, SCI_GETSELECTIONSTART, 0, 0);
 
-            char*  pszText = GlobalAlloc(GPTR, (iSelCount)+4);
-            LPWSTR pszTextW = GlobalAlloc(GPTR, (iSelCount * 2) + 8);
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+            char*  pszText = GlobalAlloc(GPTR, pszTextLen);
+            LPWSTR pszTextW = GlobalAlloc(GPTR, (pszTextLen * sizeof(WCHAR)));
 
             if (pszText == NULL || pszTextW == NULL) {
                 GlobalFree(pszText);
@@ -1795,8 +1797,9 @@ void EditTitleCase(HWND hwnd)
             int iSelCount = (int)SendMessage(hwnd, SCI_GETSELECTIONEND, 0, 0) -
                 (int)SendMessage(hwnd, SCI_GETSELECTIONSTART, 0, 0);
 
-            char*  pszText = GlobalAlloc(GPTR, (iSelCount)+4);
-            LPWSTR pszTextW = GlobalAlloc(GPTR, (iSelCount * 2) + 8);
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+            char*  pszText = GlobalAlloc(GPTR, pszTextLen);
+            LPWSTR pszTextW = GlobalAlloc(GPTR, (pszTextLen * sizeof(WCHAR)));
 
             if (pszText == NULL || pszTextW == NULL) {
                 GlobalFree(pszText);
@@ -1922,8 +1925,9 @@ void EditSentenceCase(HWND hwnd)
             int iSelCount = (int)SendMessage(hwnd, SCI_GETSELECTIONEND, 0, 0) -
                 (int)SendMessage(hwnd, SCI_GETSELECTIONSTART, 0, 0);
 
-            char*  pszText = GlobalAlloc(GPTR, (iSelCount)+4);
-            LPWSTR pszTextW = GlobalAlloc(GPTR, (iSelCount * 2) + 8);
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+            char*  pszText = GlobalAlloc(GPTR, pszTextLen);
+            LPWSTR pszTextW = GlobalAlloc(GPTR, (pszTextLen * sizeof(WCHAR)));
 
             if (pszText == NULL || pszTextW == NULL) {
                 GlobalFree(pszText);
@@ -2006,18 +2010,21 @@ void EditURLEncode(HWND hwnd)
             DWORD  cchEscapedW;
             LPWSTR pszEscapedW;
 
-            pszText = LocalAlloc(LPTR, (iSelCount)+4);
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+
+            pszText = LocalAlloc(LPTR, pszTextLen);
             if (pszText == NULL) {
                 return;
             }
 
-            pszTextW = LocalAlloc(LPTR, (iSelCount * 2) + 8);
+            pszTextW = LocalAlloc(LPTR, (pszTextLen * sizeof(WCHAR)));
             if (pszTextW == NULL) {
                 LocalFree(pszText);
                 return;
             }
 
             SendMessage(hwnd, SCI_GETSELTEXT, 0, (LPARAM)pszText);
+
             cpEdit = (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0);
             //int cchTextW = MultiByteToWideChar(cpEdit,0,pszText,iSelCount,pszTextW,(int)LocalSize(pszTextW)/sizeof(WCHAR));
 
@@ -2089,12 +2096,14 @@ void EditURLDecode(HWND hwnd)
             DWORD  cchUnescapedW;
             LPWSTR pszUnescapedW;
 
-            pszText = LocalAlloc(LPTR, (iSelCount)+4);
+            int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+
+            pszText = LocalAlloc(LPTR, pszTextLen);
             if (pszText == NULL) {
                 return;
             }
 
-            pszTextW = LocalAlloc(LPTR, (iSelCount * 2) + 8);
+            pszTextW = LocalAlloc(LPTR, (pszTextLen * sizeof(WCHAR)));
             if (pszTextW == NULL) {
                 LocalFree(pszText);
                 return;
@@ -2278,8 +2287,8 @@ void EditHex2Char(HWND hwnd)
 
             if (SendMessage(hwnd, SCI_GETSELTEXT, 0, 0) <= COUNTOF(ch)) {
 
-                ch[31] = '\0';
                 SendMessage(hwnd, SCI_GETSELTEXT, 0, (LPARAM)ch);
+                ch[31] = '\0';
 
                 if (StrChrIA(ch, ' ') || StrChrIA(ch, '\t') || StrChrIA(ch, '\r') || StrChrIA(ch, '\n') || StrChrIA(ch, '-'))
                     return;
@@ -2336,16 +2345,15 @@ void EditModifyNumber(HWND hwnd, BOOL bIncrease)
 
         if (iSelEnd - iSelStart) {
 
-            char chFormat[32] = "";
-            char chNumber[32];
+            char chFormat[32] = { '\0' };
+            char chNumber[32] = { '\0' };
             int  iNumber;
             int  iWidth;
 
             if (SendMessage(hwnd, SCI_GETSELTEXT, 0, 0) <= COUNTOF(chNumber)) {
 
-                chNumber[31] = '\0';
-
                 SendMessage(hwnd, SCI_GETSELTEXT, 0, (LPARAM)chNumber);
+                chNumber[31] = '\0';
 
                 if (StrChrIA(chNumber, '-'))
                     return;
@@ -4965,7 +4973,7 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd, UINT umsg, WPARAM wParam, LP
 
             if (cchSelection <= clipSizeLimit) {
                 cchSelection = (int)SendMessage(lpefr->hwnd, SCI_GETSELTEXT, 0, 0);
-                lpszSelection = GlobalAlloc(GPTR, cchSelection + 2);
+                lpszSelection = GlobalAlloc(GPTR, cchSelection);
                 SendMessage(lpefr->hwnd, SCI_GETSELTEXT, 0, (LPARAM)lpszSelection);
 
             #ifdef BOOKMARK_EDITION
@@ -5904,10 +5912,8 @@ void EditMarkAll(HWND hwnd, int iMarkOccurrences, BOOL bMarkOccurrencesMatchCase
         (int)SendMessage(hwnd, SCI_LINEFROMPOSITION, iSelEnd, 0))
         return;
 
-    /* notepad2-mod custom code start */
-    // fixing 64bit issue
-
-    pszText = LocalAlloc(LPTR, iSelCount + 4);
+    int pszTextLen = (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, 0);
+    pszText = LocalAlloc(LPTR, pszTextLen);
     if (pszText)
         (int)SendMessage(hwnd, SCI_GETSELTEXT, 0, (LPARAM)pszText);
 
@@ -5922,7 +5928,6 @@ void EditMarkAll(HWND hwnd, int iMarkOccurrences, BOOL bMarkOccurrencesMatchCase
             i++;
         }
     }
-    /* notepad2-mod custom code start */
 
     ZeroMemory(&ttf, sizeof(ttf));
 
