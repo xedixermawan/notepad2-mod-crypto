@@ -90,39 +90,39 @@
 
 //==== Function Declarations ==================================================
 BOOL InitApplication(HINSTANCE);
-HWND InitInstance(HINSTANCE,LPSTR,int);
+HWND InitInstance(HINSTANCE, LPSTR, int);
 BOOL ActivatePrevInst();
-void ShowNotifyIcon(HWND,BOOL);
+void ShowNotifyIcon(HWND, BOOL);
 
-BOOL ChangeDirectory(HWND,LPCWSTR,BOOL);
+BOOL ChangeDirectory(HWND, LPCWSTR, BOOL);
 void LoadSettings();
 void SaveSettings(BOOL);
 
 void ParseCommandLine();
 void LoadFlags();
-int  CheckIniFile(LPWSTR,LPCWSTR);
-int  CheckIniFileRedirect(LPWSTR,LPCWSTR);
+int  CheckIniFile(LPWSTR, LPCWSTR);
+int  CheckIniFileRedirect(LPWSTR, LPCWSTR);
 int  FindIniFile();
 int  TestIniFile();
 int  CreateIniFile();
 int  CreateIniFileEx(LPCWSTR);
 
-BOOL DisplayPath(LPCWSTR,UINT);
+BOOL DisplayPath(LPCWSTR, UINT);
 BOOL DisplayLnkFile(LPCWSTR);
 
-void LaunchTarget(LPCWSTR,BOOL);
+void LaunchTarget(LPCWSTR, BOOL);
 void SnapToTarget(HWND);
 void SnapToDefaultPos(HWND);
 
-LRESULT CALLBACK HiddenWndProc(HWND,UINT,WPARAM,LPARAM);
-LRESULT CALLBACK MainWndProc(HWND,UINT,WPARAM,LPARAM);
-LRESULT MsgCreate(HWND,WPARAM,LPARAM);
-void    CreateBars(HWND,HINSTANCE);
-void    MsgThemeChanged(HWND,WPARAM,LPARAM);
-void    MsgSize(HWND,WPARAM,LPARAM);
-void    MsgInitMenu(HWND,WPARAM,LPARAM);
-LRESULT MsgCommand(HWND,WPARAM,LPARAM);
-LRESULT MsgNotify(HWND,WPARAM,LPARAM);
+LRESULT CALLBACK HiddenWndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT MsgCreate(HWND, WPARAM, LPARAM);
+void    CreateBars(HWND, HINSTANCE);
+void    MsgThemeChanged(HWND, WPARAM, LPARAM);
+void    MsgSize(HWND, WPARAM, LPARAM);
+void    MsgInitMenu(HWND, WPARAM, LPARAM);
+LRESULT MsgCommand(HWND, WPARAM, LPARAM);
+LRESULT MsgNotify(HWND, WPARAM, LPARAM);
 
 
 

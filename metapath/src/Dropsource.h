@@ -21,19 +21,19 @@ class FAR CDropSource : public IDropSource
 {
 
 public:
-  CDropSource();
+    CDropSource();
 
-  /* IUnknown methods */
-  STDMETHOD(QueryInterface)(REFIID riid,void FAR* FAR* ppvObj);
-  STDMETHOD_(ULONG,AddRef)();
-  STDMETHOD_(ULONG,Release)();
+    /* IUnknown methods */
+    STDMETHOD(QueryInterface)(REFIID riid, void FAR* FAR* ppvObj);
+    STDMETHOD_(ULONG, AddRef)();
+    STDMETHOD_(ULONG, Release)();
 
-  /* IDropSource methods */
-  STDMETHOD(QueryContinueDrag)(BOOL fEscapePressed,DWORD grfKeyState);
-  STDMETHOD(GiveFeedback)(DWORD dwEffect);
+    /* IDropSource methods */
+    STDMETHOD(QueryContinueDrag)(BOOL fEscapePressed, DWORD grfKeyState);
+    STDMETHOD(GiveFeedback)(DWORD dwEffect);
 
 private:
-  ULONG m_refs;
+    ULONG m_refs;
 
 };
 

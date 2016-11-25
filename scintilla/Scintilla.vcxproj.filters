@@ -19,6 +19,9 @@
     <Filter Include="deelx">
       <UniqueIdentifier>{67242aad-9133-44e7-9774-c36f5a9194bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="deelx\doc">
+      <UniqueIdentifier>{4e167b73-0447-4a31-a66b-64c2d684516d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lexers\LexAHK.cxx">
@@ -419,5 +422,10 @@
     <ClInclude Include="include\Sci_Position.h">
       <Filter>include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="deelx\doc\deelx_en.chm">
+      <Filter>deelx\doc</Filter>
+    </None>
   </ItemGroup>
 </Project>

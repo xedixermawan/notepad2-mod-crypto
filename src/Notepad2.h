@@ -26,21 +26,22 @@
 
 //==== Data Type for WM_COPYDATA ==============================================
 #define DATA_NOTEPAD2_PARAMS 0xFB10
-typedef struct np2params {
+typedef struct np2params
+{
 
-  int   flagFileSpecified;
-  int   flagChangeNotify;
-  int   flagLexerSpecified;
-  int   iInitialLexer;
-  int   flagQuietCreate;
-  int   flagJumpTo;
-  int   iInitialLine;
-  int   iInitialColumn;
-  int   iSrcEncoding;
-  int   flagSetEncoding;
-  int   flagSetEOLMode;
-  int   flagTitleExcerpt;
-  WCHAR wchData;
+    int   flagFileSpecified;
+    int   flagChangeNotify;
+    int   flagLexerSpecified;
+    int   iInitialLexer;
+    int   flagQuietCreate;
+    int   flagJumpTo;
+    int   iInitialLine;
+    int   iInitialColumn;
+    int   iSrcEncoding;
+    int   flagSetEncoding;
+    int   flagSetEOLMode;
+    int   flagTitleExcerpt;
+    WCHAR wchData;
 
 } NP2PARAMS, *LPNP2PARAMS;
 
@@ -97,24 +98,24 @@ typedef struct np2params {
 
 //==== Function Declarations ==================================================
 BOOL InitApplication(HINSTANCE);
-HWND InitInstance(HINSTANCE,LPSTR,int);
+HWND InitInstance(HINSTANCE, LPSTR, int);
 BOOL ActivatePrevInst();
 BOOL RelaunchMultiInst();
-BOOL RelaunchElevated();
+BOOL RelaunchElevated(LPWSTR);
 void SnapToDefaultPos(HWND);
-void ShowNotifyIcon(HWND,BOOL);
+void ShowNotifyIcon(HWND, BOOL);
 void SetNotifyIconTitle(HWND);
 void InstallFileWatching(LPCWSTR);
-void CALLBACK WatchTimerProc(HWND,UINT,UINT_PTR,DWORD);
-void CALLBACK PasteBoardTimer(HWND,UINT,UINT_PTR,DWORD);
+void CALLBACK WatchTimerProc(HWND, UINT, UINT_PTR, DWORD);
+void CALLBACK PasteBoardTimer(HWND, UINT, UINT_PTR, DWORD);
 
 
 void LoadSettings();
 void SaveSettings(BOOL);
 void ParseCommandLine();
 void LoadFlags();
-int  CheckIniFile(LPWSTR,LPCWSTR);
-int  CheckIniFileRedirect(LPWSTR,LPCWSTR);
+int  CheckIniFile(LPWSTR, LPCWSTR);
+int  CheckIniFileRedirect(LPWSTR, LPCWSTR);
 int  FindIniFile();
 int  TestIniFile();
 int  CreateIniFile();
@@ -126,21 +127,21 @@ void UpdateToolbar();
 void UpdateLineNumberWidth();
 
 
-BOOL FileIO(BOOL,LPCWSTR,BOOL,int*,int*,BOOL*,BOOL*,BOOL*,BOOL);
-BOOL FileLoad(BOOL,BOOL,BOOL,BOOL,LPCWSTR);
-BOOL FileSave(BOOL,BOOL,BOOL,BOOL);
-BOOL OpenFileDlg(HWND,LPWSTR,int,LPCWSTR);
-BOOL SaveFileDlg(HWND,LPWSTR,int,LPCWSTR);
+BOOL FileIO(BOOL, LPCWSTR, BOOL, int*, int*, BOOL*, BOOL*, BOOL*, BOOL);
+BOOL FileLoad(BOOL, BOOL, BOOL, BOOL, LPCWSTR);
+BOOL FileSave(BOOL, BOOL, BOOL, BOOL);
+BOOL OpenFileDlg(HWND, LPWSTR, int, LPCWSTR);
+BOOL SaveFileDlg(HWND, LPWSTR, int, LPCWSTR);
 
 
-LRESULT CALLBACK MainWndProc(HWND,UINT,WPARAM,LPARAM);
-LRESULT MsgCreate(HWND,WPARAM,LPARAM);
-void    CreateBars(HWND,HINSTANCE);
-void    MsgThemeChanged(HWND,WPARAM,LPARAM);
-void    MsgSize(HWND,WPARAM,LPARAM);
-void    MsgInitMenu(HWND,WPARAM,LPARAM);
-LRESULT MsgCommand(HWND,WPARAM,LPARAM);
-LRESULT MsgNotify(HWND,WPARAM,LPARAM);
+LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT MsgCreate(HWND, WPARAM, LPARAM);
+void    CreateBars(HWND, HINSTANCE);
+void    MsgThemeChanged(HWND, WPARAM, LPARAM);
+void    MsgSize(HWND, WPARAM, LPARAM);
+void    MsgInitMenu(HWND, WPARAM, LPARAM);
+LRESULT MsgCommand(HWND, WPARAM, LPARAM);
+LRESULT MsgNotify(HWND, WPARAM, LPARAM);
 
 
 
