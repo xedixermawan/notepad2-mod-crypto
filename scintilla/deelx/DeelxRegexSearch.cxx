@@ -29,7 +29,7 @@
 
 #pragma warning( push )
 #pragma warning( disable : 4996 )   // Scintilla's "unsafe" use of std::copy() (SplitVector.h)
- //                                  // or use -D_SCL_SECURE_NO_WARNINGS preprocessor define
+//                                  // or use -D_SCL_SECURE_NO_WARNINGS preprocessor define
 
 #include "Platform.h"
 #include "Scintilla.h"
@@ -121,7 +121,7 @@ RegexSearchBase *CreateRegexSearch(CharClassify *charClassTable)
 /**
  * forward declaration of utility functions
  */
-std::string& translateRegExpr(std::string& regExprStr, bool wordStart);
+std::string& translateRegExpr(std::string& regExprStr, bool wholeWord, bool wordStart);
 std::string& convertReplExpr(std::string& replStr);
 
 
@@ -159,7 +159,7 @@ long DeelxRegexSearch::FindText(Document* doc, int minPos, int maxPos, const cha
     compileFlags |= (caseSensitive) ? deelx::NO_FLAG : deelx::IGNORECASE;
     compileFlags |= (left2right) ? deelx::NO_FLAG : deelx::RIGHTTOLEFT;
 
-    std::string sRegExprStrg = translateRegExpr(std::string(pattern, *length), wordStart);
+    std::string sRegExprStrg = translateRegExpr(std::string(pattern, *length), word, wordStart);
 
     try {
         m_RegExpr.Compile(sRegExprStrg.c_str(), compileFlags);
@@ -210,30 +210,60 @@ const char* DeelxRegexSearch::SubstituteByPosition(Document* doc, const char* te
 
     return m_SubstitutionBuffer;
 }
+// ============================================================================
+
+
+
+
+// ============================================================================
+//   Some Helpers
+// ============================================================================
+
+
+void replaceAll(std::string& source, const std::string& from, const std::string& to)
+{
+    std::string newString;
+    newString.reserve(source.length() * 2);  // avoids a few memory allocations
+
+    std::string::size_type lastPos = 0;
+    std::string::size_type findPos;
+
+    while (std::string::npos != (findPos = source.find(from, lastPos))) {
+        newString.append(source, lastPos, findPos - lastPos);
+        newString += to;
+        lastPos = findPos + from.length();
+    }
+    // Care for the rest after last occurrence
+    newString += source.substr(lastPos);
+
+    source.swap(newString);
+}
 // ----------------------------------------------------------------------------
 
 
-std::string& translateRegExpr(std::string& regExprStr, bool wordStart)
+
+std::string& translateRegExpr(std::string& regExprStr, bool wholeWord, bool wordStart)
 {
     std::string	tmpStr;
 
-    if (wordStart) {
+    if (wholeWord || wordStart) {      // push '\b' at the begin of regexpr
         tmpStr.push_back('\\');
         tmpStr.push_back('b');
+        tmpStr.append(regExprStr);
+        if (wholeWord) {               // push '\b' at the end of regexpr
+            tmpStr.push_back('\\');
+            tmpStr.push_back('b');
+        }
+        replaceAll(tmpStr, ".", "\\w");
     }
-  
-    /*
-    for (size_t i = 0; i < regExprStr.length(); ++i) {
-        char ch = regExprStr[i];
-        temp.push_back(ch);
+    else {
+        tmpStr.append(regExprStr);
     }
-    */
-    tmpStr.append(regExprStr);
-
     std::swap(regExprStr, tmpStr);
     return regExprStr;
 }
 // ----------------------------------------------------------------------------
+
 
 
 std::string& convertReplExpr(std::string& replStr)
@@ -252,7 +282,7 @@ std::string& convertReplExpr(std::string& replStr)
                 // former behavior convenience: 
                 // change "\\<n>" to deelx's group reference ($<n>)
                 tmpStr.push_back('$');
-            }
+            } 
             switch (ch) {
                 // check for escape seq:
             case 'a':

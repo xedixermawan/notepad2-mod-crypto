@@ -5114,18 +5114,12 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd, UINT umsg, WPARAM wParam, LP
         }
         break;
 
-        case IDC_FINDWORD:
-            if (IsDlgButtonChecked(hwnd, IDC_FINDWORD) == BST_CHECKED)
-                CheckDlgButton(hwnd, IDC_FINDREGEXP, BST_UNCHECKED);
-            break;
-
         case IDC_FINDREGEXP:
             if (IsDlgButtonChecked(hwnd, IDC_FINDREGEXP) == BST_CHECKED) {
                 CheckDlgButton(hwnd, IDC_FINDTRANSFORMBS, BST_UNCHECKED);
             #ifdef BOOKMARK_EDITION
                 CheckDlgButton(hwnd, IDC_WILDCARDSEARCH, BST_UNCHECKED); // Can not use wildcard search together with regexp
             #endif
-                CheckDlgButton(hwnd, IDC_FINDWORD, BST_UNCHECKED);
             }
             break;
 
@@ -5195,11 +5189,8 @@ INT_PTR CALLBACK EditFindReplaceDlgProcW(HWND hwnd, UINT umsg, WPARAM wParam, LP
             if (IsDlgButtonChecked(hwnd, IDC_FINDSTART) == BST_CHECKED)
                 lpefr->fuFlags |= SCFIND_WORDSTART;
 
-            if (IsDlgButtonChecked(hwnd, IDC_FINDREGEXP) == BST_CHECKED) {
+            if (IsDlgButtonChecked(hwnd, IDC_FINDREGEXP) == BST_CHECKED)
                 lpefr->fuFlags |= dwSCI_FIND_REGEXP | SCFIND_POSIX;
-                // reset conflicting flags
-                lpefr->fuFlags &= ~(SCFIND_WHOLEWORD);
-            }
 
             lpefr->bTransformBS =
                 (IsDlgButtonChecked(hwnd, IDC_FINDTRANSFORMBS) == BST_CHECKED) ? TRUE : FALSE;
