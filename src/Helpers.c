@@ -74,17 +74,31 @@ void ReportErrorEx(LPCTSTR lpszFunction, DWORD dwError)
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
 
+<<<<<<< HEAD
     LPTSTR lpDisplayBuf = (LPTSTR)AllocMem((lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR), HEAP_ZERO_MEMORY);
 
     if (lpDisplayBuf) {
         StringCchPrintf((LPTSTR)lpDisplayBuf, SizeOfMem(lpDisplayBuf) / sizeof(TCHAR),
+=======
+    LPTSTR lpDisplayBuf = (LPTSTR)LocalAlloc(LMEM_ZEROINIT,
+        (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+
+    if (lpDisplayBuf) {
+        StringCchPrintf((LPTSTR)lpDisplayBuf, LocalSize(lpDisplayBuf) / sizeof(TCHAR),
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                         TEXT("%s failed with error 0x%08lx:\n%s"), lpszFunction, dwError, lpMsgBuf);
 
         MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_ICONERROR | MB_OK);
 
+<<<<<<< HEAD
         FreeMem(lpDisplayBuf);
     }
     LocalFree(lpMsgBuf); // created via FORMAT_MESSAGE_ALLOCATE_BUFFER
+=======
+        LocalFree(lpDisplayBuf);
+    }
+    LocalFree(lpMsgBuf);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     //ExitProcess(dwError);
 }
 
@@ -104,8 +118,13 @@ int IniSectionGetString(
     int  ich;
 
     if (p) {
+<<<<<<< HEAD
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
+=======
+        lstrcpy(tch, lpName);
+        lstrcat(tch, L"=");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         ich = lstrlen(tch);
 
         while (*p) {
@@ -133,8 +152,13 @@ int IniSectionGetInt(
     int  i;
 
     if (p) {
+<<<<<<< HEAD
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
+=======
+        lstrcpy(tch, lpName);
+        lstrcat(tch, L"=");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         ich = lstrlen(tch);
 
         while (*p) {
@@ -162,7 +186,11 @@ BOOL IniSectionSetString(LPWSTR lpCachedIniSection, LPCWSTR lpName, LPCWSTR lpSt
             p = StrEnd(p) + 1;
         }
         wsprintf(tch, L"%s=%s", lpName, lpString);
+<<<<<<< HEAD
         StringCchCopy(p, 32 + 512 * 3 + 32, tch);
+=======
+        lstrcpy(p, tch);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         p = StrEnd(p) + 1;
         *p = 0;
         return(TRUE);
@@ -437,6 +465,7 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
 
     if (bIsElevated) {
         FormatString(szElevatedAppName, COUNTOF(szElevatedAppName), IDS_APPTITLE_ELEVATED, szAppName);
+<<<<<<< HEAD
         StringCchCopyN(szAppName, 128, szElevatedAppName, COUNTOF(szAppName));
     }
 
@@ -449,12 +478,27 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
         GetString(IDS_TITLEEXCERPT, szExcrptFmt, COUNTOF(szExcrptFmt));
         wsprintf(szExcrptQuot, szExcrptFmt, lpszExcerpt);
         StringCchCat(szTitle, 512, szExcrptQuot);
+=======
+        StrCpyN(szAppName, szElevatedAppName, COUNTOF(szAppName));
+    }
+
+    if (bModified)
+        lstrcpy(szTitle, pszMod);
+    else
+        lstrcpy(szTitle, L"");
+
+    if (lstrlen(lpszExcerpt)) {
+        GetString(IDS_TITLEEXCERPT, szExcrptFmt, COUNTOF(szExcrptFmt));
+        wsprintf(szExcrptQuot, szExcrptFmt, lpszExcerpt);
+        StrCat(szTitle, szExcrptQuot);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
 
     else if (lstrlen(lpszFile)) {
         if (iFormat < 2 && !PathIsRoot(lpszFile)) {
             if (lstrcmp(szCachedFile, lpszFile) != 0) {
                 SHFILEINFO shfi;
+<<<<<<< HEAD
                 StringCchCopy(szCachedFile, MAX_PATH, lpszFile);
                 if (SHGetFileInfo2(lpszFile, 0, &shfi, sizeof(SHFILEINFO), SHGFI_DISPLAYNAME))
                     StringCchCopy(szCachedDisplayName, MAX_PATH, shfi.szDisplayName);
@@ -488,6 +532,41 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
 
     StringCchCat(szTitle, 512, pszSep);
     StringCchCat(szTitle, 512, szAppName);
+=======
+                lstrcpy(szCachedFile, lpszFile);
+                if (SHGetFileInfo2(lpszFile, 0, &shfi, sizeof(SHFILEINFO), SHGFI_DISPLAYNAME))
+                    lstrcpy(szCachedDisplayName, shfi.szDisplayName);
+                else
+                    lstrcpy(szCachedDisplayName, PathFindFileName(lpszFile));
+            }
+            lstrcat(szTitle, szCachedDisplayName);
+            if (iFormat == 1) {
+                WCHAR tchPath[MAX_PATH];
+                StrCpyN(tchPath, lpszFile, COUNTOF(tchPath));
+                PathRemoveFileSpec(tchPath);
+                StrCat(szTitle, L" [");
+                StrCat(szTitle, tchPath);
+                StrCat(szTitle, L"]");
+            }
+        }
+        else
+            lstrcat(szTitle, lpszFile);
+    }
+
+    else {
+        lstrcpy(szCachedFile, L"");
+        lstrcpy(szCachedDisplayName, L"");
+        lstrcat(szTitle, szUntitled);
+    }
+
+    if (bReadOnly && GetString(uIDReadOnly, szReadOnly, COUNTOF(szReadOnly))) {
+        lstrcat(szTitle, L" ");
+        lstrcat(szTitle, szReadOnly);
+    }
+
+    lstrcat(szTitle, pszSep);
+    lstrcat(szTitle, szAppName);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return SetWindowText(hwnd, szTitle);
 
@@ -501,6 +580,7 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
 void SetWindowTransparentMode(HWND hwnd, BOOL bTransparentMode)
 {
     FARPROC fp = NULL;
+<<<<<<< HEAD
 
     if (bTransparentMode) {
         HMODULE hm = GetModuleHandle(L"User32");
@@ -517,6 +597,24 @@ void SetWindowTransparentMode(HWND hwnd, BOOL bTransparentMode)
                 iAlphaPercent = 75;
             BYTE bAlpha = (BYTE)((iAlphaPercent * 255 / 100) & BYTE_MAX);
 
+=======
+
+    if (bTransparentMode) {
+        HMODULE hm = GetModuleHandle(L"User32");
+        if (hm)
+            fp = GetProcAddress(hm, "SetLayeredWindowAttributes");
+
+        if (fp) {
+            SetWindowLongPtr(hwnd, GWL_EXSTYLE,
+                             GetWindowLongPtr(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+
+            // get opacity level from registry
+            int iAlphaPercent = IniGetInt(L"Settings2", L"OpacityLevel", 75);
+            if (iAlphaPercent < 0 || iAlphaPercent > 100)
+                iAlphaPercent = 75;
+            BYTE bAlpha = (BYTE)((iAlphaPercent * 255 / 100) & BYTE_MAX);
+
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             fp(hwnd, 0, bAlpha, LWA_ALPHA);
         }
     }
@@ -653,7 +751,13 @@ void ResizeDlg_Init(HWND hwnd, int cxFrame, int cyFrame, int nIdGrip)
     RECT rc;
     WCHAR wch[64];
     int cGrip;
+<<<<<<< HEAD
     RESIZEDLG *pm = AllocMem(sizeof(RESIZEDLG), HEAP_ZERO_MEMORY);
+=======
+    RESIZEDLG *pm = LocalAlloc(LPTR, sizeof(RESIZEDLG));
+    if (!pm)
+        return;
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     GetClientRect(hwnd, &rc);
     pm->cxClient = rc.right - rc.left;
@@ -697,7 +801,11 @@ void ResizeDlg_Destroy(HWND hwnd, int *cxFrame, int *cyFrame)
     *cyFrame = rc.bottom - rc.top;
 
     RemoveProp(hwnd, L"ResizeDlg");
+<<<<<<< HEAD
     FreeMem(pm);
+=======
+    LocalFree(pm);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 }
 
 void ResizeDlg_Size(HWND hwnd, LPARAM lParam, int *cx, int *cy)
@@ -899,13 +1007,23 @@ int Toolbar_GetButtons(HWND hwnd, int cmdBase, LPWSTR lpszButtons, int cchButton
     int i, c;
     TBBUTTON tbb;
 
+<<<<<<< HEAD
     StringCchCopy(tchButtons, 512, L"");
+=======
+    lstrcpy(tchButtons, L"");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     c = min(50, (int)SendMessage(hwnd, TB_BUTTONCOUNT, 0, 0));
 
     for (i = 0; i < c; i++) {
         SendMessage(hwnd, TB_GETBUTTON, (WPARAM)i, (LPARAM)&tbb);
+<<<<<<< HEAD
         wsprintf(tchItem, L"%i ", (tbb.idCommand == 0) ? 0 : tbb.idCommand - cmdBase + 1);
         StringCchCat(tchButtons, 512, tchItem);
+=======
+        wsprintf(tchItem, L"%i ",
+            (tbb.idCommand == 0) ? 0 : tbb.idCommand - cmdBase + 1);
+        lstrcat(tchButtons, tchItem);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
     TrimString(tchButtons);
     (void)StringCchCopy(lpszButtons, cchButtons, tchButtons);
@@ -982,6 +1100,7 @@ int FormatString(LPWSTR lpOutput, int nOutput, UINT uIdFormat, ...)
     va_list argList;
     va_start(argList, uIdFormat);
 
+<<<<<<< HEAD
     WCHAR *p = AllocMem(sizeof(WCHAR)*nOutput, HEAP_ZERO_MEMORY);
 
     if (p && GetString(uIdFormat, p, nOutput)) {
@@ -989,6 +1108,16 @@ int FormatString(LPWSTR lpOutput, int nOutput, UINT uIdFormat, ...)
         FreeMem(p);
     }
     va_end(argList);
+=======
+    WCHAR *p = LocalAlloc(LPTR, sizeof(WCHAR)*nOutput);
+
+    if (p && GetString(uIdFormat, p, nOutput))
+        wvsprintf(lpOutput, p, (LPVOID)((PUINT_PTR)&uIdFormat + 1));
+
+    LocalFree(p);
+
+    return lstrlen(lpOutput);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return lstrlen(lpOutput);
 }
@@ -1021,9 +1150,15 @@ void PathRelativeToApp(
         !PathIsPrefix(wchUserFiles, wchAppPath) &&
         PathIsPrefix(wchUserFiles, lpszSrc) &&
         PathRelativePathTo(wchPath, wchUserFiles, FILE_ATTRIBUTE_DIRECTORY, lpszSrc, dwAttrTo)) {
+<<<<<<< HEAD
         StringCchCopy(wchUserFiles, MAX_PATH, L"%CSIDL:MYDOCUMENTS%");
         PathAppend(wchUserFiles, wchPath);
         StringCchCopy(wchPath, MAX_PATH, wchUserFiles);
+=======
+        lstrcpy(wchUserFiles, L"%CSIDL:MYDOCUMENTS%");
+        PathAppend(wchUserFiles, wchPath);
+        lstrcpy(wchPath, wchUserFiles);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
     else if (PathIsRelative(lpszSrc) || PathCommonPrefix(wchAppPath, wchWinDir, NULL))
         (void)StringCchCopy(wchPath, ARRAYSIZE(wchPath), lpszSrc);
@@ -1055,6 +1190,7 @@ void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExp
 
     WCHAR wchPath[MAX_PATH];
     WCHAR wchResult[MAX_PATH];
+<<<<<<< HEAD
 
     /* notepad2-mod custom code start */
     if (lpszSrc == NULL) {
@@ -1063,6 +1199,16 @@ void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExp
     }
     /* notepad2-mod custom code end */
 
+=======
+
+    /* notepad2-mod custom code start */
+    if (lpszSrc == NULL) {
+        ZeroMemory(lpszDest, (cchDest == 0) ? MAX_PATH : cchDest);
+        return;
+    }
+    /* notepad2-mod custom code end */
+
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     if (StrCmpNI(lpszSrc, L"%CSIDL:MYDOCUMENTS%", CSTRLEN("%CSIDL:MYDOCUMENTS%")) == 0) {
         SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, wchPath);
         PathAppend(wchPath, lpszSrc + CSTRLEN("%CSIDL:MYDOCUMENTS%"));
@@ -1164,7 +1310,11 @@ BOOL PathGetLnkPath(LPCWSTR pszLnkFile, LPWSTR pszResPath, int cchResPath)
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 pszLnkFile,-1,wsz,MAX_PATH);*/
+<<<<<<< HEAD
             StringCchCopy(wsz, MAX_PATH, pszLnkFile);
+=======
+            lstrcpy(wsz, pszLnkFile);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
             if (SUCCEEDED(ppf->lpVtbl->Load(ppf, wsz, STGM_READ))) {
                 if (NOERROR == psl->lpVtbl->GetPath(psl, pszResPath, cchResPath, &fd, 0))
@@ -1256,11 +1406,19 @@ BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
     // init strings
     GetModuleFileName(NULL, tchExeFile, COUNTOF(tchExeFile));
 
+<<<<<<< HEAD
     StringCchCopy(tchDocTemp, MAX_PATH, pszDocument);
     PathQuoteSpaces(tchDocTemp);
 
     StringCchCopy(tchArguments, MAX_PATH + 16, L"-n ");
     StringCchCat(tchArguments, MAX_PATH, tchDocTemp);
+=======
+    lstrcpy(tchDocTemp, pszDocument);
+    PathQuoteSpaces(tchDocTemp);
+
+    lstrcpy(tchArguments, L"-n ");
+    lstrcat(tchArguments, tchDocTemp);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     SHGetSpecialFolderPath(NULL, tchLinkDir, CSIDL_DESKTOPDIRECTORY, TRUE);
 
@@ -1280,7 +1438,11 @@ BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 tchLnkFileName,-1,wsz,MAX_PATH);*/
+<<<<<<< HEAD
             StringCchCopy(wsz, MAX_PATH, tchLnkFileName);
+=======
+            lstrcpy(wsz, tchLnkFileName);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
             psl->lpVtbl->SetPath(psl, tchExeFile);
             psl->lpVtbl->SetArguments(psl, tchArguments);
@@ -1319,9 +1481,15 @@ BOOL PathCreateFavLnk(LPCWSTR pszName, LPCWSTR pszTarget, LPCWSTR pszDir)
     if (!pszName || lstrlen(pszName) == 0)
         return TRUE;
 
+<<<<<<< HEAD
     StringCchCopy(tchLnkFileName, MAX_PATH, pszDir);
     PathAppend(tchLnkFileName, pszName);
     StringCchCat(tchLnkFileName, MAX_PATH, L".lnk");
+=======
+    lstrcpy(tchLnkFileName, pszDir);
+    PathAppend(tchLnkFileName, pszName);
+    lstrcat(tchLnkFileName, L".lnk");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     if (PathFileExists(tchLnkFileName))
         return FALSE;
@@ -1336,7 +1504,11 @@ BOOL PathCreateFavLnk(LPCWSTR pszName, LPCWSTR pszTarget, LPCWSTR pszDir)
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 tchLnkFileName,-1,wsz,MAX_PATH);*/
+<<<<<<< HEAD
             StringCchCopy(wsz, MAX_PATH, tchLnkFileName);
+=======
+            lstrcpy(wsz, tchLnkFileName);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
             psl->lpVtbl->SetPath(psl, pszTarget);
 
@@ -1415,6 +1587,7 @@ BOOL ExtractFirstArgument(LPCWSTR lpArgs, LPWSTR lpArg1, LPWSTR lpArg2)
     LPWSTR psz;
     BOOL bQuoted = FALSE;
 
+<<<<<<< HEAD
     StringCchCopy(lpArg1, MAX_PATH, lpArgs);
 
     if (lpArg2)
@@ -1445,6 +1618,37 @@ BOOL ExtractFirstArgument(LPCWSTR lpArgs, LPWSTR lpArg1, LPWSTR lpArg2)
     if (lpArg2)
         TrimString(lpArg2);
 
+=======
+    lstrcpy(lpArg1, lpArgs);
+    if (lpArg2)
+        *lpArg2 = L'\0';
+
+    if (!TrimString(lpArg1))
+        return FALSE;
+
+    if (*lpArg1 == L'\"') {
+        *lpArg1 = L' ';
+        TrimString(lpArg1);
+        bQuoted = TRUE;
+    }
+
+    if (bQuoted)
+        psz = StrChr(lpArg1, L'\"');
+    else
+        psz = StrChr(lpArg1, L' ');;
+
+    if (psz) {
+        *psz = L'\0';
+        if (lpArg2)
+            lstrcpy(lpArg2, psz + 1);
+    }
+
+    TrimString(lpArg1);
+
+    if (lpArg2)
+        TrimString(lpArg2);
+
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return TRUE;
 
 }
@@ -1551,14 +1755,22 @@ DWORD_PTR SHGetFileInfo2(LPCWSTR pszPath, DWORD dwFileAttributes,
 
         DWORD_PTR dw = SHGetFileInfo(pszPath, dwFileAttributes, psfi, cbFileInfo, uFlags);
         if (lstrlen(psfi->szDisplayName) < lstrlen(PathFindFileName(pszPath)))
+<<<<<<< HEAD
             StringCchCat(psfi->szDisplayName, COUNTOF(psfi->szDisplayName), PathFindExtension(pszPath));
+=======
+            StrCatBuff(psfi->szDisplayName, PathFindExtension(pszPath), COUNTOF(psfi->szDisplayName));
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         return(dw);
     }
 
     else {
         DWORD_PTR dw = SHGetFileInfo(pszPath, FILE_ATTRIBUTE_NORMAL, psfi, cbFileInfo, uFlags | SHGFI_USEFILEATTRIBUTES);
         if (lstrlen(psfi->szDisplayName) < lstrlen(PathFindFileName(pszPath)))
+<<<<<<< HEAD
             StringCchCat(psfi->szDisplayName, COUNTOF(psfi->szDisplayName), PathFindExtension(pszPath));
+=======
+            StrCatBuff(psfi->szDisplayName, PathFindExtension(pszPath), COUNTOF(psfi->szDisplayName));
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         return(dw);
     }
 
@@ -1662,7 +1874,11 @@ UINT CodePageFromCharSet(UINT uCharSet)
 LPMRULIST MRU_Create(LPCWSTR pszRegKey, int iFlags, int iSize)
 {
 
+<<<<<<< HEAD
     LPMRULIST pmru = AllocMem(sizeof(MRULIST), HEAP_ZERO_MEMORY);
+=======
+    LPMRULIST pmru = LocalAlloc(LPTR, sizeof(MRULIST));
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     if (pmru) {
         ZeroMemory(pmru, sizeof(MRULIST));
         (void)StringCchCopy(pmru->szRegKey, ARRAYSIZE(pmru->szRegKey), pszRegKey);
@@ -1678,10 +1894,17 @@ BOOL MRU_Destroy(LPMRULIST pmru)
     int i;
     for (i = 0; i < pmru->iSize; i++) {
         if (pmru->pszItems[i])
+<<<<<<< HEAD
             LocalFree(pmru->pszItems[i]); // allocated by StrDup()
     }
     ZeroMemory(pmru, sizeof(MRULIST));
     FreeMem(pmru);
+=======
+            LocalFree(pmru->pszItems[i]);
+    }
+    ZeroMemory(pmru, sizeof(MRULIST));
+    LocalFree(pmru);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return(1);
 }
 
@@ -1700,7 +1923,11 @@ BOOL MRU_Add(LPMRULIST pmru, LPCWSTR pszNew)
     int i;
     for (i = 0; i < pmru->iSize; i++) {
         if (MRU_Compare(pmru, pmru->pszItems[i], pszNew) == 0) {
+<<<<<<< HEAD
             LocalFree(pmru->pszItems[i]); // allocated by StrDup()
+=======
+            LocalFree(pmru->pszItems[i]);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             break;
         }
     }
@@ -1717,14 +1944,22 @@ BOOL MRU_AddFile(LPMRULIST pmru, LPCWSTR pszFile, BOOL bRelativePath, BOOL bUnex
     int i;
     for (i = 0; i < pmru->iSize; i++) {
         if (!pmru->pszItems[i] || lstrcmpi(pmru->pszItems[i], pszFile) == 0) {
+<<<<<<< HEAD
             LocalFree(pmru->pszItems[i]); // allocated by StrDup()
+=======
+            LocalFree(pmru->pszItems[i]); // If parameter is NULL, LocalFree ignores it and returns NULL.
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             break;
         }
         else {
             WCHAR wchItem[MAX_PATH];
             PathAbsoluteFromApp(pmru->pszItems[i], wchItem, COUNTOF(wchItem), TRUE);
             if (lstrcmpi(wchItem, pszFile) == 0) {
+<<<<<<< HEAD
                 LocalFree(pmru->pszItems[i]); // allocated by StrDup()
+=======
+                LocalFree(pmru->pszItems[i]);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                 break;
             }
         }
@@ -1756,7 +1991,11 @@ BOOL MRU_Delete(LPMRULIST pmru, int iIndex)
     if (iIndex < 0 || iIndex > pmru->iSize - 1)
         return(0);
     if (pmru->pszItems[iIndex])
+<<<<<<< HEAD
         LocalFree(pmru->pszItems[iIndex]); // allocated by StrDup()
+=======
+        LocalFree(pmru->pszItems[iIndex]);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     for (i = iIndex; i < pmru->iSize - 1; i++) {
         pmru->pszItems[i] = pmru->pszItems[i + 1];
         pmru->pszItems[i + 1] = NULL;
@@ -1793,7 +2032,11 @@ BOOL MRU_Empty(LPMRULIST pmru)
     int i;
     for (i = 0; i < pmru->iSize; i++) {
         if (pmru->pszItems[i]) {
+<<<<<<< HEAD
             LocalFree(pmru->pszItems[i]); // allocated by StrDup()
+=======
+            LocalFree(pmru->pszItems[i]);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             pmru->pszItems[i] = NULL;
         }
     }
@@ -1825,11 +2068,19 @@ BOOL MRU_Load(LPMRULIST pmru)
     int i, n = 0;
     WCHAR tchName[32];
     WCHAR tchItem[1024];
+<<<<<<< HEAD
     WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
 
     if (pmru && pIniSection) {
         MRU_Empty(pmru);
         LoadIniSection(pmru->szRegKey, pIniSection, (int)SizeOfMem(pIniSection) / sizeof(WCHAR));
+=======
+    WCHAR *pIniSection = LocalAlloc(LPTR, sizeof(WCHAR) * 32 * 1024);
+
+    if (pmru && pIniSection) {
+        MRU_Empty(pmru);
+        LoadIniSection(pmru->szRegKey, pIniSection, (int)LocalSize(pIniSection) / sizeof(WCHAR));
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
     if (pmru) {
         for (i = 0; i < pmru->iSize; i++) {
@@ -1846,7 +2097,11 @@ BOOL MRU_Load(LPMRULIST pmru)
             }
         }
     }
+<<<<<<< HEAD
     FreeMem(pIniSection);
+=======
+    LocalFree(pIniSection);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return(1);
 }
 
@@ -1855,7 +2110,11 @@ BOOL MRU_Save(LPMRULIST pmru)
 
     int i;
     WCHAR tchName[32];
+<<<<<<< HEAD
     WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
+=======
+    WCHAR *pIniSection = LocalAlloc(LPTR, sizeof(WCHAR) * 32 * 1024);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     //IniDeleteSection(pmru->szRegKey);
 
@@ -1874,7 +2133,11 @@ BOOL MRU_Save(LPMRULIST pmru)
         }
     }
     SaveIniSection(pmru->szRegKey, pIniSection);
+<<<<<<< HEAD
     FreeMem(pIniSection);
+=======
+    LocalFree(pIniSection);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return(1);
 }
 
@@ -1923,7 +2186,11 @@ BOOL GetThemedDialogFont(LPWSTR lpFaceName, WORD* wSize)
 {
     HDC hDC;
     int iLogPixelsY;
+<<<<<<< HEAD
     HMODULE _hModUxTheme;
+=======
+    HMODULE hModUxTheme;
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     HTHEME hTheme = NULL;
     LOGFONT lf;
     BOOL bSucceed = FALSE;
@@ -1932,23 +2199,40 @@ BOOL GetThemedDialogFont(LPWSTR lpFaceName, WORD* wSize)
     iLogPixelsY = GetDeviceCaps(hDC, LOGPIXELSY);
     ReleaseDC(NULL, hDC);
 
+<<<<<<< HEAD
     if ((_hModUxTheme = GetModuleHandle(L"uxtheme.dll")) != NULL) {
         if ((BOOL)(GetProcAddress(_hModUxTheme, "IsAppThemed"))()) {
             FARPROC pa = GetProcAddress(_hModUxTheme, "OpenThemeData");
+=======
+    if ((hModUxTheme = GetModuleHandle(L"uxtheme.dll")) != NULL) {
+        if ((BOOL)(GetProcAddress(hModUxTheme, "IsAppThemed"))()) {
+            FARPROC pa = GetProcAddress(hModUxTheme, "OpenThemeData");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             if (pa)
                 hTheme = (HTHEME)(INT_PTR)(pa)(NULL, L"WINDOWSTYLE;WINDOW");
             if (hTheme) {
                 ZeroMemory(&lf, sizeof(LOGFONT));
+<<<<<<< HEAD
                 if (S_OK == (HRESULT)(GetProcAddress(_hModUxTheme, "GetThemeSysFont"))(hTheme,/*TMT_MSGBOXFONT*/805, &lf)) {
+=======
+                if (S_OK == (HRESULT)(GetProcAddress(hModUxTheme, "GetThemeSysFont"))(hTheme,/*TMT_MSGBOXFONT*/805, &lf)) {
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                     if (lf.lfHeight < 0)
                         lf.lfHeight = -lf.lfHeight;
                     *wSize = (WORD)MulDiv(lf.lfHeight, 72, iLogPixelsY);
                     if (*wSize == 0)
                         *wSize = 8;
+<<<<<<< HEAD
                     StringCchCopyN(lpFaceName, LF_FACESIZE+1, lf.lfFaceName, LF_FACESIZE);
                     bSucceed = TRUE;
                 }
                 (GetProcAddress(_hModUxTheme, "CloseThemeData"))(hTheme);
+=======
+                    StrCpyN(lpFaceName, lf.lfFaceName, LF_FACESIZE);
+                    bSucceed = TRUE;
+                }
+                (GetProcAddress(hModUxTheme, "CloseThemeData"))(hTheme);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             }
         }
     }
@@ -1963,7 +2247,11 @@ BOOL GetThemedDialogFont(LPWSTR lpFaceName, WORD* wSize)
       *wSize = (WORD)MulDiv(ncm.lfMessageFont.lfHeight,72,iLogPixelsY);
       if (*wSize == 0)
         *wSize = 8;
+<<<<<<< HEAD
       StringCchCopyN(lpFaceName,LF_FACESIZE,ncm.lfMessageFont.lfFaceName,LF_FACESIZE);
+=======
+      StrCpyN(lpFaceName,ncm.lfMessageFont.lfFaceName,LF_FACESIZE);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }*/
 
     return(bSucceed);
@@ -2016,6 +2304,7 @@ __inline BYTE* DialogTemplate_GetFontSizeField(const DLGTEMPLATE* pTemplate)
 
 DLGTEMPLATE* LoadThemedDialogTemplate(LPCTSTR lpDialogTemplateID, HINSTANCE hInstance)
 {
+<<<<<<< HEAD
 
     HRSRC hRsrc;
     HGLOBAL hRsrcMem;
@@ -2055,6 +2344,45 @@ DLGTEMPLATE* LoadThemedDialogTemplate(LPCTSTR lpDialogTemplateID, HINSTANCE hIns
         return(NULL);
     }
 
+=======
+
+    HRSRC hRsrc;
+    HGLOBAL hRsrcMem;
+    DLGTEMPLATE *pRsrcMem = NULL;
+    DLGTEMPLATE *pTemplate = NULL;
+    UINT dwTemplateSize = 0;
+    WCHAR wchFaceName[LF_FACESIZE];
+    WORD wFontSize;
+    BOOL bDialogEx;
+    BOOL bHasFont;
+    int cbFontAttr;
+    int cbNew;
+    int cbOld;
+    BYTE* pbNew;
+    BYTE* pb;
+    BYTE* pOldControls;
+    BYTE* pNewControls;
+    WORD nCtrl;
+
+    hRsrc = FindResource(hInstance, lpDialogTemplateID, RT_DIALOG);
+    if (!hRsrc)
+        return(NULL);
+
+    hRsrcMem = LoadResource(hInstance, hRsrc);
+    if (hRsrcMem)
+        pRsrcMem = (DLGTEMPLATE*)LockResource(hRsrcMem);
+
+    dwTemplateSize = (UINT)SizeofResource(hInstance, hRsrc);
+
+    if ((dwTemplateSize == 0) ||
+        (pTemplate = LocalAlloc(LPTR, dwTemplateSize + LF_FACESIZE * 2)) == NULL) {
+        if (hRsrcMem) {
+            UnlockResource(hRsrcMem);
+            FreeResource(hRsrcMem);
+        }
+        return(NULL);
+    }
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     if (pRsrcMem && pTemplate) {
         CopyMemory((BYTE*)pTemplate, pRsrcMem, (size_t)dwTemplateSize);
     }
@@ -2110,7 +2438,11 @@ INT_PTR ThemedDialogBoxParam(
     pDlgTemplate = LoadThemedDialogTemplate(lpTemplate, hInstance);
     ret = DialogBoxIndirectParam(hInstance, pDlgTemplate, hWndParent, lpDialogFunc, dwInitParam);
     if (pDlgTemplate)
+<<<<<<< HEAD
         FreeMem(pDlgTemplate);
+=======
+        LocalFree(pDlgTemplate);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return(ret);
 }
@@ -2129,7 +2461,11 @@ HWND CreateThemedDialogParam(
     pDlgTemplate = LoadThemedDialogTemplate(lpTemplate, hInstance);
     hwnd = CreateDialogIndirectParam(hInstance, pDlgTemplate, hWndParent, lpDialogFunc, dwInitParam);
     if (pDlgTemplate)
+<<<<<<< HEAD
         FreeMem(pDlgTemplate);
+=======
+        LocalFree(pDlgTemplate);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return(hwnd);
 }

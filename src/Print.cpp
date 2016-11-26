@@ -284,8 +284,13 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     if (iPrintHeader == 0) {
         WCHAR timeString[128];
         GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, timeString, 128);
+<<<<<<< HEAD
         StringCchCat(dateString, 256, L" ");
         StringCchCat(dateString, 256, timeString);
+=======
+        lstrcat(dateString, L" ");
+        lstrcat(dateString, timeString);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
 
     // Set print color mode
@@ -472,7 +477,11 @@ extern "C" UINT_PTR CALLBACK PageSetupHook(HWND hwnd, UINT uiMsg, WPARAM wParam,
 
         // Set header options
         GetString(IDS_PRINT_HEADER, tch, COUNTOF(tch));
+<<<<<<< HEAD
         StringCchCat(tch, 512, L"|");
+=======
+        lstrcat(tch, L"|");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         p1 = tch;
         while ((p2 = StrChr(p1, L'|')) != NULL) {
             *p2++ = L'\0';
@@ -484,7 +493,11 @@ extern "C" UINT_PTR CALLBACK PageSetupHook(HWND hwnd, UINT uiMsg, WPARAM wParam,
 
         // Set footer options
         GetString(IDS_PRINT_FOOTER, tch, COUNTOF(tch));
+<<<<<<< HEAD
         StringCchCat(tch, 512, L"|");
+=======
+        lstrcat(tch, L"|");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         p1 = tch;
         while ((p2 = StrChr(p1, L'|')) != NULL) {
             *p2++ = L'\0';
@@ -496,7 +509,11 @@ extern "C" UINT_PTR CALLBACK PageSetupHook(HWND hwnd, UINT uiMsg, WPARAM wParam,
 
         // Set color options
         GetString(IDS_PRINT_COLOR, tch, COUNTOF(tch));
+<<<<<<< HEAD
         StringCchCat(tch, 512, L"|");
+=======
+        lstrcat(tch, L"|");
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         p1 = tch;
         while ((p2 = StrChr(p1, L'|')) != NULL) {
             *p2++ = L'\0';
@@ -538,7 +555,12 @@ extern "C" UINT_PTR CALLBACK PageSetupHook(HWND hwnd, UINT uiMsg, WPARAM wParam,
 
 extern "C" void EditPrintSetup(HWND hwnd)
 {
+<<<<<<< HEAD
     DLGTEMPLATE* pDlgTemplate = LoadThemedDialogTemplate(MAKEINTRESOURCE(IDD_PAGESETUP), g_hInstance);
+=======
+    DLGTEMPLATE* pDlgTemplate =
+        LoadThemedDialogTemplate(MAKEINTRESOURCE(IDD_PAGESETUP), g_hInstance);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     PAGESETUPDLG pdlg;
     ZeroMemory(&pdlg, sizeof(PAGESETUPDLG));
@@ -573,7 +595,11 @@ extern "C" void EditPrintSetup(HWND hwnd)
         hDevNames = pdlg.hDevNames;
     }
 
+<<<<<<< HEAD
     FreeMem(pDlgTemplate);
+=======
+    LocalFree(pDlgTemplate);
+>>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 }
 
 
