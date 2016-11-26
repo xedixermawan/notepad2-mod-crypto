@@ -65,7 +65,6 @@ __inline void EndWaitCursor()
     SendMessage(hwndEdit, SCI_SETCURSOR, (WPARAM)SC_CURSORNORMAL, 0);
     GetCursorPos(&pt);
     SetCursorPos(pt.x, pt.y);
-<<<<<<< HEAD
 }
 
 #define Is2k     IsWindowsXPOrGreater
@@ -93,18 +92,6 @@ inline size_t SizeOfMem(LPVOID lpMemory)
 }
 
 
-=======
-}
-
-#define Is2k     IsWindowsXPOrGreater
-#define IsXP     IsWindowsXPSP3OrGreater
-#define IsVista  IsWindowsVistaOrGreater
-#define IsW7     IsWindows7OrGreater
-#define IsW8     IsWindows8OrGreater
-#define IsW81    IsWindows8Point1OrGreater
-#define IsW10    IsWindows10OrGreater
-
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 inline UINT GetTickCount_UINT() { return (UINT)(GetTickCount64() & UINT_MAX); }
 inline ULONG GetTickCount_ULONG() { return (ULONG)(GetTickCount64() & ULONG_MAX); } // use for DWORD
 

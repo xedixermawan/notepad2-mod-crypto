@@ -175,7 +175,6 @@ INT_PTR CALLBACK SetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
         case IDC_CHECK1:
         {
             BOOL useMas = IsDlgButtonChecked(hDlg, IDC_CHECK1) == BST_CHECKED;
-<<<<<<< HEAD
 
             if (useMas) { CheckDlgButton(hDlg, IDC_CHECK3, useMas ? BST_UNCHECKED : BST_CHECKED); }
         }
@@ -192,24 +191,6 @@ INT_PTR CALLBACK SetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
 
     }
 
-=======
-
-            if (useMas) { CheckDlgButton(hDlg, IDC_CHECK3, useMas ? BST_UNCHECKED : BST_CHECKED); }
-        }
-
-        break;
-
-        case IDCANCEL:
-            EndDialog(hDlg, IDCANCEL);
-            break;
-
-        }
-
-        break;
-
-    }
-
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return FALSE;
 
 }
@@ -251,39 +232,6 @@ INT_PTR CALLBACK GetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
             BOOL useMas = (IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED);
             WCHAR newKey[WKEY_LEN] = L"\0";
             GetDlgItemText(hDlg, IDC_EDIT3, newKey, COUNTOF(newKey));
-<<<<<<< HEAD
-
-            if (useMas) {
-                //@@@lstrcpyn( masterKey, newKey, WKEY_LEN );
-                memcpy(unicodeMasterKey, newKey, sizeof(unicodeMasterKey));
-                unicodeStringCpy(masterKey, unicodeMasterKey, sizeof(masterKey));
-                useFileKey = FALSE;
-                useMasterKey = TRUE;
-            }
-            else {
-                //@@@lstrcpyn( fileKey, newKey, WKEY_LEN );
-                memcpy(unicodeFileKey, newKey, sizeof(unicodeFileKey));
-                unicodeStringCpy(fileKey, unicodeFileKey, sizeof(fileKey));
-                useFileKey = TRUE;
-                useMasterKey = FALSE;
-            }
-
-            EndDialog(hDlg, IDOK);
-
-            return(TRUE);
-            break;
-        }
-
-        case IDCANCEL:
-            EndDialog(hDlg, IDCANCEL);
-            break;
-
-        }
-
-        break;
-    }
-
-=======
 
             if (useMas) {
                 //@@@lstrcpyn( masterKey, newKey, WKEY_LEN );
@@ -315,7 +263,6 @@ INT_PTR CALLBACK GetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
         break;
     }
 
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return FALSE;
 
 }
@@ -342,11 +289,7 @@ BOOL ReadFileKey(HWND hwnd, BOOL master)
 BOOL ReadAndDecryptFile(HWND hwnd, HANDLE hFile, DWORD size, void** result, DWORD *resultlen)
 {
     BOOL usedEncryption = FALSE;
-<<<<<<< HEAD
     HANDLE rawhandle = *result;
-=======
-    HANDLE rawhandle = *result; // GlobalAlloc(GPTR, size);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     BYTE* rawdata = (BYTE*)GlobalLock(rawhandle);
     unsigned long readsize = 0;
     BOOL bReadSuccess = ReadFile(hFile, rawdata, size, &readsize, NULL);
@@ -440,20 +383,13 @@ BOOL ReadAndDecryptFile(HWND hwnd, HANDLE hFile, DWORD size, void** result, DWOR
                     usedEncryption = FALSE;
                 }
             }
-<<<<<<< HEAD
 
             break;
 
-=======
-
-            break;
-
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
             default: BUG1("format %d not understood", scheme);
             }
         }
     }
-<<<<<<< HEAD
 
     if (!usedEncryption) { // here, the file is believed to be a straight text file
         ResetEncryption();
@@ -461,20 +397,6 @@ BOOL ReadAndDecryptFile(HWND hwnd, HANDLE hFile, DWORD size, void** result, DWOR
     }
 
     GlobalUnlock(rawhandle);
-=======
-
-    if (!usedEncryption) { // here, the file is believed to be a straight text file
-        ResetEncryption();
-        *resultlen = readsize;
-    }
-
-    GlobalUnlock(rawhandle);
-
-    //if ( !bReadSuccess )
-    //{
-    //	GlobalFree( rawhandle );
-    //}
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return(bReadSuccess);
 }
@@ -499,7 +421,6 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
             int i; for (i = 0; i < AES_MAX_IV_SIZE; i++) {
                 precodedata[PREAMBLE_SIZE + i] = 0;//rand();
             }
-<<<<<<< HEAD
         }
 
         {
@@ -577,85 +498,6 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
 
             *written = PREAMBLE_written + enclen_written;		// return the file size written
             return(bWriteRes);									// and the file ok status
-=======
-        }
-
-        {
-            if (useFileKey) {
-                // generate the encryption key from the passphrase
-                /* @@@
-                        char ansiKey[KEY_LEN+1];
-                        int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, fileKey, -1, ansiKey, KEY_LEN, NULL, NULL );
-                        ansiKey[len] = '\0';
-                        AES_keygen( ansiKey, binFileKey );
-                        */
-                AES_keygen(fileKey, binFileKey);
-                hasBinFileKey = TRUE;
-            };
-
-            AES_bin_setup(&fileEncode, AES_DIR_ENCRYPT, KEY_BYTES * 8, binFileKey);
-
-            AES_bin_cipherInit(&fileCypher, AES_MODE_CBC, &precodedata[PREAMBLE_SIZE]);
-
-            if (useMasterKey && *masterKey) {	//setup with the master key and encrypt the file key.
-              //append the encrypted file key to the end of the PREAMBLE block
-                BYTE binMasterKey[KEY_BYTES];
-                AES_keyInstance masterencode;
-                AES_cipherInstance mastercypher;
-                /* @@@
-                        char ansiKey[KEY_LEN+1];
-                        int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, masterKey, -1, ansiKey, KEY_LEN, NULL, NULL );
-                        ansiKey[len] = '\0';
-                        AES_keygen( ansiKey, binMasterKey );
-                        */
-                AES_keygen(masterKey, binMasterKey);
-                AES_bin_setup(&masterencode, AES_DIR_ENCRYPT, KEY_BYTES * 8, binMasterKey);
-                {// generate another IV for the master key
-
-                    int i; for (i = 0; i < sizeof(masterFileIV); i++) { masterFileIV[i] = (BYTE)(rand() & BYTE_MAX); }
-                }
-
-                AES_bin_cipherInit(&mastercypher, AES_MODE_CBC, masterFileIV);
-
-                AES_blockEncrypt(&mastercypher, &masterencode, binFileKey, sizeof(binFileKey), masterFileKey);
-                hasMasterFileKey = TRUE;
-            }
-
-            if (hasMasterFileKey) {// copy the encrypted (new or recycled) into the output
-                memcpy(&precodedata[precode_size], masterFileIV, sizeof(masterFileIV));
-                memcpy(&precodedata[precode_size + sizeof(masterFileIV)], masterFileKey, sizeof(masterFileKey));
-                precode_size += sizeof(masterFileKey) + sizeof(masterFileIV);
-                PREAMBLE_data[1] = MASTERKEY_FORMAT;
-            }
-
-            // write the PREAMBLE, punt if that failed
-            if (!WriteFile(hFile, precodedata, precode_size, &PREAMBLE_written, NULL)) {
-                *written = PREAMBLE_written;
-                return(FALSE);
-            }
-        }
-
-        // now encrypt the main file
-        {
-            BOOL writeOK = FALSE;
-            HANDLE enchandle = GlobalAlloc(GPTR, size + PAD_SLOP);	// add slop to the end for padding
-            if (enchandle == NULL)
-                return writeOK;
-            BYTE *encdata = GlobalLock(enchandle);
-            DWORD enclen_written = 0;
-            DWORD enclen = 0;
-
-            if (size > PAD_SLOP) { enclen += AES_blockEncrypt(&fileCypher, &fileEncode, data, size - PAD_SLOP, encdata); }
-
-            enclen += AES_padEncrypt(&fileCypher, &fileEncode, data + enclen, size - enclen, encdata + enclen);
-
-            writeOK = WriteFile(hFile, encdata, enclen, &enclen_written, NULL);
-
-            GlobalUnlock(enchandle);							// clean up
-            GlobalFree(enchandle);
-            *written = PREAMBLE_written + enclen_written;		// return the file size written
-            return(writeOK);									// and the file ok status
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         }
     }
     else {

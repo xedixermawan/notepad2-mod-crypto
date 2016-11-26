@@ -30,31 +30,18 @@
 #include <stdio.h>
 void Hexify
 (const unsigned char *src,	// @parm the source byte string
-<<<<<<< HEAD
- long len,				          // @parm the length of the source
- unsigned char *dest,			  // @parm the destination ascii-hex
- long destlen)				      // @parm the available length of the destination
-{
-    long n = 0, sn = 0;
-    static unsigned char HexDigits[] = "0123456789abcdef";
-=======
  long len,				// @parm the length of the source
  char *dest,			// @parm the destination ascii-hex
  long destlen)				// @parm the available length of the destination
 {
     long n = 0, sn = 0;
     static char  HexDigits[] = "0123456789abcdef";
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     while (sn < len) {
         unsigned char ch = src[sn++];
         if (n < destlen) { dest[n++] = HexDigits[(ch & 0xf0) >> 4]; }
         if (n < destlen) { dest[n++] = HexDigits[ch & 0x0f]; }
     }
-<<<<<<< HEAD
-    if (n < destlen) { dest[n++] = (unsigned char)0; }
-=======
     if (n < destlen) { dest[n++] = (char)0; }
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     else { perror("Hexify: dest buffer too small"); }
 }
 
@@ -309,10 +296,6 @@ void sha256_finish
     PUT_UINT32(ctx->state[7], digest, 28);
 }
 
-<<<<<<< HEAD
-#if 0
-=======
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 /* @func
 Convert a MD5 digest to a 32 char hex string (plus trailing null).  This
 function is intended to be used to armor digests as ordinary ascii for
@@ -325,11 +308,6 @@ void SHA256String(
 {
 
 }
-<<<<<<< HEAD
-#endif
-
-=======
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
 /* @func
 this is the short form to generate a binary hash from an ascii string
@@ -337,19 +315,11 @@ this is the short form to generate a binary hash from an ascii string
   */
 void Sha256String
 (const char *str,		           	//@parm the string to hash
-<<<<<<< HEAD
- unsigned char output[32])	    //@parm the result hash
-{
-    sha256_context ctx;
-    sha256_starts(&ctx);
-    sha256_update(&ctx, (const unsigned char*)str, (long)strlen(str));
-=======
  unsigned char output[32])	   //@parm the result hash
 {
     sha256_context ctx;
     sha256_starts(&ctx);
     sha256_update(&ctx, str, (long)strlen(str));
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     sha256_finish(&ctx, output);
 
 }
@@ -359,11 +329,7 @@ this is the short form to generate a hex hash from an ascii string
   */
 void Sha256HexString
 (const char *str,        //@parm the input string
-<<<<<<< HEAD
- unsigned char output[65])        //@parm the output string
-=======
  char output[65])        //@parm the output string
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 {
     unsigned char temp[32];
     Sha256String(str, temp);

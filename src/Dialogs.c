@@ -89,21 +89,12 @@ int MsgBox(int iType, UINT uIdMsg, ...)
             0,
             NULL);
         StrTrim(lpMsgBuf, L" \a\b\f\n\r\t\v");
-<<<<<<< HEAD
         StringCchCat(szText, COUNTOF(szText), L"\n");
         StringCchCat(szText, COUNTOF(szText), lpMsgBuf);
         LocalFree(lpMsgBuf); // created via FORMAT_MESSAGE_ALLOCATE_BUFFER
         wcht = *CharPrev(szText, StrEnd(szText));
         if (IsCharAlphaNumeric(wcht) || wcht == '"' || wcht == '\'')
             StringCchCat(szText, COUNTOF(szText), L".");
-=======
-        StrCatBuff(szText, L"\n", COUNTOF(szText));
-        StrCatBuff(szText, lpMsgBuf, COUNTOF(szText));
-        LocalFree(lpMsgBuf);
-        wcht = *CharPrev(szText, StrEnd(szText));
-        if (IsCharAlphaNumeric(wcht) || wcht == '"' || wcht == '\'')
-            StrCatBuff(szText, L".", COUNTOF(szText));
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     }
 
     GetString(IDS_APPTITLE, szTitle, COUNTOF(szTitle));
@@ -1075,11 +1066,7 @@ INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lPar
         SHFILEINFO shfi;
         LVCOLUMN lvc = { LVCF_FMT | LVCF_TEXT, LVCFMT_LEFT, 0, L"", -1, 0, 0, 0 };
 
-<<<<<<< HEAD
         LPICONTHREADINFO lpit = (LPVOID)AllocMem(sizeof(ICONTHREADINFO), HEAP_ZERO_MEMORY);
-=======
-        LPICONTHREADINFO lpit = (LPVOID)GlobalAlloc(GPTR, sizeof(ICONTHREADINFO));
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         if (lpit == NULL)
             return FALSE;
         SetProp(hwnd, L"it", (HANDLE)lpit);
@@ -1129,11 +1116,7 @@ INT_PTR CALLBACK FileMRUDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lPar
         CloseHandle(lpit->hExitThread);
         CloseHandle(lpit->hTerminatedThread);
         RemoveProp(hwnd, L"it");
-<<<<<<< HEAD
         FreeMem(lpit);
-=======
-        GlobalFree(lpit);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
         bSaveRecentFiles = (IsDlgButtonChecked(hwnd, IDC_SAVEMRU)) ? 1 : 0;
 
@@ -2288,11 +2271,7 @@ INT_PTR CALLBACK InfoBoxDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lPar
         SetDlgItemText(hwnd, IDC_INFOBOXTEXT, lpib->lpstrMessage);
         if (lpib->bDisableCheckBox)
             EnableWindow(GetDlgItem(hwnd, IDC_INFOBOXCHECK), FALSE);
-<<<<<<< HEAD
         FreeMem(lpib->lpstrMessage);
-=======
-        LocalFree(lpib->lpstrMessage);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
         CenterDlgInParent(hwnd);
         return TRUE;
 
@@ -2328,10 +2307,7 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
     int idDlg = IDD_INFOBOX;
     INFOBOX ib;
     WCHAR wchFormat[512];
-<<<<<<< HEAD
     WCHAR* pwchMessage;
-=======
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     int iMode;
     va_list argList;
     va_start(argList, uidMessage);
@@ -2346,7 +2322,6 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
         va_end(argList);
         return(-1);
     }
-<<<<<<< HEAD
     pwchMessage = (WCHAR*)AllocMem(1024 * sizeof(WCHAR), HEAP_ZERO_MEMORY);
     if (!pwchMessage) {
         va_end(argList);
@@ -2357,16 +2332,6 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
     va_end(argList);
 
     ib.lpstrMessage = pwchMessage;
-=======
-    ib.lpstrMessage = LocalAlloc(LPTR, 1024 * sizeof(WCHAR));
-    if (ib.lpstrMessage == NULL) {
-        va_end(argList);
-        return(-1);
-    }
-    StringCchVPrintf(ib.lpstrMessage, 1024, wchFormat, argList);
-    va_end(argList);
-
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     ib.lpstrSetting = (LPWSTR)lpstrSetting;
     ib.bDisableCheckBox = (lstrlen(szIniFile) == 0 || lstrlen(lpstrSetting) == 0 || iMode == 2) ? TRUE : FALSE;
 
@@ -2380,16 +2345,7 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
 
     MessageBeep(MB_ICONEXCLAMATION);
 
-<<<<<<< HEAD
     return ThemedDialogBoxParam(g_hInstance, MAKEINTRESOURCE(idDlg), hwnd, InfoBoxDlgProc, (LPARAM)&ib);
-=======
-    return ThemedDialogBoxParam(
-        g_hInstance,
-        MAKEINTRESOURCE(idDlg),
-        hwnd,
-        InfoBoxDlgProc,
-        (LPARAM)&ib);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
 }
 

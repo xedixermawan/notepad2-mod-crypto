@@ -19,21 +19,12 @@
 ******************************************************************************/
 
 
-
 typedef struct _editstyle
 {
-<<<<<<< HEAD
     union {
         INT32 iStyle;
         UINT8 iStyle8[4];
     } u ;
-=======
-    union
-    {
-        INT32 iStyle;
-        UINT8 iStyle8[4];
-    };
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     int rid;
     WCHAR* pszName;
     WCHAR* pszDefault;

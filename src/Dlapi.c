@@ -69,11 +69,7 @@ BOOL DirList_Init(HWND hwnd, LPCWSTR pszHeader)
     UNUSED(pszHeader);
 
     // Allocate DirListData Property
-<<<<<<< HEAD
     LPDLDATA lpdl = (LPVOID)AllocMem(sizeof(DLDATA), HEAP_ZERO_MEMORY);
-=======
-    LPDLDATA lpdl = (LPVOID)GlobalAlloc(GPTR, sizeof(DLDATA));
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     if (lpdl == NULL)
         return FALSE;
     SetProp(hwnd, pDirListProp, (HANDLE)lpdl);
@@ -142,11 +138,7 @@ BOOL DirList_Destroy(HWND hwnd)
 
     // Free DirListData Property
     RemoveProp(hwnd, pDirListProp);
-<<<<<<< HEAD
     FreeMem(lpdl);
-=======
-    GlobalFree(lpdl);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
     return FALSE;
 
@@ -254,10 +246,6 @@ int DirList_Fill(HWND hwnd, LPCWSTR lpszDir, DWORD grfFlags, LPCWSTR lpszFileSpe
     if (!lpszDir || !*lpszDir)
         return(-1);
 
-<<<<<<< HEAD
-=======
-    //lstrcpy(lpdl->szPath,lpszDir);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     StringCchCopy(lpdl->szPath, MAX_PATH, lpszDir);
 
     // Init ListView
@@ -282,12 +270,7 @@ int DirList_Fill(HWND hwnd, LPCWSTR lpszDir, DWORD grfFlags, LPCWSTR lpszFileSpe
                         -1,
                         wszDir,
                         MAX_PATH);*/
-<<<<<<< HEAD
     StringCchCopy(wszDir, MAX_PATH, lpszDir);
-=======
-                        //lstrcpy(wszDir,lpszDir);
-    StringCchCopy(wszDir, ARRAYSIZE(wszDir), lpszDir);
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
 
 
     // Get Desktop Folder
@@ -923,35 +906,6 @@ BOOL DirList_SelectItem(HWND hwnd, LPCWSTR lpszDisplayName, LPCWSTR lpszFullPath
         return(FALSE);
     else
         GetShortPathName(lpszFullPath, szShortPath, MAX_PATH);
-<<<<<<< HEAD
-
-    if (!lpszDisplayName || !lstrlen(lpszDisplayName)) {
-        ZeroMemory(&shfi, sizeof(SHFILEINFO));
-        SHGetFileInfo(lpszFullPath, 0, &shfi, sizeof(SHFILEINFO), SHGFI_DISPLAYNAME);
-    }
-    else {
-        StringCchCopy(shfi.szDisplayName, MAX_PATH, lpszDisplayName);
-    }
-    lvfi.flags = LVFI_STRING;
-    lvfi.psz = shfi.szDisplayName;
-
-    dli.mask = DLI_ALL;
-
-    while ((i = ListView_FindItem(hwnd, i, &lvfi)) != -1) {
-
-        DirList_GetItem(hwnd, i, &dli);
-        GetShortPathName(dli.szFileName, dli.szFileName, MAX_PATH);
-
-        if (!lstrcmpi(dli.szFileName, szShortPath)) {
-            ListView_SetItemState(hwnd, i, LVIS_FLAGS, LVIS_FLAGS);
-            ListView_EnsureVisible(hwnd, i, FALSE);
-
-            return(TRUE);
-        }
-
-    }
-
-=======
 
     if (!lpszDisplayName || !lstrlen(lpszDisplayName)) {
         ZeroMemory(&shfi, sizeof(SHFILEINFO));
@@ -980,7 +934,6 @@ BOOL DirList_SelectItem(HWND hwnd, LPCWSTR lpszDisplayName, LPCWSTR lpszFullPath
 
     }
 
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     return(FALSE);
 
 }
@@ -998,21 +951,6 @@ void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
 {
 
     WCHAR *p;
-<<<<<<< HEAD
-
-    ZeroMemory(pdlf, sizeof(DL_FILTER));
-    if (lpszFileSpec)
-        StringCchCopy(pdlf->tFilterBuf, DL_FILTER_BUFSIZE, lpszFileSpec);
-
-    pdlf->bExcludeFilter = bExcludeFilter;
-
-    if (!lpszFileSpec || !lstrcmp(lpszFileSpec, L"*.*") || !lstrlen(lpszFileSpec))
-        return;
-
-    pdlf->nCount = 1;
-    pdlf->pFilter[0] = &pdlf->tFilterBuf[0];    // Zeile zum Ausprobieren
-
-=======
 
     ZeroMemory(pdlf, sizeof(DL_FILTER));
     //lstrcpyn(pdlf->tFilterBuf,lpszFileSpec,(DL_FILTER_BUFSIZE-1));
@@ -1027,7 +965,6 @@ void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
     pdlf->nCount = 1;
     pdlf->pFilter[0] = &pdlf->tFilterBuf[0];    // Zeile zum Ausprobieren
 
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
     while ((p = StrChr(pdlf->pFilter[pdlf->nCount - 1], L';')) != NULL) {
         *p = L'\0';                              // Replace L';' by L'\0'
         pdlf->pFilter[pdlf->nCount] = (p + 1);  // Next position after L';'
@@ -1182,7 +1119,6 @@ int DriveBox_Fill(HWND hwnd)
                     hwnd,
                     grfFlags,
                     &lpe))
-<<<<<<< HEAD
 
                 {
 
@@ -1193,18 +1129,6 @@ int DriveBox_Fill(HWND hwnd)
                         &pidlEntry,
                         NULL))
 
-=======
-
-                {
-
-                    // Enumerate the contents of [My Computer]
-                    while (NOERROR == lpe->lpVtbl->Next(
-                        lpe,
-                        1,
-                        &pidlEntry,
-                        NULL))
-
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                     {
 
                         // Add item to the List if it is part of the
@@ -1245,21 +1169,13 @@ int DriveBox_Fill(HWND hwnd)
 
                                     while ((SendMessage(hwnd, CBEM_GETITEM, 0, (LPARAM)&cbei2))) {
                                         LPDC_ITEMDATA lpdcid2 = (LPDC_ITEMDATA)cbei2.lParam;
-<<<<<<< HEAD
                                         HRESULT _hr = (lpdcid->lpsf->lpVtbl->CompareIDs(
-=======
-                                        HRESULT hr = (lpdcid->lpsf->lpVtbl->CompareIDs(
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                                             lpdcid->lpsf,
                                             0,
                                             lpdcid->pidl,
                                             lpdcid2->pidl));
 
-<<<<<<< HEAD
                                         if ((short)(SCODE_CODE(GetScode(_hr))) < 0)
-=======
-                                        if ((short)(SCODE_CODE(GetScode(hr))) < 0)
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                                             break;
                                         else
                                             cbei2.iItem++;
@@ -1268,10 +1184,7 @@ int DriveBox_Fill(HWND hwnd)
                                     cbei.iItem = cbei2.iItem;
                                     cbei.lParam = (LPARAM)lpdcid;
                                     SendMessage(hwnd, CBEM_INSERTITEM, 0, (LPARAM)&cbei);
-<<<<<<< HEAD
-=======
 
->>>>>>> cdeee6e4f97f06fb949c178e8fffa9bba9d58948
                                 }
 
                             }
