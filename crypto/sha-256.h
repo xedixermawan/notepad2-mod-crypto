@@ -31,6 +31,6 @@ void sha256_update(sha256_context *ctx, const uint8 *input, uint32 length);
 void sha256_finish(sha256_context *ctx, uint8 digest[32]);
 
 void Sha256String(const char *str, unsigned char output[32]);
-void Sha256HexString(const char *str, char output[65]);
+void Sha256HexString(const char *str, unsigned char output[65]);
 
 #endif /* sha256.h */
