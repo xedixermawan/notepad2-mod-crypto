@@ -77,7 +77,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
 {
 
     // Don't print empty documents
-    if (SendMessage(hwnd, SCI_GETLENGTH, 0, 0) == 0) {
+    if (SendMessage(hwnd, SCI_GETLENGTH, 0, 0) == 0)
+    {
         MsgBox(MBWARN, IDS_PRINT_EMPTY);
         return TRUE;
     }
@@ -136,17 +137,21 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     startPos = (int)SendMessage(hwnd, SCI_GETSELECTIONSTART, 0, 0);
     endPos = (int)SendMessage(hwnd, SCI_GETSELECTIONEND, 0, 0);
 
-    if (startPos == endPos) {
+    if (startPos == endPos)
+    {
         pdlg.Flags |= PD_NOSELECTION;
     }
-    else {
+    else
+    {
         pdlg.Flags |= PD_SELECTION;
     }
-    if (0) {
+    if (0)
+    {
         // Don't display dialog box, just use the default printer and options
         pdlg.Flags |= PD_RETURNDEFAULT;
     }
-    if (!PrintDlg(&pdlg)) {
+    if (!PrintDlg(&pdlg))
+    {
         return TRUE; // False means error...
     }
 
@@ -184,7 +189,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
 
     // Take in account the page setup given by the user (if one value is not null)
     if (pagesetupMargin.left != 0 || pagesetupMargin.right != 0 ||
-        pagesetupMargin.top != 0 || pagesetupMargin.bottom != 0) {
+        pagesetupMargin.top != 0 || pagesetupMargin.bottom != 0)
+    {
 
         // Convert the hundredths of millimeters (HiMetric) or
         // thousandths of inches (HiEnglish) margin values
@@ -194,13 +200,15 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
         WCHAR localeInfo[3];
         GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_IMEASURE, localeInfo, 3);
 
-        if (localeInfo[0] == L'0') {  // Metric system. L'1' is US System
+        if (localeInfo[0] == L'0')
+        {  // Metric system. L'1' is US System
             rectSetup.left = MulDiv(pagesetupMargin.left, ptDpi.x, 2540);
             rectSetup.top = MulDiv(pagesetupMargin.top, ptDpi.y, 2540);
             rectSetup.right = MulDiv(pagesetupMargin.right, ptDpi.x, 2540);
             rectSetup.bottom = MulDiv(pagesetupMargin.bottom, ptDpi.y, 2540);
         }
-        else {
+        else
+        {
             rectSetup.left = MulDiv(pagesetupMargin.left, ptDpi.x, 1000);
             rectSetup.top = MulDiv(pagesetupMargin.top, ptDpi.y, 1000);
             rectSetup.right = MulDiv(pagesetupMargin.right, ptDpi.x, 1000);
@@ -213,7 +221,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
         rectMargins.right = max(rectPhysMargins.right, rectSetup.right);
         rectMargins.bottom = max(rectPhysMargins.bottom, rectSetup.bottom);
     }
-    else {
+    else
+    {
         rectMargins.left = rectPhysMargins.left;
         rectMargins.top = rectPhysMargins.top;
         rectMargins.right = rectPhysMargins.right;
@@ -266,7 +275,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     di.lpszOutput = 0;
     di.lpszDatatype = 0;
     di.fwType = 0;
-    if (StartDoc(hdc, &di) < 0) {
+    if (StartDoc(hdc, &di) < 0)
+    {
         DeleteDC(hdc);
         if (fontHeader)
             DeleteObject(fontHeader);
@@ -281,7 +291,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &st, NULL, dateString, 256);
 
     // Get current time...
-    if (iPrintHeader == 0) {
+    if (iPrintHeader == 0)
+    {
         WCHAR timeString[128];
         GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, timeString, 128);
         StringCchCat(dateString, 256, L" ");
@@ -305,12 +316,15 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     lengthPrinted = 0;
 
     // Requested to print selection
-    if (pdlg.Flags & PD_SELECTION) {
-        if (startPos > endPos) {
+    if (pdlg.Flags & PD_SELECTION)
+    {
+        if (startPos > endPos)
+        {
             lengthPrinted = endPos;
             lengthDoc = startPos;
         }
-        else {
+        else
+        {
             lengthPrinted = startPos;
             lengthDoc = endPos;
         }
@@ -337,13 +351,15 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     // Print each page
     pageNum = 1;
 
-    while (lengthPrinted < lengthDoc) {
+    while (lengthPrinted < lengthDoc)
+    {
         BOOL printPage = (!(pdlg.Flags & PD_PAGENUMS) ||
             (pageNum >= pdlg.nFromPage) && (pageNum <= pdlg.nToPage));
 
         wsprintf(pageString, pszPageFormat, pageNum);
 
-        if (printPage) {
+        if (printPage)
+        {
 
             // Show wait cursor...
             BeginWaitCursor();
@@ -361,14 +377,16 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
                         frPrint.rc.right, frPrint.rc.top - headerLineHeight / 2 };
             rcw.bottom = rcw.top + headerLineHeight;
 
-            if (iPrintHeader < 3) {
+            if (iPrintHeader < 3)
+            {
                 ExtTextOut(hdc, frPrint.rc.left + 5, frPrint.rc.top - headerLineHeight / 2,
                            /*ETO_OPAQUE*/0, &rcw, pszDocTitle,
                            lstrlen(pszDocTitle), NULL);
             }
 
             // Print date in header
-            if (iPrintHeader == 0 || iPrintHeader == 1) {
+            if (iPrintHeader == 0 || iPrintHeader == 1)
+            {
                 SIZE sizeInfo;
                 SelectObject(hdc, fontFooter);
                 GetTextExtentPoint32(hdc, dateString, lstrlen(dateString), &sizeInfo);
@@ -377,7 +395,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
                            lstrlen(dateString), NULL);
             }
 
-            if (iPrintHeader < 3) {
+            if (iPrintHeader < 3)
+            {
                 SetTextAlign(hdc, ta);
                 pen = CreatePen(0, 1, RGB(0, 0, 0));
                 penOld = (HPEN)SelectObject(hdc, pen);
@@ -393,7 +412,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
 
         lengthPrinted = (int)SendMessage(hwnd, SCI_FORMATRANGE, printPage, (LPARAM)&frPrint);
 
-        if (printPage) {
+        if (printPage)
+        {
             SetTextColor(hdc, RGB(0, 0, 0));
             SetBkColor(hdc, RGB(255, 255, 255));
             SelectObject(hdc, fontFooter);
@@ -401,7 +421,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
             RECT rcw = { frPrint.rc.left, frPrint.rc.bottom + footerLineHeight / 2,
                         frPrint.rc.right, frPrint.rc.bottom + footerLineHeight + footerLineHeight / 2 };
 
-            if (iPrintFooter == 0) {
+            if (iPrintFooter == 0)
+            {
                 SIZE sizeFooter;
                 GetTextExtentPoint32(hdc, pageString, lstrlen(pageString), &sizeFooter);
                 ExtTextOut(hdc, frPrint.rc.right - 5 - sizeFooter.cx, frPrint.rc.bottom + footerLineHeight / 2,
@@ -459,78 +480,83 @@ extern "C" UINT_PTR CALLBACK PageSetupHook(HWND hwnd, UINT uiMsg, WPARAM wParam,
 {
     UNUSED(lParam);
 
-    switch (uiMsg) {
-    case WM_INITDIALOG:
+    switch (uiMsg)
     {
-        WCHAR tch[512];
-        WCHAR *p1, *p2;
+        case WM_INITDIALOG:
+        {
+            WCHAR tch[512];
+            WCHAR *p1, *p2;
 
-        SendDlgItemMessage(hwnd, 30, EM_LIMITTEXT, 32, 0);
+            SendDlgItemMessage(hwnd, 30, EM_LIMITTEXT, 32, 0);
 
-        SendDlgItemMessage(hwnd, 31, UDM_SETRANGE, 0, MAKELONG((short)20, (short)-10));
-        SendDlgItemMessage(hwnd, 31, UDM_SETPOS, 0, MAKELONG((short)iPrintZoom, 0));
+            SendDlgItemMessage(hwnd, 31, UDM_SETRANGE, 0, MAKELONG((short)20, (short)-10));
+            SendDlgItemMessage(hwnd, 31, UDM_SETPOS, 0, MAKELONG((short)iPrintZoom, 0));
 
-        // Set header options
-        GetString(IDS_PRINT_HEADER, tch, COUNTOF(tch));
-        StringCchCat(tch, 512, L"|");
-        p1 = tch;
-        while ((p2 = StrChr(p1, L'|')) != NULL) {
-            *p2++ = L'\0';
-            if (*p1)
-                SendDlgItemMessage(hwnd, 32, CB_ADDSTRING, 0, (LPARAM)p1);
-            p1 = p2;
-        }
-        SendDlgItemMessage(hwnd, 32, CB_SETCURSEL, (WPARAM)iPrintHeader, 0);
+            // Set header options
+            GetString(IDS_PRINT_HEADER, tch, COUNTOF(tch));
+            StringCchCat(tch, 512, L"|");
+            p1 = tch;
+            while ((p2 = StrChr(p1, L'|')) != NULL)
+            {
+                *p2++ = L'\0';
+                if (*p1)
+                    SendDlgItemMessage(hwnd, 32, CB_ADDSTRING, 0, (LPARAM)p1);
+                p1 = p2;
+            }
+            SendDlgItemMessage(hwnd, 32, CB_SETCURSEL, (WPARAM)iPrintHeader, 0);
 
-        // Set footer options
-        GetString(IDS_PRINT_FOOTER, tch, COUNTOF(tch));
-        StringCchCat(tch, 512, L"|");
-        p1 = tch;
-        while ((p2 = StrChr(p1, L'|')) != NULL) {
-            *p2++ = L'\0';
-            if (*p1)
-                SendDlgItemMessage(hwnd, 33, CB_ADDSTRING, 0, (LPARAM)p1);
-            p1 = p2;
-        }
-        SendDlgItemMessage(hwnd, 33, CB_SETCURSEL, (WPARAM)iPrintFooter, 0);
+            // Set footer options
+            GetString(IDS_PRINT_FOOTER, tch, COUNTOF(tch));
+            StringCchCat(tch, 512, L"|");
+            p1 = tch;
+            while ((p2 = StrChr(p1, L'|')) != NULL)
+            {
+                *p2++ = L'\0';
+                if (*p1)
+                    SendDlgItemMessage(hwnd, 33, CB_ADDSTRING, 0, (LPARAM)p1);
+                p1 = p2;
+            }
+            SendDlgItemMessage(hwnd, 33, CB_SETCURSEL, (WPARAM)iPrintFooter, 0);
 
-        // Set color options
-        GetString(IDS_PRINT_COLOR, tch, COUNTOF(tch));
-        StringCchCat(tch, 512, L"|");
-        p1 = tch;
-        while ((p2 = StrChr(p1, L'|')) != NULL) {
-            *p2++ = L'\0';
-            if (*p1)
-                SendDlgItemMessage(hwnd, 34, CB_ADDSTRING, 0, (LPARAM)p1);
-            p1 = p2;
-        }
-        SendDlgItemMessage(hwnd, 34, CB_SETCURSEL, (WPARAM)iPrintColor, 0);
+            // Set color options
+            GetString(IDS_PRINT_COLOR, tch, COUNTOF(tch));
+            StringCchCat(tch, 512, L"|");
+            p1 = tch;
+            while ((p2 = StrChr(p1, L'|')) != NULL)
+            {
+                *p2++ = L'\0';
+                if (*p1)
+                    SendDlgItemMessage(hwnd, 34, CB_ADDSTRING, 0, (LPARAM)p1);
+                p1 = p2;
+            }
+            SendDlgItemMessage(hwnd, 34, CB_SETCURSEL, (WPARAM)iPrintColor, 0);
 
-        // Make combos handier
-        SendDlgItemMessage(hwnd, 32, CB_SETEXTENDEDUI, TRUE, 0);
-        SendDlgItemMessage(hwnd, 33, CB_SETEXTENDEDUI, TRUE, 0);
-        SendDlgItemMessage(hwnd, 34, CB_SETEXTENDEDUI, TRUE, 0);
-        SendDlgItemMessage(hwnd, 1137, CB_SETEXTENDEDUI, TRUE, 0);
-        SendDlgItemMessage(hwnd, 1138, CB_SETEXTENDEDUI, TRUE, 0);
-    }
-    break;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK) {
-            int iPos = (int)SendDlgItemMessage(hwnd, 31, UDM_GETPOS, 0, 0);
-            if (HIWORD(iPos) == 0)
-                iPrintZoom = (int)(short)LOWORD(iPos);
-            else
-                iPrintZoom = 0;
-
-            iPrintHeader = (int)SendDlgItemMessage(hwnd, 32, CB_GETCURSEL, 0, 0);
-            iPrintFooter = (int)SendDlgItemMessage(hwnd, 33, CB_GETCURSEL, 0, 0);
-            iPrintColor = (int)SendDlgItemMessage(hwnd, 34, CB_GETCURSEL, 0, 0);
+            // Make combos handier
+            SendDlgItemMessage(hwnd, 32, CB_SETEXTENDEDUI, TRUE, 0);
+            SendDlgItemMessage(hwnd, 33, CB_SETEXTENDEDUI, TRUE, 0);
+            SendDlgItemMessage(hwnd, 34, CB_SETEXTENDEDUI, TRUE, 0);
+            SendDlgItemMessage(hwnd, 1137, CB_SETEXTENDEDUI, TRUE, 0);
+            SendDlgItemMessage(hwnd, 1138, CB_SETEXTENDEDUI, TRUE, 0);
         }
         break;
 
-    default:
-        break;
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK)
+            {
+                int iPos = (int)SendDlgItemMessage(hwnd, 31, UDM_GETPOS, 0, 0);
+                if (HIWORD(iPos) == 0)
+                    iPrintZoom = (int)(short)LOWORD(iPos);
+                else
+                    iPrintZoom = 0;
+
+                iPrintHeader = (int)SendDlgItemMessage(hwnd, 32, CB_GETCURSEL, 0, 0);
+                iPrintFooter = (int)SendDlgItemMessage(hwnd, 33, CB_GETCURSEL, 0, 0);
+                iPrintColor = (int)SendDlgItemMessage(hwnd, 34, CB_GETCURSEL, 0, 0);
+            }
+            break;
+
+        default:
+            break;
     }
     return(0);
 }
@@ -550,7 +576,8 @@ extern "C" void EditPrintSetup(HWND hwnd)
     pdlg.hInstance = g_hInstance;
 
     if (pagesetupMargin.left != 0 || pagesetupMargin.right != 0 ||
-        pagesetupMargin.top != 0 || pagesetupMargin.bottom != 0) {
+        pagesetupMargin.top != 0 || pagesetupMargin.bottom != 0)
+    {
         pdlg.Flags |= PSD_MARGINS;
 
         pdlg.rtMargin.left = pagesetupMargin.left;
@@ -562,7 +589,8 @@ extern "C" void EditPrintSetup(HWND hwnd)
     pdlg.hDevMode = hDevMode;
     pdlg.hDevNames = hDevNames;
 
-    if (PageSetupDlg(&pdlg)) {
+    if (PageSetupDlg(&pdlg))
+    {
 
         pagesetupMargin.left = pdlg.rtMargin.left;
         pagesetupMargin.top = pdlg.rtMargin.top;
@@ -584,18 +612,21 @@ extern "C" void EditPrintSetup(HWND hwnd)
 extern "C" void EditPrintInit()
 {
     if (pagesetupMargin.left == -1 || pagesetupMargin.top == -1 ||
-        pagesetupMargin.right == -1 || pagesetupMargin.bottom == -1) {
+        pagesetupMargin.right == -1 || pagesetupMargin.bottom == -1)
+    {
         WCHAR localeInfo[3];
         GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_IMEASURE, localeInfo, 3);
 
-        if (localeInfo[0] == L'0') {  // Metric system. L'1' is US System
+        if (localeInfo[0] == L'0')
+        {  // Metric system. L'1' is US System
             pagesetupMargin.left = 2000;
             pagesetupMargin.top = 2000;
             pagesetupMargin.right = 2000;
             pagesetupMargin.bottom = 2000;
         }
 
-        else {
+        else
+        {
             pagesetupMargin.left = 1000;
             pagesetupMargin.top = 1000;
             pagesetupMargin.right = 1000;

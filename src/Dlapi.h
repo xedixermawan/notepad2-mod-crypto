@@ -169,9 +169,9 @@ extern "C" { // C-Declarations
     //==== ItemID =================================================================
 
     //==== IL_Next() ==============================================================
-    #define _IL_Next(pidl) ((LPITEMIDLIST)(((LPBYTE)(pidl)) + pidl->mkid.cb))
+#define _IL_Next(pidl) ((LPITEMIDLIST)(((LPBYTE)(pidl)) + pidl->mkid.cb))
 
-    //==== IL_Create() ============================================================
+//==== IL_Create() ============================================================
     LPITEMIDLIST IL_Create(LPCITEMIDLIST, UINT,
                            LPCITEMIDLIST, UINT);
 

@@ -65,7 +65,8 @@ void unicodeStringCpy(char *dest, WCHAR *src, int destSize)
     int sidx = 0;
     int didx = 0;
     int destLim = destSize - 1;
-    while ((src[sidx] != 0) && (didx < destLim)) {
+    while ((src[sidx] != 0) && (didx < destLim))
+    {
         WCHAR c = src[sidx++];
         char clow = (char)(c & 0xff);
         if (clow != 0) { dest[didx++] = clow; }		// ignore zeros in the low order part
@@ -94,100 +95,102 @@ INT_PTR CALLBACK SetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
 {
     UNUSED(lParam);
 
-    switch (umsg) {
-
-    case WM_INITDIALOG:
+    switch (umsg)
     {
-        SetDlgItemText(hDlg, IDC_EDIT1, unicodeFileKey);
-        SetDlgItemText(hDlg, IDC_EDIT2, unicodeMasterKey);
-        ShowWindow(GetDlgItem(hDlg, IDC_CHECK3), hasMasterFileKey);
-        CheckDlgButton(hDlg, IDC_CHECK3, hasMasterFileKey ? BST_CHECKED : BST_UNCHECKED);
-        CheckDlgButton(hDlg, IDC_CHECK2, (hasBinFileKey | useFileKey) ? BST_CHECKED : BST_UNCHECKED);
-        CheckDlgButton(hDlg, IDC_CHECK1, useMasterKey ? BST_CHECKED : BST_UNCHECKED);
-        CenterDlgInParent(hDlg);
-        // Don't use: SetFocus( GetDlgItem( hDlg, IDC_EDIT1 ) );
-        SetDialogFocus(hDlg, GetDlgItem(hDlg, IDC_EDIT1));
-    }
 
-    return TRUE;
-    break;
-
-    case WM_COMMAND:
-
-        switch (LOWORD(wParam)) {
-
-        case IDOK:
+        case WM_INITDIALOG:
         {
-            BOOL useMas = IsDlgButtonChecked(hDlg, IDC_CHECK1) == BST_CHECKED;
-            BOOL useFil = IsDlgButtonChecked(hDlg, IDC_CHECK2) == BST_CHECKED;
-            BOOL reuseMas = IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED;
-            WCHAR newFileKey[WKEY_LEN] = { 0 };
-            WCHAR newMasKey[WKEY_LEN] = { 0 };
-            hasMasterFileKey &= reuseMas;
-            GetDlgItemText(hDlg, IDC_EDIT1, newFileKey, COUNTOF(newFileKey));
-            GetDlgItemText(hDlg, IDC_EDIT2, newMasKey, COUNTOF(newMasKey));
-            useFileKey = !((newFileKey[0] <= ' ') || !useFil);
-            useMasterKey = !((newMasKey[0] <= ' ') || !useMas);
-            //@@@lstrcpyn(fileKey, newFileKey, WKEY_LEN);
-            //@@@lstrcpyn(masterKey, newMasKey, WKEY_LEN);
-            memcpy(unicodeFileKey, newFileKey, sizeof(unicodeFileKey));
-            memcpy(unicodeMasterKey, newMasKey, sizeof(unicodeMasterKey));
-            unicodeStringCpy(fileKey, unicodeFileKey, sizeof(fileKey));
-            unicodeStringCpy(masterKey, unicodeMasterKey, sizeof(masterKey));
-            EndDialog(hDlg, IDOK);
-            return(TRUE);
+            SetDlgItemText(hDlg, IDC_EDIT1, unicodeFileKey);
+            SetDlgItemText(hDlg, IDC_EDIT2, unicodeMasterKey);
+            ShowWindow(GetDlgItem(hDlg, IDC_CHECK3), hasMasterFileKey);
+            CheckDlgButton(hDlg, IDC_CHECK3, hasMasterFileKey ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hDlg, IDC_CHECK2, (hasBinFileKey | useFileKey) ? BST_CHECKED : BST_UNCHECKED);
+            CheckDlgButton(hDlg, IDC_CHECK1, useMasterKey ? BST_CHECKED : BST_UNCHECKED);
+            CenterDlgInParent(hDlg);
+            // Don't use: SetFocus( GetDlgItem( hDlg, IDC_EDIT1 ) );
+            SetDialogFocus(hDlg, GetDlgItem(hDlg, IDC_EDIT1));
         }
 
+        return TRUE;
         break;
 
-        case IDC_EDIT1:
-        {
-            WCHAR newFileKey[WKEY_LEN] = { 0 };
-            GetDlgItemText(hDlg, IDC_EDIT1, newFileKey, COUNTOF(newFileKey));
-            CheckDlgButton(hDlg, IDC_CHECK2, (newFileKey[0] <= ' ') ? BST_UNCHECKED : BST_CHECKED);
-        }
+        case WM_COMMAND:
 
-        break;
-
-        case IDC_EDIT2:
-        {
-            WCHAR newMasKey[WKEY_LEN] = { 0 };
-            GetDlgItemText(hDlg, IDC_EDIT2, newMasKey, COUNTOF(newMasKey));
+            switch (LOWORD(wParam))
             {
-                BOOL newuse = (newMasKey[0] > ' ');	// no leading whitespace or empty passwords
-                CheckDlgButton(hDlg, IDC_CHECK1, newuse ? BST_CHECKED : BST_UNCHECKED);
 
-                if (newuse) { CheckDlgButton(hDlg, IDC_CHECK3, BST_UNCHECKED); }
+                case IDOK:
+                {
+                    BOOL useMas = IsDlgButtonChecked(hDlg, IDC_CHECK1) == BST_CHECKED;
+                    BOOL useFil = IsDlgButtonChecked(hDlg, IDC_CHECK2) == BST_CHECKED;
+                    BOOL reuseMas = IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED;
+                    WCHAR newFileKey[WKEY_LEN] = { 0 };
+                    WCHAR newMasKey[WKEY_LEN] = { 0 };
+                    hasMasterFileKey &= reuseMas;
+                    GetDlgItemText(hDlg, IDC_EDIT1, newFileKey, COUNTOF(newFileKey));
+                    GetDlgItemText(hDlg, IDC_EDIT2, newMasKey, COUNTOF(newMasKey));
+                    useFileKey = !((newFileKey[0] <= ' ') || !useFil);
+                    useMasterKey = !((newMasKey[0] <= ' ') || !useMas);
+                    //@@@lstrcpyn(fileKey, newFileKey, WKEY_LEN);
+                    //@@@lstrcpyn(masterKey, newMasKey, WKEY_LEN);
+                    memcpy(unicodeFileKey, newFileKey, sizeof(unicodeFileKey));
+                    memcpy(unicodeMasterKey, newMasKey, sizeof(unicodeMasterKey));
+                    unicodeStringCpy(fileKey, unicodeFileKey, sizeof(fileKey));
+                    unicodeStringCpy(masterKey, unicodeMasterKey, sizeof(masterKey));
+                    EndDialog(hDlg, IDOK);
+                    return(TRUE);
+                }
+
+                break;
+
+                case IDC_EDIT1:
+                {
+                    WCHAR newFileKey[WKEY_LEN] = { 0 };
+                    GetDlgItemText(hDlg, IDC_EDIT1, newFileKey, COUNTOF(newFileKey));
+                    CheckDlgButton(hDlg, IDC_CHECK2, (newFileKey[0] <= ' ') ? BST_UNCHECKED : BST_CHECKED);
+                }
+
+                break;
+
+                case IDC_EDIT2:
+                {
+                    WCHAR newMasKey[WKEY_LEN] = { 0 };
+                    GetDlgItemText(hDlg, IDC_EDIT2, newMasKey, COUNTOF(newMasKey));
+                    {
+                        BOOL newuse = (newMasKey[0] > ' ');	// no leading whitespace or empty passwords
+                        CheckDlgButton(hDlg, IDC_CHECK1, newuse ? BST_CHECKED : BST_UNCHECKED);
+
+                        if (newuse) { CheckDlgButton(hDlg, IDC_CHECK3, BST_UNCHECKED); }
+                    }
+                }
+
+                break;
+
+                case IDC_CHECK3:  // check reuse, uncheck set new and inverse
+                {
+                    BOOL reuseMas = IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED;
+
+                    if (reuseMas) { CheckDlgButton(hDlg, IDC_CHECK1, reuseMas ? BST_UNCHECKED : BST_CHECKED); }
+                }
+
+                break;
+
+                case IDC_CHECK1:
+                {
+                    BOOL useMas = IsDlgButtonChecked(hDlg, IDC_CHECK1) == BST_CHECKED;
+
+                    if (useMas) { CheckDlgButton(hDlg, IDC_CHECK3, useMas ? BST_UNCHECKED : BST_CHECKED); }
+                }
+
+                break;
+
+                case IDCANCEL:
+                    EndDialog(hDlg, IDCANCEL);
+                    break;
+
             }
-        }
 
-        break;
-
-        case IDC_CHECK3:  // check reuse, uncheck set new and inverse
-        {
-            BOOL reuseMas = IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED;
-
-            if (reuseMas) { CheckDlgButton(hDlg, IDC_CHECK1, reuseMas ? BST_UNCHECKED : BST_CHECKED); }
-        }
-
-        break;
-
-        case IDC_CHECK1:
-        {
-            BOOL useMas = IsDlgButtonChecked(hDlg, IDC_CHECK1) == BST_CHECKED;
-
-            if (useMas) { CheckDlgButton(hDlg, IDC_CHECK3, useMas ? BST_UNCHECKED : BST_CHECKED); }
-        }
-
-        break;
-
-        case IDCANCEL:
-            EndDialog(hDlg, IDCANCEL);
             break;
-
-        }
-
-        break;
 
     }
 
@@ -204,63 +207,67 @@ INT_PTR CALLBACK GetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
 {
     UNUSED(lParam);
 
-    switch (umsg) {
-
-    case WM_INITDIALOG:
+    switch (umsg)
     {
-        int vis = masterKeyAvailable ? SW_SHOW : SW_HIDE;
-        ShowWindow(GetDlgItem(hDlg, IDC_STATICPW), vis);
-        ShowWindow(GetDlgItem(hDlg, IDC_CHECK3), vis);
-        //@@@SetDlgItemText( hDlg, IDC_EDIT3, fileKey );
-        SetDlgItemText(hDlg, IDC_EDIT3, unicodeFileKey);
-        CheckDlgButton(hDlg, IDC_CHECK3, BST_UNCHECKED);
-        CenterDlgInParent(hDlg);
-        // Don't use: SetFocus( GetDlgItem( hDlg, IDC_EDIT3 ) );
-        SetDialogFocus(hDlg, GetDlgItem(hDlg, IDC_EDIT3));
-    }
 
-    return TRUE;
-    break;
-
-    case WM_COMMAND:
-
-        switch (LOWORD(wParam)) {
-
-        case IDOK:
+        case WM_INITDIALOG:
         {
-
-            BOOL useMas = (IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED);
-            WCHAR newKey[WKEY_LEN] = L"\0";
-            GetDlgItemText(hDlg, IDC_EDIT3, newKey, COUNTOF(newKey));
-
-            if (useMas) {
-                //@@@lstrcpyn( masterKey, newKey, WKEY_LEN );
-                memcpy(unicodeMasterKey, newKey, sizeof(unicodeMasterKey));
-                unicodeStringCpy(masterKey, unicodeMasterKey, sizeof(masterKey));
-                useFileKey = FALSE;
-                useMasterKey = TRUE;
-            }
-            else {
-                //lstrcpyn( fileKey, newKey, WKEY_LEN );
-                memcpy(unicodeFileKey, newKey, sizeof(unicodeFileKey));
-                unicodeStringCpy(fileKey, unicodeFileKey, sizeof(fileKey));
-                useFileKey = TRUE;
-                useMasterKey = FALSE;
-            }
-
-            EndDialog(hDlg, IDOK);
-
-            return(TRUE);
-            break;
+            int vis = masterKeyAvailable ? SW_SHOW : SW_HIDE;
+            ShowWindow(GetDlgItem(hDlg, IDC_STATICPW), vis);
+            ShowWindow(GetDlgItem(hDlg, IDC_CHECK3), vis);
+            //@@@SetDlgItemText( hDlg, IDC_EDIT3, fileKey );
+            SetDlgItemText(hDlg, IDC_EDIT3, unicodeFileKey);
+            CheckDlgButton(hDlg, IDC_CHECK3, BST_UNCHECKED);
+            CenterDlgInParent(hDlg);
+            // Don't use: SetFocus( GetDlgItem( hDlg, IDC_EDIT3 ) );
+            SetDialogFocus(hDlg, GetDlgItem(hDlg, IDC_EDIT3));
         }
 
-        case IDCANCEL:
-            EndDialog(hDlg, IDCANCEL);
-            break;
-
-        }
-
+        return TRUE;
         break;
+
+        case WM_COMMAND:
+
+            switch (LOWORD(wParam))
+            {
+
+                case IDOK:
+                {
+
+                    BOOL useMas = (IsDlgButtonChecked(hDlg, IDC_CHECK3) == BST_CHECKED);
+                    WCHAR newKey[WKEY_LEN] = L"\0";
+                    GetDlgItemText(hDlg, IDC_EDIT3, newKey, COUNTOF(newKey));
+
+                    if (useMas)
+                    {
+                        //@@@lstrcpyn( masterKey, newKey, WKEY_LEN );
+                        memcpy(unicodeMasterKey, newKey, sizeof(unicodeMasterKey));
+                        unicodeStringCpy(masterKey, unicodeMasterKey, sizeof(masterKey));
+                        useFileKey = FALSE;
+                        useMasterKey = TRUE;
+                    }
+                    else
+                    {
+                        //lstrcpyn( fileKey, newKey, WKEY_LEN );
+                        memcpy(unicodeFileKey, newKey, sizeof(unicodeFileKey));
+                        unicodeStringCpy(fileKey, unicodeFileKey, sizeof(fileKey));
+                        useFileKey = TRUE;
+                        useMasterKey = FALSE;
+                    }
+
+                    EndDialog(hDlg, IDOK);
+
+                    return(TRUE);
+                    break;
+                }
+
+                case IDCANCEL:
+                    EndDialog(hDlg, IDCANCEL);
+                    break;
+
+            }
+
+            break;
     }
 
     return FALSE;
@@ -296,102 +303,114 @@ BOOL ReadAndDecryptFile(HWND hwnd, HANDLE hFile, DWORD size, void** result, DWOR
 
     // we read the file, check if it looks like our encryption format
 
-    if (bReadSuccess && (readsize > (PREAMBLE_SIZE + AES_MAX_IV_SIZE))) {
+    if (bReadSuccess && (readsize > (PREAMBLE_SIZE + AES_MAX_IV_SIZE)))
+    {
         long *ldata = (long*)rawdata;
 
-        if (ldata && (ldata[0] == PREAMBLE)) {
+        if (ldata && (ldata[0] == PREAMBLE))
+        {
             long scheme = ldata[1];
             unsigned long code_offset = PREAMBLE_SIZE + AES_MAX_IV_SIZE;
 
-            switch (scheme) {
-            case MASTERKEY_FORMAT:
-                code_offset += sizeof(masterFileKey) + sizeof(masterFileIV);
-                // save the encrypted file key and IV.  They can be reused if the
-                // passphrases are not changed.
-                memcpy(masterFileIV, &rawdata[MASTER_KEY_OFFSET], sizeof(masterFileIV));
-                memcpy(masterFileKey, &rawdata[MASTER_KEY_OFFSET + sizeof(masterFileIV)], sizeof(masterFileKey));
-                hasMasterFileKey = TRUE;
-
-                // fall through
-            case FILEKEY_FORMAT:
+            switch (scheme)
             {
-                BOOL haveFileKey = ReadFileKey(hwnd, scheme == MASTERKEY_FORMAT);
+                case MASTERKEY_FORMAT:
+                    code_offset += sizeof(masterFileKey) + sizeof(masterFileIV);
+                    // save the encrypted file key and IV.  They can be reused if the
+                    // passphrases are not changed.
+                    memcpy(masterFileIV, &rawdata[MASTER_KEY_OFFSET], sizeof(masterFileIV));
+                    memcpy(masterFileKey, &rawdata[MASTER_KEY_OFFSET + sizeof(masterFileIV)], sizeof(masterFileKey));
+                    hasMasterFileKey = TRUE;
 
-                if (useFileKey) {
-                    // use the file key to decode
-                    /*@@@
-                                char ansiKey[KEY_LEN+1];
-                                int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, fileKey, -1, ansiKey, KEY_LEN, NULL, NULL );
-                                ansiKey[len] = '\0';
-                                AES_keygen( ansiKey, binFileKey );		// generate the encryption key from the passphrase
-                                */
-                    AES_keygen(fileKey, binFileKey);		// generate the encryption key from the passphrase
-                    hasBinFileKey = TRUE;
-                }
-                else if ((scheme == MASTERKEY_FORMAT) && useMasterKey) {	// use the master key to recover the file key
-                    BYTE binMasterKey[KEY_BYTES];
-                    AES_keyInstance masterdecode;
-                    AES_cipherInstance mastercypher;
-                    /*@@@
-                                char ansiKey[KEY_LEN+1];
-                                int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, masterKey, -1, ansiKey, KEY_LEN, NULL, NULL );
-                                AES_keygen( ansiKey, binMasterKey );
-                                */
-                    AES_keygen(masterKey, binMasterKey);
-                    AES_bin_setup(&masterdecode, AES_DIR_DECRYPT, KEY_BYTES * 8, binMasterKey);
-                    AES_bin_cipherInit(&mastercypher, AES_MODE_CBC, masterFileIV);
-                    AES_blockDecrypt(&mastercypher, &masterdecode, masterFileKey, sizeof(binFileKey), binFileKey);
-                    hasBinFileKey = TRUE;
-                    haveFileKey = TRUE;
-                    useMasterKey = FALSE;
-                }
+                    // fall through
+                case FILEKEY_FORMAT:
+                {
+                    BOOL haveFileKey = ReadFileKey(hwnd, scheme == MASTERKEY_FORMAT);
 
-                if (haveFileKey) {
-                    AES_keyInstance fileDecode;
-                    AES_cipherInstance fileCypher;
-                    AES_bin_setup(&fileDecode, AES_DIR_DECRYPT, KEY_BYTES * 8, binFileKey);
-                    AES_bin_cipherInit(&fileCypher, AES_MODE_CBC, &rawdata[PREAMBLE_SIZE]);	// IV is next
-                    { // finally, decrypt the actual data
-                        int nbb = BAD_CIPHER_STATE;
-                        int nbp = BAD_CIPHER_STATE;
-                        if ((readsize - code_offset) >= PAD_SLOP) {
-                            nbb = AES_blockDecrypt(&fileCypher, &fileDecode, &rawdata[code_offset], readsize - code_offset - PAD_SLOP, rawdata);
-                        }
-                        if (nbb >= 0) {
-                            nbp = AES_padDecrypt(&fileCypher, &fileDecode, &rawdata[code_offset + nbb], readsize - code_offset - nbb, rawdata + nbb);
-                        }
-                        if (nbp >= 0) {
-                            int nb = nbb + nbp;
-                            rawdata[nb] = (char)0;
-                            rawdata[nb + 1] = (char)0;	// two zeros in case it's multi-byte
-                            *resultlen = (DWORD)nb;
-                            bReadSuccess = TRUE;
-                        }
-                        else {
-                            MsgBox(MBWARN, IDS_PASS_FAILURE);
-                            *resultlen = 0;
-                            bReadSuccess = FALSE;
-                        }
+                    if (useFileKey)
+                    {
+                        // use the file key to decode
+                        /*@@@
+                                    char ansiKey[KEY_LEN+1];
+                                    int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, fileKey, -1, ansiKey, KEY_LEN, NULL, NULL );
+                                    ansiKey[len] = '\0';
+                                    AES_keygen( ansiKey, binFileKey );		// generate the encryption key from the passphrase
+                                    */
+                        AES_keygen(fileKey, binFileKey);		// generate the encryption key from the passphrase
+                        hasBinFileKey = TRUE;
                     }
-                    usedEncryption = TRUE;
-                }
-                else {
-                    // simulate read failure
-                    MsgBox(MBWARN, IDS_NOPASS);
-                    *resultlen = 0;
-                    bReadSuccess = FALSE;
-                    usedEncryption = FALSE;
-                }
-            }
+                    else if ((scheme == MASTERKEY_FORMAT) && useMasterKey)
+                    {	// use the master key to recover the file key
+                        BYTE binMasterKey[KEY_BYTES];
+                        AES_keyInstance masterdecode;
+                        AES_cipherInstance mastercypher;
+                        /*@@@
+                                    char ansiKey[KEY_LEN+1];
+                                    int len = WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, masterKey, -1, ansiKey, KEY_LEN, NULL, NULL );
+                                    AES_keygen( ansiKey, binMasterKey );
+                                    */
+                        AES_keygen(masterKey, binMasterKey);
+                        AES_bin_setup(&masterdecode, AES_DIR_DECRYPT, KEY_BYTES * 8, binMasterKey);
+                        AES_bin_cipherInit(&mastercypher, AES_MODE_CBC, masterFileIV);
+                        AES_blockDecrypt(&mastercypher, &masterdecode, masterFileKey, sizeof(binFileKey), binFileKey);
+                        hasBinFileKey = TRUE;
+                        haveFileKey = TRUE;
+                        useMasterKey = FALSE;
+                    }
 
-            break;
+                    if (haveFileKey)
+                    {
+                        AES_keyInstance fileDecode;
+                        AES_cipherInstance fileCypher;
+                        AES_bin_setup(&fileDecode, AES_DIR_DECRYPT, KEY_BYTES * 8, binFileKey);
+                        AES_bin_cipherInit(&fileCypher, AES_MODE_CBC, &rawdata[PREAMBLE_SIZE]);	// IV is next
+                        { // finally, decrypt the actual data
+                            int nbb = BAD_CIPHER_STATE;
+                            int nbp = BAD_CIPHER_STATE;
+                            if ((readsize - code_offset) >= PAD_SLOP)
+                            {
+                                nbb = AES_blockDecrypt(&fileCypher, &fileDecode, &rawdata[code_offset], readsize - code_offset - PAD_SLOP, rawdata);
+                            }
+                            if (nbb >= 0)
+                            {
+                                nbp = AES_padDecrypt(&fileCypher, &fileDecode, &rawdata[code_offset + nbb], readsize - code_offset - nbb, rawdata + nbb);
+                            }
+                            if (nbp >= 0)
+                            {
+                                int nb = nbb + nbp;
+                                rawdata[nb] = (char)0;
+                                rawdata[nb + 1] = (char)0;	// two zeros in case it's multi-byte
+                                *resultlen = (DWORD)nb;
+                                bReadSuccess = TRUE;
+                            }
+                            else
+                            {
+                                MsgBox(MBWARN, IDS_PASS_FAILURE);
+                                *resultlen = 0;
+                                bReadSuccess = FALSE;
+                            }
+                        }
+                        usedEncryption = TRUE;
+                    }
+                    else
+                    {
+                        // simulate read failure
+                        MsgBox(MBWARN, IDS_NOPASS);
+                        *resultlen = 0;
+                        bReadSuccess = FALSE;
+                        usedEncryption = FALSE;
+                    }
+                }
 
-            default: BUG1("format %d not understood", scheme);
+                break;
+
+                default: BUG1("format %d not understood", scheme);
             }
         }
     }
 
-    if (!usedEncryption) { // here, the file is believed to be a straight text file
+    if (!usedEncryption)
+    { // here, the file is believed to be a straight text file
         ResetEncryption();
         *resultlen = readsize;
     }
@@ -406,7 +425,8 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
     UNUSED(hwnd);
     static int sequence = 1;	// sequence counter so each time is unique
 
-    if (useFileKey || hasMasterFileKey) {
+    if (useFileKey || hasMasterFileKey)
+    {
         AES_keyInstance fileEncode;		// encryption key for the file
         AES_cipherInstance fileCypher;	// cypher for the file, including the IV
         DWORD PREAMBLE_written = 0;
@@ -418,13 +438,15 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
 
         srand(sequence++ ^ (unsigned int)time(NULL));
         {
-            int i; for (i = 0; i < AES_MAX_IV_SIZE; i++) {
+            int i; for (i = 0; i < AES_MAX_IV_SIZE; i++)
+            {
                 precodedata[PREAMBLE_SIZE + i] = 0;//rand();
             }
         }
 
         {
-            if (useFileKey) {
+            if (useFileKey)
+            {
                 // generate the encryption key from the passphrase
                 /* @@@
                         char ansiKey[KEY_LEN+1];
@@ -440,8 +462,9 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
 
             AES_bin_cipherInit(&fileCypher, AES_MODE_CBC, &precodedata[PREAMBLE_SIZE]);
 
-            if (useMasterKey && *masterKey) {	//setup with the master key and encrypt the file key.
-              //append the encrypted file key to the end of the PREAMBLE block
+            if (useMasterKey && *masterKey)
+            {	//setup with the master key and encrypt the file key.
+//append the encrypted file key to the end of the PREAMBLE block
                 BYTE binMasterKey[KEY_BYTES];
                 AES_keyInstance masterencode;
                 AES_cipherInstance mastercypher;
@@ -464,7 +487,8 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
                 hasMasterFileKey = TRUE;
             }
 
-            if (hasMasterFileKey) {// copy the encrypted (new or recycled) into the output
+            if (hasMasterFileKey)
+            {// copy the encrypted (new or recycled) into the output
                 memcpy(&precodedata[precode_size], masterFileIV, sizeof(masterFileIV));
                 memcpy(&precodedata[precode_size + sizeof(masterFileIV)], masterFileKey, sizeof(masterFileKey));
                 precode_size += sizeof(masterFileKey) + sizeof(masterFileIV);
@@ -472,7 +496,8 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
             }
 
             // write the PREAMBLE, punt if that failed
-            if (!WriteFile(hFile, precodedata, precode_size, &PREAMBLE_written, NULL)) {
+            if (!WriteFile(hFile, precodedata, precode_size, &PREAMBLE_written, NULL))
+            {
                 *written = PREAMBLE_written;
                 return(FALSE);
             }
@@ -485,7 +510,7 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
             BOOL bWriteRes = FALSE;
 
             BYTE* encdata = (BYTE*)HeapAlloc(GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, size + PAD_SLOP);  // add slop to the end for padding
-            if (!encdata) 
+            if (!encdata)
                 return bWriteRes;
 
             if (size > PAD_SLOP) { enclen += AES_blockEncrypt(&fileCypher, &fileEncode, data, size - PAD_SLOP, encdata); }
@@ -500,7 +525,8 @@ BOOL EncryptAndWriteFile(HWND hwnd, HANDLE hFile, BYTE *data, DWORD size, DWORD 
             return(bWriteRes);									// and the file ok status
         }
     }
-    else {
+    else
+    {
         // not an encrypted file, write normally
         BOOL bWriteSuccess = WriteFile(hFile, data, size, written, NULL);
         return(bWriteSuccess);

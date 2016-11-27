@@ -36,7 +36,8 @@ void Hexify
 {
     long n = 0, sn = 0;
     static unsigned char  HexDigits[] = "0123456789abcdef";
-    while (sn < len) {
+    while (sn < len)
+    {
         unsigned char ch = src[sn++];
         if (n < destlen) { dest[n++] = HexDigits[(ch & 0xf0) >> 4]; }
         if (n < destlen) { dest[n++] = HexDigits[ch & 0x0f]; }
@@ -233,7 +234,8 @@ void sha256_update
     if (ctx->total[0] < length)
         ctx->total[1]++;
 
-    if (left && length >= fill) {
+    if (left && length >= fill)
+    {
         memcpy((void *)(ctx->buffer + left),
             (void *)input, fill);
         sha256_process(ctx, ctx->buffer);
@@ -242,13 +244,15 @@ void sha256_update
         left = 0;
     }
 
-    while (length >= 64) {
+    while (length >= 64)
+    {
         sha256_process(ctx, input);
         length -= 64;
         input += 64;
     }
 
-    if (length) {
+    if (length)
+    {
         memcpy((void *)(ctx->buffer + left),
             (void *)input, length);
     }
