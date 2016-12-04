@@ -924,12 +924,12 @@ BOOL DirList_SelectItem(HWND hwnd, LPCWSTR lpszDisplayName, LPCWSTR lpszFullPath
 
     int i = -1;
 
-    if (!lpszFullPath || !lstrlen(lpszFullPath))
+    if (!lpszFullPath || !StringLength(lpszFullPath))
         return(FALSE);
     else
         GetShortPathName(lpszFullPath, szShortPath, MAX_PATH);
 
-    if (!lpszDisplayName || !lstrlen(lpszDisplayName))
+    if (!lpszDisplayName || !StringLength(lpszDisplayName))
     {
         ZeroMemory(&shfi, sizeof(SHFILEINFO));
         SHGetFileInfo(lpszFullPath, 0, &shfi, sizeof(SHFILEINFO), SHGFI_DISPLAYNAME);
@@ -985,7 +985,7 @@ void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
 
     pdlf->bExcludeFilter = bExcludeFilter;
 
-    if (!lpszFileSpec || !lstrcmp(lpszFileSpec, L"*.*") || !lstrlen(lpszFileSpec))
+    if (!lpszFileSpec || !lstrcmp(lpszFileSpec, L"*.*") || !StringLength(lpszFileSpec))
         return;
 
     pdlf->nCount = 1;

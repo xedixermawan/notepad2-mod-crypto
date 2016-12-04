@@ -42,7 +42,7 @@ __inline BOOL IniSetInt(LPCWSTR lpSection, LPCWSTR lpName, int i)
     WCHAR tch[32]; wsprintf(tch, L"%i", i); return IniSetString(lpSection, lpName, tch);
 }
 #define LoadIniSection(lpSection,lpBuf,cchBuf) \
-  GetPrivateProfileSection(lpSection,lpBuf,cchBuf,szIniFile);
+  GetPrivateProfileSection(lpSection,lpBuf,cchBuf,szIniFile)
 #define SaveIniSection(lpSection,lpBuf) \
   WritePrivateProfileSection(lpSection,lpBuf,szIniFile)
 int IniSectionGetString(LPCWSTR, LPCWSTR, LPCWSTR, LPWSTR, int);
@@ -147,7 +147,11 @@ BOOL IsCmdEnabled(HWND, UINT);
 
 #define GetString(id,pb,cb) LoadString(g_hInstance,id,pb,cb)
 
-#define StrEnd(pStart) (pStart + lstrlen(pStart))
+
+//#define StrEnd(pStart) (pStart + StringLength(pStart))
+LPWSTR StringEnd(LPCWSTR psz);
+int StringLength(LPCTSTR psz);
+
 
 int FormatString(LPWSTR, int, UINT, ...);
 

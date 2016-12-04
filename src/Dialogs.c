@@ -94,7 +94,7 @@ int MsgBox(int iType, UINT uIdMsg, ...)
         StringCchCat(szText, COUNTOF(szText), L"\n");
         StringCchCat(szText, COUNTOF(szText), lpMsgBuf);
         LocalFree(lpMsgBuf); // created via FORMAT_MESSAGE_ALLOCATE_BUFFER
-        wcht = *CharPrev(szText, StrEnd(szText));
+        wcht = *CharPrev(szText, StringEnd(szText));
         if (IsCharAlphaNumeric(wcht) || wcht == '"' || wcht == '\'')
             StringCchCat(szText, COUNTOF(szText), L".");
     }
@@ -395,7 +395,7 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
                     if (GetOpenFileName(&ofn))
                     {
                         PathQuoteSpaces(szFile);
-                        if (lstrlen(szArg2))
+                        if (StringLength(szArg2))
                         {
                             StringCchCat(szFile, MAX_PATH * 2, L" ");
                             StringCchCat(szFile, MAX_PATH * 2, szArg2);
@@ -415,7 +415,7 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
 
                     if (GetDlgItemText(hwnd, IDC_COMMANDLINE, args, MAX_PATH))
                         if (ExtractFirstArgument(args, args, NULL))
-                            if (lstrlen(args))
+                            if (StringLength(args))
                                 bEnableOK = TRUE;
 
                     EnableWindow(GetDlgItem(hwnd, IDOK), bEnableOK);
@@ -446,7 +446,7 @@ INT_PTR CALLBACK RunDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
                             bQuickExit = TRUE;
                         }
 
-                        if (lstrlen(szCurFile))
+                        if (StringLength(szCurFile))
                         {
                             StringCchCopy(wchDirectory, MAX_PATH, szCurFile);
                             PathRemoveFileSpec(wchDirectory);
@@ -686,7 +686,7 @@ BOOL OpenWithDlg(HWND hwnd, LPCWSTR lpstrFile)
         WCHAR szParam[MAX_PATH];
         WCHAR wchDirectory[MAX_PATH] = L"";
 
-        if (lstrlen(szCurFile))
+        if (StringLength(szCurFile))
         {
             StringCchCopy(wchDirectory, MAX_PATH, szCurFile);
             PathRemoveFileSpec(wchDirectory);
@@ -2411,7 +2411,7 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
 
     iMode = IniGetInt(L"Suppressed Messages", lpstrSetting, 0);
 
-    if (lstrlen(lpstrSetting) > 0 && iMode == 1)
+    if (StringLength(lpstrSetting) > 0 && iMode == 1)
     {
         va_end(argList);
         return (iType == MBYESNO) ? IDYES : IDOK;
@@ -2433,7 +2433,7 @@ INT_PTR InfoBox(int iType, LPCWSTR lpstrSetting, int uidMessage, ...)
 
     ib.lpstrMessage = pwchMessage;
     ib.lpstrSetting = (LPWSTR)lpstrSetting;
-    ib.bDisableCheckBox = (lstrlen(szIniFile) == 0 || lstrlen(lpstrSetting) == 0 || iMode == 2) ? TRUE : FALSE;
+    ib.bDisableCheckBox = (StringLength(szIniFile) == 0 || StringLength(lpstrSetting) == 0 || iMode == 2) ? TRUE : FALSE;
 
     if (iType == MBYESNO)
         idDlg = IDD_INFOBOX2;

@@ -381,7 +381,7 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
             {
                 ExtTextOut(hdc, frPrint.rc.left + 5, frPrint.rc.top - headerLineHeight / 2,
                            /*ETO_OPAQUE*/0, &rcw, pszDocTitle,
-                           lstrlen(pszDocTitle), NULL);
+                           StringLength(pszDocTitle), NULL);
             }
 
             // Print date in header
@@ -389,10 +389,10 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
             {
                 SIZE sizeInfo;
                 SelectObject(hdc, fontFooter);
-                GetTextExtentPoint32(hdc, dateString, lstrlen(dateString), &sizeInfo);
+                GetTextExtentPoint32(hdc, dateString, StringLength(dateString), &sizeInfo);
                 ExtTextOut(hdc, frPrint.rc.right - 5 - sizeInfo.cx, frPrint.rc.top - headerLineHeight / 2,
                            /*ETO_OPAQUE*/0, &rcw, dateString,
-                           lstrlen(dateString), NULL);
+                           StringLength(dateString), NULL);
             }
 
             if (iPrintHeader < 3)
@@ -424,10 +424,10 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
             if (iPrintFooter == 0)
             {
                 SIZE sizeFooter;
-                GetTextExtentPoint32(hdc, pageString, lstrlen(pageString), &sizeFooter);
+                GetTextExtentPoint32(hdc, pageString, StringLength(pageString), &sizeFooter);
                 ExtTextOut(hdc, frPrint.rc.right - 5 - sizeFooter.cx, frPrint.rc.bottom + footerLineHeight / 2,
                            /*ETO_OPAQUE*/0, &rcw, pageString,
-                           lstrlen(pageString), NULL);
+                           StringLength(pageString), NULL);
 
                 SetTextAlign(hdc, ta);
                 pen = ::CreatePen(0, 1, RGB(0, 0, 0));

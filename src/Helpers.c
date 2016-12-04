@@ -75,7 +75,7 @@ void ReportErrorEx(LPCTSTR lpszFunction, DWORD dwError)
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
 
-    LPTSTR lpDisplayBuf = (LPTSTR)AllocMem((lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR), HEAP_ZERO_MEMORY);
+    LPTSTR lpDisplayBuf = (LPTSTR)AllocMem((StringLength((LPCTSTR)lpMsgBuf) + StringLength((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR), HEAP_ZERO_MEMORY);
 
     if (lpDisplayBuf)
     {
@@ -92,6 +92,26 @@ void ReportErrorEx(LPCTSTR lpszFunction, DWORD dwError)
 
 //=============================================================================
 //
+//  String Helpers
+//
+
+int StringLength(LPCWSTR psz)
+{
+    size_t len = 0L;
+    //if (UnalignedStringCchLength(psz, STRSAFE_MAX_CCH, &len) == S_OK)
+    if (StringCchLength(psz, STRSAFE_MAX_CCH, &len) == S_OK)
+        return (int)len;
+    return 0;
+}
+
+LPWSTR StringEnd(LPCWSTR psz)
+{
+    return (LPWSTR)(psz + StringLength(psz));
+}
+
+
+//=============================================================================
+//
 //  Manipulation of (cached) ini file sections
 //
 int IniSectionGetString(
@@ -101,29 +121,31 @@ int IniSectionGetString(
     LPWSTR lpReturnedString,
     int cchReturnedString)
 {
-    WCHAR *p = (WCHAR *)lpCachedIniSection;
-    WCHAR tch[256];
-    int  ich;
+    WCHAR* p = (WCHAR*)lpCachedIniSection;
+    WCHAR tch[256] = { L'\0' };
+    int ich;
 
     if (p)
     {
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
-        ich = lstrlen(tch);
+        ich = StringLength(tch);
 
-        while (*p)
+        while (p[0] != L'\0')
         {
             if (StrCmpNI(p, tch, ich) == 0)
             {
                 (void)StringCchCopy(lpReturnedString, cchReturnedString, (p + ich));
-                return(lstrlen(lpReturnedString));
+                return (StringLength(lpReturnedString));
             }
             else
-                p = StrEnd(p) + 1;
+            {
+                p = StringEnd(p) + 1; // skip \0 termination
+            }
         }
     }
     (void)StringCchCopy(lpReturnedString, cchReturnedString, lpDefault);
-    return(lstrlen(lpReturnedString));
+    return (StringLength(lpReturnedString));
 }
 
 
@@ -141,7 +163,7 @@ int IniSectionGetInt(
     {
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
-        ich = lstrlen(tch);
+        ich = StringLength(tch);
 
         while (*p)
         {
@@ -153,7 +175,7 @@ int IniSectionGetInt(
                     return(iDefault);
             }
             else
-                p = StrEnd(p) + 1;
+                p = StringEnd(p) + 1;
         }
     }
     return(iDefault);
@@ -169,11 +191,11 @@ BOOL IniSectionSetString(LPWSTR lpCachedIniSection, LPCWSTR lpName, LPCWSTR lpSt
     {
         while (*p)
         {
-            p = StrEnd(p) + 1;
+            p = StringEnd(p) + 1;
         }
         wsprintf(tch, L"%s=%s", lpName, lpString);
         StringCchCopy(p, 32 + 512 * 3 + 32, tch);
-        p = StrEnd(p) + 1;
+        p = StringEnd(p) + 1;
         *p = 0;
         return(TRUE);
     }
@@ -210,7 +232,7 @@ HRESULT PrivateSetCurrentProcessExplicitAppUserModelID(PCWSTR AppID)
 {
     FARPROC pfnSetCurrentProcessExplicitAppUserModelID = NULL;
 
-    if (lstrlen(AppID) == 0)
+    if (StringLength(AppID) == 0)
         return(S_OK);
 
     if (lstrcmpi(AppID, L"(default)") == 0)
@@ -471,14 +493,14 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
     else
         StringCchCopy(szTitle, 512, L"");
 
-    if (lstrlen(lpszExcerpt))
+    if (StringLength(lpszExcerpt))
     {
         GetString(IDS_TITLEEXCERPT, szExcrptFmt, COUNTOF(szExcrptFmt));
         wsprintf(szExcrptQuot, szExcrptFmt, lpszExcerpt);
         StringCchCat(szTitle, 512, szExcrptQuot);
     }
 
-    else if (lstrlen(lpszFile))
+    else if (StringLength(lpszFile))
     {
         if (iFormat < 2 && !PathIsRoot(lpszFile))
         {
@@ -918,7 +940,7 @@ int StatusCalcPaneWidth(HWND hwnd, LPCWSTR lpsz)
     HFONT hfold = SelectObject(hdc, hfont);
     int   mmode = SetMapMode(hdc, MM_TEXT);
 
-    GetTextExtentPoint32(hdc, lpsz, lstrlen(lpsz), &size);
+    GetTextExtentPoint32(hdc, lpsz, StringLength(lpsz), &size);
 
     SetMapMode(hdc, mmode);
     SelectObject(hdc, hfold);
@@ -963,7 +985,7 @@ int Toolbar_SetButtons(HWND hwnd, int cmdBase, LPCWSTR lpszButtons, LPCTBBUTTON 
     (void)StringCchCopy(tchButtons, ARRAYSIZE(tchButtons), lpszButtons);
     TrimString(tchButtons);
     while ((p = StrStr(tchButtons, L"  ")) != NULL)
-        MoveMemory((WCHAR*)p, (WCHAR*)p + 1, (lstrlen(p) + 1) * sizeof(WCHAR));
+        MoveMemory((WCHAR*)p, (WCHAR*)p + 1, (StringLength(p) + 1) * sizeof(WCHAR));
 
     c = (int)SendMessage(hwnd, TB_BUTTONCOUNT, 0, 0);
     for (i = 0; i < c; i++)
@@ -987,7 +1009,7 @@ int Toolbar_SetButtons(HWND hwnd, int cmdBase, LPCWSTR lpszButtons, LPCTBBUTTON 
                 }
             }
         }
-        p = StrEnd(p) + 1;
+        p = StringEnd(p) + 1;
     }
     return((int)SendMessage(hwnd, TB_BUTTONCOUNT, 0, 0));
 }
@@ -1036,7 +1058,7 @@ int FormatString(LPWSTR lpOutput, int nOutput, UINT uIdFormat, ...)
     }
     va_end(argList);
 
-    return lstrlen(lpOutput);
+    return StringLength(lpOutput);
 }
 
 
@@ -1231,7 +1253,7 @@ BOOL PathGetLnkPath(LPCWSTR pszLnkFile, LPWSTR pszResPath, int cchResPath)
     }
 
     // This additional check seems reasonable
-    if (!lstrlen(pszResPath))
+    if (!StringLength(pszResPath))
         bSucceeded = FALSE;
 
     if (bSucceeded)
@@ -1309,7 +1331,7 @@ BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
     BOOL bSucceeded = FALSE;
     BOOL fMustCopy;
 
-    if (!pszDocument || lstrlen(pszDocument) == 0)
+    if (!pszDocument || StringLength(pszDocument) == 0)
         return TRUE;
 
     // init strings
@@ -1377,7 +1399,7 @@ BOOL PathCreateFavLnk(LPCWSTR pszName, LPCWSTR pszTarget, LPCWSTR pszDir)
     IShellLink *psl;
     BOOL bSucceeded = FALSE;
 
-    if (!pszName || lstrlen(pszName) == 0)
+    if (!pszName || StringLength(pszName) == 0)
         return TRUE;
 
     StringCchCopy(tchLnkFileName, MAX_PATH, pszDir);
@@ -1431,7 +1453,7 @@ BOOL StrLTrim(LPWSTR pszSource, LPCWSTR pszTrimChars)
     while (StrChrI(pszTrimChars, *psz))
         psz++;
 
-    MoveMemory(pszSource, psz, sizeof(WCHAR)*(lstrlen(psz) + 1));
+    MoveMemory(pszSource, psz, sizeof(WCHAR)*(StringLength(psz) + 1));
 
     return TRUE;
 }
@@ -1455,10 +1477,10 @@ BOOL TrimString(LPWSTR lpString)
     while (*psz == L' ')
         psz = CharNext(psz);
 
-    MoveMemory(lpString, psz, sizeof(WCHAR)*(lstrlen(psz) + 1));
+    MoveMemory(lpString, psz, sizeof(WCHAR)*(StringLength(psz) + 1));
 
     // Trim right
-    psz = StrEnd(lpString);
+    psz = StringEnd(lpString);
 
     while (*(psz = CharPrev(lpString, psz)) == L' ')
         *psz = L'\0';
@@ -1521,7 +1543,7 @@ BOOL ExtractFirstArgument(LPCWSTR lpArgs, LPWSTR lpArg1, LPWSTR lpArg2)
 //
 void PrepareFilterStr(LPWSTR lpFilter)
 {
-    LPWSTR psz = StrEnd(lpFilter);
+    LPWSTR psz = StringEnd(lpFilter);
     while (psz != lpFilter)
     {
         if (*(psz = CharPrev(lpFilter, psz)) == L'|')
@@ -1619,7 +1641,7 @@ DWORD_PTR SHGetFileInfo2(LPCWSTR pszPath, DWORD dwFileAttributes,
     {
 
         DWORD_PTR dw = SHGetFileInfo(pszPath, dwFileAttributes, psfi, cbFileInfo, uFlags);
-        if (lstrlen(psfi->szDisplayName) < lstrlen(PathFindFileName(pszPath)))
+        if (StringLength(psfi->szDisplayName) < StringLength(PathFindFileName(pszPath)))
             StringCchCat(psfi->szDisplayName, COUNTOF(psfi->szDisplayName), PathFindExtension(pszPath));
         return(dw);
     }
@@ -1627,7 +1649,7 @@ DWORD_PTR SHGetFileInfo2(LPCWSTR pszPath, DWORD dwFileAttributes,
     else
     {
         DWORD_PTR dw = SHGetFileInfo(pszPath, FILE_ATTRIBUTE_NORMAL, psfi, cbFileInfo, uFlags | SHGFI_USEFILEATTRIBUTES);
-        if (lstrlen(psfi->szDisplayName) < lstrlen(PathFindFileName(pszPath)))
+        if (StringLength(psfi->szDisplayName) < StringLength(PathFindFileName(pszPath)))
             StringCchCat(psfi->szDisplayName, COUNTOF(psfi->szDisplayName), PathFindExtension(pszPath));
         return(dw);
     }
@@ -1645,7 +1667,7 @@ int FormatNumberStr(LPWSTR lpNumberStr)
     WCHAR szSep[8];
     int  i = 0;
 
-    if (!lstrlen(lpNumberStr))
+    if (!StringLength(lpNumberStr))
         return(0);
 
     if (!GetLocaleInfo(LOCALE_USER_DEFAULT,
@@ -1654,19 +1676,19 @@ int FormatNumberStr(LPWSTR lpNumberStr)
                        COUNTOF(szSep)))
         szSep[0] = L'\'';
 
-    c = StrEnd(lpNumberStr);
+    c = StringEnd(lpNumberStr);
 
     while ((c = CharPrev(lpNumberStr, c)) != lpNumberStr)
     {
         if (++i == 3)
         {
             i = 0;
-            MoveMemory(c + 1, c, sizeof(WCHAR)*(lstrlen(c) + 1));
+            MoveMemory(c + 1, c, sizeof(WCHAR)*(StringLength(c) + 1));
             *c = szSep[0];
         }
     }
 
-    return(lstrlen(lpNumberStr));
+    return(StringLength(lpNumberStr));
 }
 
 
@@ -1902,7 +1924,7 @@ int MRU_Enum(LPMRULIST pmru, int iIndex, LPWSTR pszItem, int cchItem)
         else
         {
             (void)StringCchCopy(pszItem, cchItem, pmru->pszItems[iIndex]);
-            return (lstrlen(pszItem));
+            return (StringLength(pszItem));
         }
     }
 }
@@ -2181,11 +2203,11 @@ DLGTEMPLATE* LoadThemedDialogTemplate(LPCTSTR lpDialogTemplateID, HINSTANCE hIns
     else
         pTemplate->style |= DS_SHELLFONT;
 
-    cbNew = cbFontAttr + ((lstrlen(wchFaceName) + 1) * sizeof(WCHAR));
+    cbNew = cbFontAttr + ((StringLength(wchFaceName) + 1) * sizeof(WCHAR));
     pbNew = (BYTE*)wchFaceName;
 
     pb = DialogTemplate_GetFontSizeField(pTemplate);
-    cbOld = (int)(bHasFont ? cbFontAttr + 2 * (lstrlen((WCHAR*)(pb + cbFontAttr)) + 1) : 0);
+    cbOld = (int)(bHasFont ? cbFontAttr + 2 * (StringLength((WCHAR*)(pb + cbFontAttr)) + 1) : 0);
 
     pOldControls = (BYTE*)(((DWORD_PTR)pb + cbOld + 3) & ~(DWORD_PTR)3);
     pNewControls = (BYTE*)(((DWORD_PTR)pb + cbNew + 3) & ~(DWORD_PTR)3);
