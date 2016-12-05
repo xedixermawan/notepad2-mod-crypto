@@ -307,6 +307,7 @@
     <ClInclude Include="src\RunStyles.h" />
     <ClInclude Include="src\ScintillaBase.h" />
     <ClInclude Include="src\Selection.h" />
+    <ClInclude Include="src\SparseVector.h" />
     <ClInclude Include="src\SplitVector.h" />
     <ClInclude Include="src\Style.h" />
     <ClInclude Include="src\UnicodeFromUTF8.h" />

@@ -28,8 +28,11 @@
 #include <string.h>
 #include <strsafe.h>
 #include <limits.h>
+
+#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "scintilla.h"
 #include "scilexer.h"
+
 #include "notepad2.h"
 #include "edit.h"
 #include "styles.h"
@@ -37,7 +40,7 @@
 #include "helpers.h"
 #include "resource.h"
 #include "SciCall.h"
-#include "../crypto/crypto.h"
+#include "crypto.h"
 
 extern HWND  hwndMain;
 extern HWND  hwndEdit;
@@ -5286,8 +5289,8 @@ void EditGetExcerpt(HWND hwnd, LPWSTR lpszExcerpt, DWORD cchExcerpt)
 
     tr.chrg.cpMax = min((int)SendMessage(hwnd, SCI_GETLENGTH, 0, 0), tr.chrg.cpMax);
 
-    pszText = AllocMem((tr.chrg.cpMax - tr.chrg.cpMin) + 2, HEAP_ZERO_MEMORY);
-    pszTextW = AllocMem(((tr.chrg.cpMax - tr.chrg.cpMin) * 2) + 2, HEAP_ZERO_MEMORY);
+    pszText = (char*)AllocMem((tr.chrg.cpMax - tr.chrg.cpMin) + 2, HEAP_ZERO_MEMORY);
+    pszTextW = (LPWSTR)AllocMem(((tr.chrg.cpMax - tr.chrg.cpMin) * 2) + 2, HEAP_ZERO_MEMORY);
 
     if (pszText && pszTextW)
     {
@@ -5295,7 +5298,7 @@ void EditGetExcerpt(HWND hwnd, LPWSTR lpszExcerpt, DWORD cchExcerpt)
         tr.lpstrText = pszText;
         SendMessage(hwnd, SCI_GETTEXTRANGE, 0, (LPARAM)&tr);
         cpEdit = (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0);
-        MultiByteToWideChar(cpEdit, 0, pszText, tr.chrg.cpMax - tr.chrg.cpMin, pszTextW, (int)SizeOfMem(pszTextW) / sizeof(WCHAR));
+        MultiByteToWideChar(cpEdit, 0, pszText, tr.chrg.cpMax - tr.chrg.cpMin, pszTextW, (int)(SizeOfMem(pszTextW) / sizeof(WCHAR)));
 
         for (p = pszTextW; *p && cch < COUNTOF(tch) - 1; p++)
         {

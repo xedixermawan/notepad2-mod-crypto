@@ -53,20 +53,20 @@ using namespace Scintilla;
 Caret::Caret() :
 	active(false), on(false), period(500) {}
 
-EditModel::EditModel()
-    : posDrag(SelectionPosition(invalidPosition))
-    , imeInteraction(imeWindowed)
-    , hotspot(Range(invalidPosition))
-{
+EditModel::EditModel() {
     inOverstrike = false;
     xOffset = 0;
     trackLineWidth = false;
+	posDrag = SelectionPosition(invalidPosition);
     braces[0] = invalidPosition;
     braces[1] = invalidPosition;
 	bracesMatchStyle = STYLE_BRACEBAD;
 	highlightGuideColumn = 0;
 	primarySelection = true;
+	imeInteraction = imeWindowed;
 	foldFlags = 0;
+	foldDisplayTextStyle = SC_FOLDDISPLAYTEXT_HIDDEN;
+	hotspot = Range(invalidPosition);
 	hoverIndicatorPos = invalidPosition;
 	wrapWidth = LineLayout::wrapWidthInfinite;
 	pdoc = new Document();

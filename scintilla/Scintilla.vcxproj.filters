@@ -425,6 +425,9 @@
     <ClInclude Include="deelx\deelx64.h">
       <Filter>deelx</Filter>
     </ClInclude>
+    <ClInclude Include="src\SparseVector.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="deelx\doc\deelx_en.chm">

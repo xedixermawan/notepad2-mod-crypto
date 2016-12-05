@@ -27,9 +27,12 @@
 #include <commdlg.h>
 #include <string.h>
 #include <strsafe.h>
+
+#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "platform.h"
 #include "scintilla.h"
 #include "scilexer.h"
+
 extern "C" {
 #include "dialogs.h"
 #include "helpers.h"

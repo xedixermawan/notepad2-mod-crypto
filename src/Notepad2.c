@@ -39,8 +39,11 @@
 #include <string.h>
 #include <strsafe.h>
 #include <time.h>
+
+#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "scintilla.h"
 #include "scilexer.h"
+
 #include "notepad2.h"
 #include "edit.h"
 #include "styles.h"
