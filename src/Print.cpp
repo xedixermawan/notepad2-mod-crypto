@@ -28,7 +28,6 @@
 #include <string.h>
 #include <strsafe.h>
 
-#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "platform.h"
 #include "scintilla.h"
 #include "scilexer.h"
@@ -115,7 +114,7 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     int lengthDocMax;
     int lengthPrinted;
 
-    struct RangeToFormat frPrint;
+    struct Sci_RangeToFormat frPrint;
 
     int pageNum;
 

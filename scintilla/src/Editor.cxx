@@ -4045,11 +4045,11 @@ std::string Editor::CaseMapString(const std::string &s, int caseMapping) {
 	for (size_t i=0; i<ret.size(); i++) {
 		switch (caseMapping) {
 			case cmUpper:
-				if (ret[i] >= 'a' && ret[i] <= 'z')
+				if ((ret[i] >= 'a') && (ret[i] <= 'z'))
 					ret[i] = static_cast<char>(ret[i] - 'a' + 'A');
 				break;
 			case cmLower:
-				if (ret[i] >= 'A' && ret[i] <= 'Z')
+				if ((ret[i] >= 'A') && (ret[i] <= 'Z'))
 					ret[i] = static_cast<char>(ret[i] - 'A' + 'a');
 				break;
 		}

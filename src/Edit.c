@@ -29,7 +29,6 @@
 #include <strsafe.h>
 #include <limits.h>
 
-#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "scintilla.h"
 #include "scilexer.h"
 
@@ -327,7 +326,7 @@ void EditSetNewText(HWND hwnd, char* lpstrText, DWORD cbText)
 //
 BOOL EditConvertText(HWND hwnd, UINT cpSource, UINT cpDest, BOOL bSetSavePoint)
 {
-    struct TextRange tr = { { 0, -1 }, NULL };
+    struct Sci_TextRange tr = { { 0, -1 }, NULL };
     int length, cbText, cbwText;
     char *pchText;
     WCHAR *pwchText;
@@ -2615,7 +2614,7 @@ void EditTabsToSpaces(HWND hwnd, int nTabWidth, BOOL bOnlyIndentingWS)
     int iSelEnd;
     int iSelCount;
     UINT cpEdit;
-    struct TextRange tr;
+    struct Sci_TextRange tr;
     BOOL bIsLineStart = TRUE;
     BOOL bModified = FALSE;
 
@@ -2754,7 +2753,7 @@ void EditSpacesToTabs(HWND hwnd, int nTabWidth, BOOL bOnlyIndentingWS)
     int iSelEnd;
     int iSelCount;
     UINT cpEdit;
-    struct TextRange tr;
+    struct Sci_TextRange tr;
     WCHAR space[256];
     BOOL bIsLineStart = TRUE;
     BOOL bModified = FALSE;
@@ -3872,7 +3871,7 @@ void EditToggleLineComments(HWND hwnd, LPCWSTR pwszComment, BOOL bInsertAtStart)
             int iCommentPos;
             int iIndentPos = (int)SendMessage(hwnd, SCI_GETLINEINDENTPOSITION, (WPARAM)iLine, 0);
             char tchBuf[32];
-            struct TextRange tr;
+            struct Sci_TextRange tr;
 
             if (iIndentPos == SendMessage(hwnd, SCI_GETLINEENDPOSITION, (WPARAM)iLine, 0))
                 continue;
@@ -4447,7 +4446,7 @@ void EditWrapToColumn(HWND hwnd, int nColumn/*,int nTabWidth*/)
     int iSelEnd;
     int iSelCount;
     UINT cpEdit;
-    struct TextRange tr;
+    struct Sci_TextRange tr;
     int   cEOLMode;
     WCHAR wszEOL[] = L"\r\n";
     int   cchEOL = 2;
@@ -4666,7 +4665,7 @@ void EditJoinLinesEx(HWND hwnd)
     int iSelStart;
     int iSelEnd;
     int iSelCount;
-    struct TextRange tr;
+    struct Sci_TextRange tr;
     int  cEOLMode;
     char szEOL[] = "\r\n";
     int  cchEOL = 2;
@@ -5262,7 +5261,7 @@ void EditGetExcerpt(HWND hwnd, LPWSTR lpszExcerpt, DWORD cchExcerpt)
     WCHAR *p;
     DWORD cch = 0;
     UINT cpEdit;
-    struct TextRange tr;
+    struct Sci_TextRange tr;
     char*  pszText;
     LPWSTR pszTextW;
 
@@ -5935,7 +5934,7 @@ void EscapeWildcards(char* szFind2, int bufSize, LPCEDITFINDREPLACE lpefr)
 BOOL EditFindNext(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
 {
 
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     int iSelPos, iSelAnchor;
     char szFind2[512];
@@ -6006,7 +6005,7 @@ BOOL EditFindNext(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
 BOOL EditFindPrev(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
 {
 
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     int iSelPos, iSelAnchor;
     int iLength;
@@ -6079,7 +6078,7 @@ BOOL EditFindPrev(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
 BOOL EditReplace(HWND hwnd, LPCEDITFINDREPLACE lpefr)
 {
 
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     int iSelStart;
     int iSelEnd;
@@ -6223,7 +6222,7 @@ void CompleteWord(HWND hwnd, BOOL autoInsert)
     int iRootLen = 0;
     int iDocLen;
     int iPosFind;
-    struct TextRange tr = { { 0, -1 }, NULL };
+    struct Sci_TextRange tr = { { 0, -1 }, NULL };
     struct Sci_TextToFind ft = { {0, 0}, 0, {0, 0} };
     BOOL bWordAllNumbers = TRUE;
     struct WLIST* lListHead = NULL;
@@ -6375,7 +6374,7 @@ void CompleteWord(HWND hwnd, BOOL autoInsert)
 //
 void EditMarkAll(HWND hwnd, int iMarkOccurrences, BOOL bMarkOccurrencesMatchCase, BOOL bMarkOccurrencesMatchWords)
 {
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     char *pszText;
     int iTextLen;
@@ -6462,7 +6461,7 @@ void EditMarkAll(HWND hwnd, int iMarkOccurrences, BOOL bMarkOccurrencesMatchCase
 BOOL EditReplaceAll(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowInfo)
 {
 
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     int iCount = 0;
     int iReplaceMsg = (lpefr->fuFlags & dwSCI_FIND_REGEXP) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;
@@ -6593,7 +6592,7 @@ BOOL EditReplaceAll(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowInfo)
 BOOL EditReplaceAllInSelection(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowInfo)
 {
 
-    struct TextToFind ttf;
+    struct Sci_TextToFind ttf;
     int iPos;
     int iCount = 0;
     int iReplaceMsg = (lpefr->fuFlags & dwSCI_FIND_REGEXP) ? SCI_REPLACETARGETRE : SCI_REPLACETARGET;

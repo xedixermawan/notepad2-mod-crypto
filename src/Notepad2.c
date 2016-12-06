@@ -40,7 +40,6 @@
 #include <strsafe.h>
 #include <time.h>
 
-#define INCLUDE_DEPRECATED_FEATURES 1 //TODO: replace deprecated features
 #include "scintilla.h"
 #include "scilexer.h"
 
@@ -5590,7 +5589,7 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                             if (iSize >= 3)
                             {
 
-                                struct TextRange tr;
+                                struct Sci_TextRange tr;
                                 tr.chrg.cpMin = iStartPos;
                                 tr.chrg.cpMax = iCurPos;
                                 tr.lpstrText = tchBuf;
