@@ -2739,7 +2739,7 @@ void Style_Load()
         {
             if (!IniSectionGetString(pIniSection, L"FileNameExtensions", pLexArray[iLexer]->pszDefExt,
                                      pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions)))
-                                     (void)StringCchCopy(pLexArray[iLexer]->szExtensions, ARRAYSIZE(pLexArray[iLexer]->szExtensions), pLexArray[iLexer]->pszDefExt);
+                                     (void)StringCchCopy(pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions), pLexArray[iLexer]->pszDefExt);
             i = 0;
             while (pLexArray[iLexer]->Styles[i].u.iStyle != -1)
             {
@@ -2857,7 +2857,7 @@ BOOL Style_Import(HWND hwnd)
             {
                 if (!IniSectionGetString(pIniSection, L"FileNameExtensions", pLexArray[iLexer]->pszDefExt,
                                          pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions)))
-                                         (void)StringCchCopy(pLexArray[iLexer]->szExtensions, ARRAYSIZE(pLexArray[iLexer]->szExtensions), pLexArray[iLexer]->pszDefExt);
+                                         (void)StringCchCopy(pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions), pLexArray[iLexer]->pszDefExt);
 
                 i = 0;
                 while (pLexArray[iLexer]->Styles[i].u.iStyle != -1)
@@ -3091,7 +3091,7 @@ void Style_SetLexer(HWND hwnd, PEDITLEXER pLexNew)
 
         WCHAR tch[32];
         WCHAR wchStyle[COUNTOF(lexDefault.Styles[0].szValue)];
-        (void)StringCchCopy(wchStyle, ARRAYSIZE(wchStyle), lexDefault.Styles[7 + iIdx].szValue);
+        (void)StringCchCopy(wchStyle, COUNTOF(wchStyle), lexDefault.Styles[7 + iIdx].szValue);
 
         iValue = max(min(iValue, 5), 0);
         wsprintf(lexDefault.Styles[7 + iIdx].szValue, L"size:%i", iValue);
@@ -4075,7 +4075,7 @@ BOOL Style_SelectFont(HWND hwnd, LPWSTR lpszStyle, int cchStyle, BOOL bDefaultSt
 
     // Map lpszStyle to LOGFONT
     if (Style_StrGetFont(lpszStyle, tch, COUNTOF(tch)))
-        (void)StringCchCopy(lf.lfFaceName, ARRAYSIZE(lf.lfFaceName), tch);
+        (void)StringCchCopy(lf.lfFaceName, COUNTOF(lf.lfFaceName), tch);
 
     if (Style_StrGetCharSet(lpszStyle, &iValue))
         lf.lfCharSet = (BYTE)(iValue & 0xFF);

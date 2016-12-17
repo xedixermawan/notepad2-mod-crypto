@@ -4957,7 +4957,7 @@ void EditSortLines(HWND hwnd, int iSortFlags)
         if (cchw > 0)
         {
             UINT col = 0, tabs = iTabWidth;
-            pLines[i].pwszLine = AllocMem(sizeof(WCHAR) * (cchw + 1), HEAP_ZERO_MEMORY);
+            pLines[i].pwszLine = LocalAlloc(LPTR, sizeof(WCHAR) * (cchw + 1));
             MultiByteToWideChar(uCodePage, 0, pmsz, -1, pLines[i].pwszLine, (int)SizeOfMem(pLines[i].pwszLine) / sizeof(WCHAR));
             pLines[i].pwszSortEntry = pLines[i].pwszLine;
             if (iSortFlags & SORT_COLUMN)
@@ -5071,7 +5071,7 @@ void EditSortLines(HWND hwnd, int iSortFlags)
     for (i = 0; i < iLineCount; i++)
     {
         if (pLines[i].pwszLine)
-            FreeMem(pLines[i].pwszLine);
+            LocalFree(pLines[i].pwszLine); // allocated by StrDup()
     }
     FreeMem(pLines);
 
@@ -5943,7 +5943,7 @@ BOOL EditFindNext(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
     if (!lstrlenA(lpefr->szFind))
         return /*EditFindReplaceDlg(hwnd,lpefr,FALSE)*/FALSE;
 
-    (void)StringCchCopyA(szFind2, ARRAYSIZE(szFind2), lpefr->szFind);
+    (void)StringCchCopyA(szFind2, COUNTOF(szFind2), lpefr->szFind);
     if (lpefr->bTransformBS)
         TransformBackslashes(szFind2, (lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0));
@@ -6015,7 +6015,7 @@ BOOL EditFindPrev(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL fExtendSelection)
     if (!lstrlenA(lpefr->szFind))
         return /*EditFindReplaceDlg(hwnd,lpefr,FALSE)*/FALSE;
 
-    (void)StringCchCopyA(szFind2, ARRAYSIZE(szFind2), lpefr->szFind);
+    (void)StringCchCopyA(szFind2, COUNTOF(szFind2), lpefr->szFind);
     if (lpefr->bTransformBS)
         TransformBackslashes(szFind2, (lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0));
@@ -6091,7 +6091,7 @@ BOOL EditReplace(HWND hwnd, LPCEDITFINDREPLACE lpefr)
     if (!lstrlenA(lpefr->szFind))
         return /*EditFindReplaceDlg(hwnd,lpefr,TRUE)*/FALSE;
 
-    (void)StringCchCopyA(szFind2, ARRAYSIZE(szFind2), lpefr->szFind);
+    (void)StringCchCopyA(szFind2, COUNTOF(szFind2), lpefr->szFind);
     if (lpefr->bTransformBS)
         TransformBackslashes(szFind2, bRegExSearch, (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0));
 
@@ -6146,7 +6146,7 @@ BOOL EditReplace(HWND hwnd, LPCEDITFINDREPLACE lpefr)
     if (iPos == -1)
     {
         // notfound
-        FreeMem(pszReplace2);
+        LocalFree(pszReplace2); // allocated by StrDup()
         if (!bSuppressNotFound)
             InfoBox(0, L"MsgNotFound", IDS_NOTFOUND);
         return FALSE;
@@ -6154,7 +6154,7 @@ BOOL EditReplace(HWND hwnd, LPCEDITFINDREPLACE lpefr)
 
     if (iSelStart != ttf.chrgText.cpMin || iSelEnd != ttf.chrgText.cpMax)
     {
-        FreeMem(pszReplace2);
+        LocalFree(pszReplace2); // allocated by StrDup()
         EditSelectEx(hwnd, ttf.chrgText.cpMin, ttf.chrgText.cpMax);
         return FALSE;
     }
@@ -6192,7 +6192,7 @@ BOOL EditReplace(HWND hwnd, LPCEDITFINDREPLACE lpefr)
             InfoBox(0, L"MsgNotFound", IDS_NOTFOUND);
     }
 
-    FreeMem(pszReplace2);
+    LocalFree(pszReplace2); // allocated by StrDup()
     return TRUE;
 
 }
@@ -6476,7 +6476,7 @@ BOOL EditReplaceAll(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowInfo)
     // Show wait cursor...
     BeginWaitCursor();
 
-    (void)StringCchCopyA(szFind2, ARRAYSIZE(szFind2), lpefr->szFind);
+    (void)StringCchCopyA(szFind2, COUNTOF(szFind2), lpefr->szFind);
     if (lpefr->bTransformBS)
         TransformBackslashes(szFind2, (lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0));
@@ -6614,7 +6614,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowIn
     // Show wait cursor...
     BeginWaitCursor();
 
-    (void)StringCchCopyA(szFind2, ARRAYSIZE(szFind2), lpefr->szFind);
+    (void)StringCchCopyA(szFind2, COUNTOF(szFind2), lpefr->szFind);
     if (lpefr->bTransformBS)
         TransformBackslashes(szFind2, (lpefr->fuFlags & dwSCI_FIND_REGEXP),
         (UINT)SendMessage(hwnd, SCI_GETCODEPAGE, 0, 0));
@@ -6743,7 +6743,7 @@ BOOL EditReplaceAllInSelection(HWND hwnd, LPCEDITFINDREPLACE lpefr, BOOL bShowIn
             InfoBox(0, L"MsgNotFound", IDS_NOTFOUND);
     }
 
-    FreeMem(pszReplace2);
+    LocalFree(pszReplace2);
     return TRUE;
 
 }
@@ -7535,7 +7535,7 @@ BOOL FileVars_Init(char *lpData, DWORD cbData, LPFILEVARS lpfv)
     if ((fNoFileVariables && bNoEncodingTags) || !lpData || !cbData)
         return(TRUE);
 
-    (void)StringCchCopyA(tch, min(cbData + 1, ARRAYSIZE(tch)), lpData);
+    (void)StringCchCopyA(tch, min(cbData + 1, COUNTOF(tch)), lpData);
 
     if (!fNoFileVariables)
     {
@@ -7603,7 +7603,7 @@ BOOL FileVars_Init(char *lpData, DWORD cbData, LPFILEVARS lpfv)
     if (lpfv->mask == 0 && cbData > COUNTOF(tch))
     {
 
-        (void)StringCchCopyA(tch, ARRAYSIZE(tch), (lpData + cbData - COUNTOF(tch) + 1));
+        (void)StringCchCopyA(tch, COUNTOF(tch), (lpData + cbData - COUNTOF(tch) + 1));
 
         if (!fNoFileVariables)
         {
@@ -7779,7 +7779,7 @@ BOOL FileVars_ParseInt(char* pszData, char* pszName, int* piValue)
         while (*pvStart && StrChrIA(":=\"' \t", *pvStart))
             pvStart++;
 
-        (void)StringCchCopyA(tch, ARRAYSIZE(tch), pvStart);
+        (void)StringCchCopyA(tch, COUNTOF(tch), pvStart);
 
         pvEnd = tch;
         while (*pvEnd && IsCharAlphaNumericA(*pvEnd))
@@ -7843,7 +7843,7 @@ BOOL FileVars_ParseStr(char* pszData, char* pszName, char* pszValue, int cchValu
                 bQuoted = TRUE;
             pvStart++;
         }
-        (void)StringCchCopyA(tch, ARRAYSIZE(tch), pvStart);
+        (void)StringCchCopyA(tch, COUNTOF(tch), pvStart);
 
         pvEnd = tch;
         while (*pvEnd && (IsCharAlphaNumericA(*pvEnd) || StrChrIA("+-/_", *pvEnd) || (bQuoted && *pvEnd == ' ')))

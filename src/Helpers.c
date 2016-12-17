@@ -516,7 +516,7 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
             StringCchCat(szTitle, 512, szCachedDisplayName);
             if (iFormat == 1)
             {
-                WCHAR tchPath[MAX_PATH];
+                WCHAR tchPath[MAX_PATH] = { L'\0' };
                 StringCchCopyN(tchPath, MAX_PATH, lpszFile, COUNTOF(tchPath));
                 PathRemoveFileSpec(tchPath);
                 StringCchCat(szTitle, 512, L" [");
@@ -982,7 +982,7 @@ int Toolbar_SetButtons(HWND hwnd, int cmdBase, LPCWSTR lpszButtons, LPCTBBUTTON 
     int i, c;
     int iCmd;
 
-    (void)StringCchCopy(tchButtons, ARRAYSIZE(tchButtons), lpszButtons);
+    (void)StringCchCopy(tchButtons, COUNTOF(tchButtons), lpszButtons);
     TrimString(tchButtons);
     while ((p = StrStr(tchButtons, L"  ")) != NULL)
         MoveMemory((WCHAR*)p, (WCHAR*)p + 1, (StringLength(p) + 1) * sizeof(WCHAR));
@@ -1071,11 +1071,11 @@ void PathRelativeToApp(
     BOOL bUnexpandEnv, BOOL bUnexpandMyDocs)
 {
 
-    WCHAR wchAppPath[MAX_PATH];
-    WCHAR wchWinDir[MAX_PATH];
-    WCHAR wchUserFiles[MAX_PATH];
-    WCHAR wchPath[MAX_PATH];
-    WCHAR wchResult[MAX_PATH];
+    WCHAR wchAppPath[MAX_PATH] = { L'\0' };
+    WCHAR wchWinDir[MAX_PATH] = { L'\0' };
+    WCHAR wchUserFiles[MAX_PATH] = { L'\0' };
+    WCHAR wchPath[MAX_PATH] = { L'\0' };
+    WCHAR wchResult[MAX_PATH] = { L'\0' };
     DWORD dwAttrTo = (bSrcIsFile) ? 0 : FILE_ATTRIBUTE_DIRECTORY;
 
     GetModuleFileName(NULL, wchAppPath, COUNTOF(wchAppPath));
@@ -1095,20 +1095,20 @@ void PathRelativeToApp(
         StringCchCopy(wchPath, MAX_PATH, wchUserFiles);
     }
     else if (PathIsRelative(lpszSrc) || PathCommonPrefix(wchAppPath, wchWinDir, NULL))
-        (void)StringCchCopy(wchPath, ARRAYSIZE(wchPath), lpszSrc);
+        (void)StringCchCopy(wchPath, COUNTOF(wchPath), lpszSrc);
     else
     {
         if (!PathRelativePathTo(wchPath, wchAppPath, FILE_ATTRIBUTE_DIRECTORY, lpszSrc, dwAttrTo))
-            (void)StringCchCopy(wchPath, ARRAYSIZE(wchPath), lpszSrc);
+            (void)StringCchCopy(wchPath, COUNTOF(wchPath), lpszSrc);
     }
 
     if (bUnexpandEnv)
     {
         if (!PathUnExpandEnvStrings(wchPath, wchResult, COUNTOF(wchResult)))
-            (void)StringCchCopy(wchResult, ARRAYSIZE(wchResult), wchPath);
+            (void)StringCchCopy(wchResult, COUNTOF(wchResult), wchPath);
     }
     else
-        (void)StringCchCopy(wchResult, ARRAYSIZE(wchResult), wchPath);
+        (void)StringCchCopy(wchResult, COUNTOF(wchResult), wchPath);
 
     if (lpszDest == NULL || lpszSrc == lpszDest)
         (void)StringCchCopy(lpszSrc, ((cchDest == 0) ? MAX_PATH : cchDest), wchResult);
@@ -1124,8 +1124,8 @@ void PathRelativeToApp(
 void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExpandEnv)
 {
 
-    WCHAR wchPath[MAX_PATH];
-    WCHAR wchResult[MAX_PATH];
+    WCHAR wchPath[MAX_PATH] = { L'\0' };
+    WCHAR wchResult[MAX_PATH] = { L'\0' };
 
     /* notepad2-mod custom code start */
     if (lpszSrc == NULL)
@@ -1141,7 +1141,7 @@ void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExp
         PathAppend(wchPath, lpszSrc + CSTRLEN("%CSIDL:MYDOCUMENTS%"));
     }
     else
-        (void)StringCchCopy(wchPath, ARRAYSIZE(wchPath), lpszSrc);
+        (void)StringCchCopy(wchPath, COUNTOF(wchPath), lpszSrc);
 
     if (bExpandEnv)
         ExpandEnvironmentStringsEx(wchPath, COUNTOF(wchPath));
@@ -1153,9 +1153,9 @@ void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExp
         PathAppend(wchResult, wchPath);
     }
     else
-        (void)StringCchCopy(wchResult, ARRAYSIZE(wchResult), wchPath);
+        (void)StringCchCopy(wchResult, COUNTOF(wchResult), wchPath);
 
-    PathCanonicalizeEx(wchResult, ARRAYSIZE(wchResult));
+    PathCanonicalizeEx(wchResult, COUNTOF(wchResult));
     if (PathGetDriveNumber(wchResult) != -1)
         CharUpperBuff(wchResult, 1);
 
@@ -1236,7 +1236,7 @@ BOOL PathGetLnkPath(LPCWSTR pszLnkFile, LPWSTR pszResPath, int cchResPath)
 
         if (SUCCEEDED(psl->lpVtbl->QueryInterface(psl, &IID_IPersistFile, &ppf)))
         {
-            WORD wsz[MAX_PATH];
+            WORD wsz[MAX_PATH] = { L'\0' };
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 pszLnkFile,-1,wsz,MAX_PATH);*/
@@ -1282,7 +1282,7 @@ BOOL PathIsLnkToDirectory(LPCWSTR pszPath, LPWSTR pszResPath, int cchResPath)
     if (PathIsLnkFile(pszPath))
     {
 
-        WCHAR tchResPath[MAX_PATH];
+        WCHAR tchResPath[MAX_PATH] = { L'\0' };
 
         if (PathGetLnkPath(pszPath, tchResPath, sizeof(WCHAR)*COUNTOF(tchResPath)))
         {
@@ -1319,13 +1319,13 @@ BOOL PathIsLnkToDirectory(LPCWSTR pszPath, LPWSTR pszResPath, int cchResPath)
 BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
 {
 
-    WCHAR tchExeFile[MAX_PATH];
-    WCHAR tchDocTemp[MAX_PATH];
-    WCHAR tchArguments[MAX_PATH + 16];
-    WCHAR tchLinkDir[MAX_PATH];
-    WCHAR tchDescription[64];
+    WCHAR tchExeFile[MAX_PATH] = { L'\0' };
+    WCHAR tchDocTemp[MAX_PATH] = { L'\0' };
+    WCHAR tchArguments[MAX_PATH + 16] = { L'\0' };
+    WCHAR tchLinkDir[MAX_PATH] = { L'\0' };
+    WCHAR tchDescription[64] = { L'\0' };
 
-    WCHAR tchLnkFileName[MAX_PATH];
+    WCHAR tchLnkFileName[MAX_PATH] = { L'\0' };
 
     IShellLink *psl;
     BOOL bSucceeded = FALSE;
@@ -1359,7 +1359,7 @@ BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
 
         if (SUCCEEDED(psl->lpVtbl->QueryInterface(psl, &IID_IPersistFile, &ppf)))
         {
-            WORD wsz[MAX_PATH];
+            WORD wsz[MAX_PATH] = { L'\0' };
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 tchLnkFileName,-1,wsz,MAX_PATH);*/
@@ -1394,7 +1394,7 @@ BOOL PathCreateDeskLnk(LPCWSTR pszDocument)
 BOOL PathCreateFavLnk(LPCWSTR pszName, LPCWSTR pszTarget, LPCWSTR pszDir)
 {
 
-    WCHAR tchLnkFileName[MAX_PATH];
+    WCHAR tchLnkFileName[MAX_PATH] = { L'\0' };
 
     IShellLink *psl;
     BOOL bSucceeded = FALSE;
@@ -1417,7 +1417,7 @@ BOOL PathCreateFavLnk(LPCWSTR pszName, LPCWSTR pszTarget, LPCWSTR pszDir)
 
         if (SUCCEEDED(psl->lpVtbl->QueryInterface(psl, &IID_IPersistFile, &ppf)))
         {
-            WORD wsz[MAX_PATH];
+            WORD wsz[MAX_PATH] = { L'\0' };
 
             /*MultiByteToWideChar(CP_ACP,MB_PRECOMPOSED,
                                 tchLnkFileName,-1,wsz,MAX_PATH);*/
@@ -1602,7 +1602,7 @@ void ExpandEnvironmentStringsEx(LPWSTR lpSrc, DWORD dwSrc)
 //
 void PathCanonicalizeEx(LPWSTR lpSrc, DWORD size)
 {
-    WCHAR szDst[MAX_PATH];
+    WCHAR szDst[MAX_PATH] = { L'\0' };
     if (PathCanonicalize(szDst, lpSrc))
         (void)StringCchCopy(lpSrc, size, szDst);
 }
@@ -1755,12 +1755,11 @@ UINT CodePageFromCharSet(UINT uCharSet)
 //
 LPMRULIST MRU_Create(LPCWSTR pszRegKey, int iFlags, int iSize)
 {
-
-    LPMRULIST pmru = AllocMem(sizeof(MRULIST), HEAP_ZERO_MEMORY);
+    LPMRULIST pmru = LocalAlloc(LPTR, sizeof(MRULIST));
     if (pmru)
     {
         ZeroMemory(pmru, sizeof(MRULIST));
-        (void)StringCchCopy(pmru->szRegKey, ARRAYSIZE(pmru->szRegKey), pszRegKey);
+        (void)StringCchCopy(pmru->szRegKey, COUNTOF(pmru->szRegKey), pszRegKey);
         pmru->iFlags = iFlags;
         pmru->iSize = min(iSize, MRU_MAXITEMS);
     }
@@ -1777,7 +1776,7 @@ BOOL MRU_Destroy(LPMRULIST pmru)
             LocalFree(pmru->pszItems[i]); // allocated by StrDup()
     }
     ZeroMemory(pmru, sizeof(MRULIST));
-    FreeMem(pmru);
+    LocalFree(pmru);
     return(1);
 }
 
@@ -1822,7 +1821,7 @@ BOOL MRU_AddFile(LPMRULIST pmru, LPCWSTR pszFile, BOOL bRelativePath, BOOL bUnex
         }
         else
         {
-            WCHAR wchItem[MAX_PATH];
+            WCHAR wchItem[MAX_PATH] = { L'\0' };
             PathAbsoluteFromApp(pmru->pszItems[i], wchItem, COUNTOF(wchItem), TRUE);
             if (lstrcmpi(wchItem, pszFile) == 0)
             {
@@ -1837,7 +1836,7 @@ BOOL MRU_AddFile(LPMRULIST pmru, LPCWSTR pszFile, BOOL bRelativePath, BOOL bUnex
 
     if (bRelativePath)
     {
-        WCHAR wchFile[MAX_PATH];
+        WCHAR wchFile[MAX_PATH] = { L'\0' };
         PathRelativeToApp((LPWSTR)pszFile, wchFile, COUNTOF(wchFile), TRUE, TRUE, bUnexpandMyDocs);
         pmru->pszItems[0] = StrDup(wchFile);
     }
@@ -1933,8 +1932,8 @@ BOOL MRU_Load(LPMRULIST pmru)
 {
 
     int i, n = 0;
-    WCHAR tchName[32];
-    WCHAR tchItem[1024];
+    WCHAR tchName[32] = { L'\0' };
+    WCHAR tchItem[1024] = { L'\0' };
     WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
 
     if (pmru && pIniSection)
@@ -2010,7 +2009,7 @@ BOOL MRU_MergeSave(LPMRULIST pmru, BOOL bAddFiles, BOOL bRelativePath, BOOL bUne
         {
             if (pmru->pszItems[i])
             {
-                WCHAR wchItem[MAX_PATH];
+                WCHAR wchItem[MAX_PATH] = { L'\0' };
                 PathAbsoluteFromApp(pmru->pszItems[i], wchItem, COUNTOF(wchItem), TRUE);
                 MRU_AddFile(pmruBase, wchItem, bRelativePath, bUnexpandMyDocs);
             }
