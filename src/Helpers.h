@@ -75,25 +75,24 @@ __inline void EndWaitCursor()
 #define IsW81    IsWindows8Point1OrGreater
 #define IsW10    IsWindows10OrGreater
 
-
-inline LPVOID AllocMem(size_t numBytes, DWORD dwFlags)
+__inline LPVOID AllocMem(size_t numBytes, DWORD dwFlags)
 {
     return HeapAlloc(GetProcessHeap(), (dwFlags | HEAP_GENERATE_EXCEPTIONS), numBytes);
 }
 
-inline BOOL FreeMem(LPVOID lpMemory)
+__inline BOOL FreeMem(LPVOID lpMemory)
 {
     return ((lpMemory != NULL) ? HeapFree(GetProcessHeap(), 0, lpMemory) : TRUE);
 }
 
-inline size_t SizeOfMem(LPVOID lpMemory)
+__inline size_t SizeOfMem(LPVOID lpMemory)
 {
     return ((lpMemory != NULL) ? HeapSize(GetProcessHeap(), 0, lpMemory) : 0);
 }
 
 
-inline UINT GetTickCount_UINT() { return (UINT)(GetTickCount64() & UINT_MAX); }
-inline ULONG GetTickCount_ULONG() { return (ULONG)(GetTickCount64() & ULONG_MAX); } // use for DWORD
+__inline UINT GetTickCount_UINT() { return (UINT)(GetTickCount64() & UINT_MAX); }
+__inline ULONG GetTickCount_ULONG() { return (ULONG)(GetTickCount64() & ULONG_MAX); } // use for DWORD
 
 void ReportError(LPCTSTR);
 void ReportErrorEx(LPCTSTR, DWORD);

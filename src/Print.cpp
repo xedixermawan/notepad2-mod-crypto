@@ -147,11 +147,12 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     {
         pdlg.Flags |= PD_SELECTION;
     }
-    if (0)
+#if 0
     {
         // Don't display dialog box, just use the default printer and options
         pdlg.Flags |= PD_RETURNDEFAULT;
     }
+#endif
     if (!PrintDlg(&pdlg))
     {
         return TRUE; // False means error...

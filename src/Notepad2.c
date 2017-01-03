@@ -5578,7 +5578,7 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                     else if (bAutoCloseTags && scn->ch == '>')
                     {
                         //int iLexer = (int)SendMessage(hwndEdit,SCI_GETLEXER,0,0);
-                        if (/*iLexer == SCLEX_HTML || iLexer == SCLEX_XML*/ 1)
+                        //if (iLexer == SCLEX_HTML || iLexer == SCLEX_XML)
                         {
                             char tchBuf[512] = { '\0' };
                             char tchIns[516] = "</";

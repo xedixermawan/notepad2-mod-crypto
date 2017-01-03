@@ -75,7 +75,8 @@ protected:
 template <class ELT> CBufferRefT <ELT> ::CBufferRefT(const ELT * pcsz, index_t length)
     : m_pBuffer((ELT *)pcsz)
     , m_nSize(length)
-{}
+{
+}
 
 template <class ELT> CBufferRefT <ELT> ::CBufferRefT(const ELT * pcsz)
     : m_pBuffer((ELT *)pcsz)
@@ -1603,7 +1604,8 @@ template <class CHART> CConditionElxT <CHART> ::CConditionElxT()
     , m_pelxask(nullptr)
     , m_pelxyes(nullptr)
     , m_pelxno(nullptr)
-{}
+{
+}
 
 template <class CHART> int CConditionElxT <CHART> ::Match(CContext * pContext) const
 {
