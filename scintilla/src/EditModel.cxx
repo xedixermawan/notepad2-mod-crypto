@@ -58,11 +58,11 @@ EditModel::EditModel()
     , imeInteraction(imeWindowed)
     , hotspot(Range(invalidPosition))
 {
-    inOverstrike = false;
-    xOffset = 0;
-    trackLineWidth = false;
-    braces[0] = invalidPosition;
-    braces[1] = invalidPosition;
+	inOverstrike = false;
+	xOffset = 0;
+	trackLineWidth = false;
+	braces[0] = invalidPosition;
+	braces[1] = invalidPosition;
 	bracesMatchStyle = STYLE_BRACEBAD;
 	highlightGuideColumn = 0;
 	primarySelection = true;

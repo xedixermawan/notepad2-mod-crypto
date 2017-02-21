@@ -1624,7 +1624,7 @@ CharClassify::cc Document::WordCharacterClass(unsigned int ch) const {
 			}
 		} else {
 			// Asian DBCS
-		return CharClassify::ccWord;
+			return CharClassify::ccWord;
 		}
 	}
 	return charClass.GetClass(static_cast<unsigned char>(ch));
@@ -1805,7 +1805,7 @@ bool Document::MatchesWordOptions(bool word, bool wordStart, int pos, int length
 			(wordStart && IsWordStartAt(pos));
 }
 
-bool Document::HasCaseFolder(void) const {
+bool Document::HasCaseFolder() const {
 	return pcf != 0;
 }
 
