@@ -68,8 +68,14 @@
 #endif
 #endif
 #elif defined(_MSC_VER)
-#if _MSC_VER == 1900
-#if (_MSC_FULL_VER >= 190024210)
+#if _MSC_VER == 1910
+#if (_MSC_FULL_VER >= 191025017)
+#define VER_CPL    "MSVC 2017"
+#endif
+#elif _MSC_VER == 1900
+#if (_MSC_FULL_VER >= 191025017)
+#define VER_CPL    "MSVC 2017"
+#elif (_MSC_FULL_VER >= 190024210)
 #define VER_CPL    "MSVC 2015 Update 3"
 #elif (_MSC_FULL_VER == 190023918)
 #define VER_CPL    "MSVC 2015 Update 2"
