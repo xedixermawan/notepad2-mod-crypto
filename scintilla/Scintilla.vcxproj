@@ -23,7 +23,7 @@
     <ProjectGuid>{5877B917-512B-49F5-B514-1B4159E7A9CA}</ProjectGuid>
     <ProjectName>Scintilla</ProjectName>
     <RootNamespace>Scintilla</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -312,6 +312,7 @@
     <ClInclude Include="src\Style.h" />
     <ClInclude Include="src\UnicodeFromUTF8.h" />
     <ClInclude Include="src\UniConversion.h" />
+    <ClInclude Include="src\UniqueString.h" />
     <ClInclude Include="src\ViewStyle.h" />
     <ClInclude Include="src\XPM.h" />
     <ClInclude Include="win32\PlatWin.h" />
