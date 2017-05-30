@@ -19,3 +19,4 @@
 /signinfo.txt
 /src/VersionRev.h
 *.orig
+.vs/
