@@ -2673,7 +2673,7 @@ extern BOOL bHiliteCurrentLine;
 //
 void Style_Load()
 {
-    int i, iLexer;
+    int iLexer;
     WCHAR tch[32];
     WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
     if (!pIniSection)
@@ -2700,9 +2700,8 @@ void Style_Load()
     crCustom[15] = RGB(0xB2, 0x8B, 0x40);
 
     LoadIniSection(L"Custom Colors", pIniSection, cchIniSection);
-    for (i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++)
     {
-        int itok;
         unsigned int irgb;
         WCHAR wch[32];
         wsprintf(tch, L"%02i", i + 1);
@@ -2710,7 +2709,7 @@ void Style_Load()
         {
             if (wch[0] == L'#')
             {
-                itok = swscanf_s(CharNext(wch), L"%x", &irgb);
+                int itok = swscanf_s(CharNext(wch), L"%x", &irgb);
                 if (itok == 1)
                     crCustom[i] = RGB((irgb & 0xFF0000) >> 16, (irgb & 0xFF00) >> 8, irgb & 0xFF);
             }
@@ -2742,7 +2741,7 @@ void Style_Load()
             if (!IniSectionGetString(pIniSection, L"FileNameExtensions", pLexArray[iLexer]->pszDefExt,
                                      pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions)))
                                      (void)StringCchCopy(pLexArray[iLexer]->szExtensions, COUNTOF(pLexArray[iLexer]->szExtensions), pLexArray[iLexer]->pszDefExt);
-            i = 0;
+            int i = 0;
             while (pLexArray[iLexer]->Styles[i].u.iStyle != -1)
             {
                 IniSectionGetString(pIniSection, pLexArray[iLexer]->Styles[i].pszName,
@@ -2904,17 +2903,15 @@ BOOL Style_Export(HWND hwnd)
 
     if (GetSaveFileName(&ofn))
     {
-
-        int i, iLexer;
         WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
         if (!pIniSection)
             return FALSE;
         //int   cchIniSection = (int)SizeOfMem(pIniSection) / sizeof(WCHAR);
 
-        for (iLexer = 0; iLexer < NUMLEXERS; iLexer++)
+        for (int iLexer = 0; iLexer < NUMLEXERS; iLexer++)
         {
             IniSectionSetString(pIniSection, L"FileNameExtensions", pLexArray[iLexer]->szExtensions);
-            i = 0;
+            int i = 0;
             while (pLexArray[iLexer]->Styles[i].u.iStyle != -1)
             {
                 IniSectionSetString(pIniSection, pLexArray[iLexer]->Styles[i].pszName, pLexArray[iLexer]->Styles[i].szValue);
@@ -3488,19 +3485,17 @@ PEDITLEXER __fastcall Style_MatchLexer(LPCWSTR lpszMatch, BOOL bCheckNames)
 {
     int i;
     WCHAR  tch[256 + 16];
-    WCHAR  *p1, *p2;
 
     if (!bCheckNames)
     {
-
         for (i = 0; i < NUMLEXERS; i++)
         {
-
             ZeroMemory(tch, sizeof(tch));
             StringCchCopy(tch, 256 + 16, pLexArray[i]->szExtensions);
-            p1 = tch;
+            WCHAR* p1 = tch;
             while (*p1)
             {
+                WCHAR* p2;
                 if ((p2 = StrChr(p1, L';')) != NULL)
                     *p2 = L'\0';
                 else
@@ -3887,7 +3882,6 @@ BOOL Style_StrGetCharSet(LPCWSTR lpszStyle, int *i)
     WCHAR tch[256];
     WCHAR *p;
     int  iValue;
-    int  itok;
 
     if ((p = StrStrI(lpszStyle, L"charset:")) != NULL)
     {
@@ -3895,7 +3889,7 @@ BOOL Style_StrGetCharSet(LPCWSTR lpszStyle, int *i)
         if ((p = StrChr(tch, L';')) != NULL)
             *p = L'\0';
         TrimString(tch);
-        itok = swscanf_s(tch, L"%i", &iValue);
+        int itok = swscanf_s(tch, L"%i", &iValue);
         if (itok == 1)
         {
             *i = iValue;
@@ -3915,11 +3909,10 @@ BOOL Style_StrGetSize(LPCWSTR lpszStyle, int *i)
     WCHAR tch[256];
     WCHAR *p;
     int  iValue;
-    int  iSign = 0;
-    int  itok;
 
     if ((p = StrStrI(lpszStyle, L"size:")) != NULL)
     {
+        int  iSign = 0;
         StringCchCopy(tch, 256, p + CSTRLEN(L"size:"));
         if (tch[0] == L'+')
         {
@@ -3934,7 +3927,7 @@ BOOL Style_StrGetSize(LPCWSTR lpszStyle, int *i)
         if ((p = StrChr(tch, L';')) != NULL)
             *p = L'\0';
         TrimString(tch);
-        itok = swscanf_s(tch, L"%i", &iValue);
+        int itok = swscanf_s(tch, L"%i", &iValue);
         if (itok == 1)
         {
             if (iSign == 0)
@@ -3979,7 +3972,6 @@ BOOL Style_StrGetColor(BOOL bFore, LPCWSTR lpszStyle, int *rgb)
     WCHAR tch[256];
     WCHAR *p;
     unsigned int  iValue;
-    int  itok;
     WCHAR *pItem = (bFore) ? L"fore:" : L"back:";
 
     if ((p = StrStrI(lpszStyle, pItem)) != NULL)
@@ -3990,7 +3982,7 @@ BOOL Style_StrGetColor(BOOL bFore, LPCWSTR lpszStyle, int *rgb)
         if ((p = StrChr(tch, L';')) != NULL)
             *p = L'\0';
         TrimString(tch);
-        itok = swscanf_s(tch, L"%x", &iValue);
+        int itok = swscanf_s(tch, L"%x", &iValue);
         if (itok == 1)
         {
             *rgb = RGB((iValue & 0xFF0000) >> 16, (iValue & 0xFF00) >> 8, iValue & 0xFF);
@@ -4040,7 +4032,6 @@ BOOL Style_StrGetAlpha(LPCWSTR lpszStyle, int *i)
     WCHAR tch[256];
     WCHAR *p;
     int  iValue;
-    int  itok;
 
     if ((p = StrStrI(lpszStyle, L"alpha:")) != NULL)
     {
@@ -4048,7 +4039,7 @@ BOOL Style_StrGetAlpha(LPCWSTR lpszStyle, int *i)
         if ((p = StrChr(tch, L';')) != NULL)
             *p = L'\0';
         TrimString(tch);
-        itok = swscanf_s(tch, L"%i", &iValue);
+        int itok = swscanf_s(tch, L"%i", &iValue);
         if (itok == 1)
         {
             *i = min(max(SC_ALPHA_TRANSPARENT, iValue), SC_ALPHA_OPAQUE);

@@ -123,13 +123,12 @@ int IniSectionGetString(
 {
     WCHAR* p = (WCHAR*)lpCachedIniSection;
     WCHAR tch[256] = { L'\0' };
-    int ich;
 
     if (p)
     {
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
-        ich = StringLength(tch);
+        int ich = StringLength(tch);
 
         while (p[0] != L'\0')
         {
@@ -156,19 +155,18 @@ int IniSectionGetInt(
 {
     WCHAR *p = (WCHAR *)lpCachedIniSection;
     WCHAR tch[256];
-    int  ich;
-    int  i;
 
     if (p)
     {
         StringCchCopy(tch, 256, lpName);
         StringCchCat(tch, 256, L"=");
-        ich = StringLength(tch);
+        int ich = StringLength(tch);
 
         while (*p)
         {
             if (StrCmpNI(p, tch, ich) == 0)
             {
+                int  i;
                 if (swscanf_s(p + ich, L"%i", &i) == 1)
                     return(i);
                 else
@@ -473,6 +471,7 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
     static WCHAR szCachedFile[MAX_PATH] = { L'\0' };
     static WCHAR szCachedDisplayName[MAX_PATH] = { L'\0' };;
     static const WCHAR *pszSep = L" - ";
+    // cppcheck-suppress  variableScope
     static const WCHAR *pszMod = L"* ";
 
     if (bFreezeAppTitle)
@@ -1930,9 +1929,6 @@ int MRU_Enum(LPMRULIST pmru, int iIndex, LPWSTR pszItem, int cchItem)
 
 BOOL MRU_Load(LPMRULIST pmru)
 {
-
-    int i, n = 0;
-    WCHAR tchName[32] = { L'\0' };
     WCHAR tchItem[1024] = { L'\0' };
     WCHAR *pIniSection = AllocMem(sizeof(WCHAR) * 32 * 1024, HEAP_ZERO_MEMORY);
 
@@ -1943,8 +1939,10 @@ BOOL MRU_Load(LPMRULIST pmru)
     }
     if (pmru)
     {
-        for (i = 0; i < pmru->iSize; i++)
+        int n = 0;
+        for (int i = 0; i < pmru->iSize; i++)
         {
+            WCHAR tchName[32] = { L'\0' };
             wsprintf(tchName, L"%.2i", i + 1);
             if (IniSectionGetString(pIniSection, tchName, L"", tchItem, COUNTOF(tchItem)))
             {

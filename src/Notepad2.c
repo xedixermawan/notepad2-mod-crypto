@@ -286,6 +286,7 @@ BOOL      fIsElevated = FALSE;
 WCHAR     wchWndClass[32] = WC_NOTEPAD2;
 
 HINSTANCE g_hInstance;
+HINSTANCE g_hPrevInstance;
 HANDLE    g_hScintilla;
 WCHAR     g_wchAppUserModelID[32] = { L'\0' };
 WCHAR     g_wchWorkingDirectory[MAX_PATH] = { L'\0' };
@@ -596,6 +597,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst, _In_ 
 
     // Set global variable g_hInstance
     g_hInstance = hInstance;
+    g_hPrevInstance = hPrevInst;
 
     // Don't keep working directory locked
     GetCurrentDirectory(COUNTOF(g_wchWorkingDirectory), g_wchWorkingDirectory);
@@ -725,9 +727,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst, _In_ 
     OleUninitialize();
 
     return(int)(msg.wParam);
-
-    hPrevInst;
-
 }
 
 
@@ -3568,19 +3567,17 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
 
         case IDM_EDIT_INSERT_GUID:
         {
-            UINT uCP;
             GUID guid;
-            WCHAR wszGuid[40] = { L'\0' };;
-            WCHAR *pwszGuid;
-            char mszGuid[40 * 4] = { '\0' };; // UTF-8 max of 4 bytes per char
 
             if (SUCCEEDED(CoCreateGuid(&guid)))
             {
+                WCHAR wszGuid[40] = { L'\0' };;
                 if (StringFromGUID2(&guid, wszGuid, COUNTOF(wszGuid)))
                 {
-                    pwszGuid = wszGuid + 1; // trim first brace char
+                    char mszGuid[40 * 4] = { '\0' };; // UTF-8 max of 4 bytes per char
+                    WCHAR* pwszGuid = wszGuid + 1; // trim first brace char
                     wszGuid[wcslen(wszGuid) - 1] = L'\0'; // trim last brace char 
-                    uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
+                    UINT uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
                     if (WideCharToMultiByte(uCP, 0, pwszGuid, -1, mszGuid, COUNTOF(mszGuid), NULL, NULL))
                     {
                         SendMessage(hwndEdit, SCI_REPLACESEL, 0, (LPARAM)mszGuid);
@@ -4877,9 +4874,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
             BOOL  bCmdEnabled;
             LPWSTR lpszTemplateName;
             WCHAR  szCmdTemplate[256] = { L'\0' };
-            char  mszSelection[512] = { '\0' };
             DWORD cchSelection;
-            char  *lpsz;
             LPWSTR lpszCommand;
             LPWSTR lpszArgs;
             SHELLEXECUTEINFO sei;
@@ -4895,13 +4890,14 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                 cchSelection = (int)SendMessage(hwndEdit, SCI_GETSELECTIONEND, 0, 0) -
                     (int)SendMessage(hwndEdit, SCI_GETSELECTIONSTART, 0, 0);
 
+                char  mszSelection[512] = { '\0' };
                 if ((cchSelection > 0) && (cchSelection <= 500) && (SendMessage(hwndEdit, SCI_GETSELTEXT, 0, 0) < COUNTOF(mszSelection)))
                 {
                     SendMessage(hwndEdit, SCI_GETSELTEXT, 0, (LPARAM)mszSelection);
                     mszSelection[cchSelection] = '\0'; // zero terminate
 
                     // Check lpszSelection and truncate bad WCHARs
-                    lpsz = StrChrA(mszSelection, 13);
+                    char* lpsz = StrChrA(mszSelection, 13);
                     if (lpsz) *lpsz = '\0';
 
                     lpsz = StrChrA(mszSelection, 10);
@@ -5503,7 +5499,6 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                         if ((SC_EOL_CRLF == iEOLMode && scn->ch != '\x0A') || SC_EOL_CRLF != iEOLMode)
                         {
                             char *pLineBuf;
-                            char *pPos;
                             //int  iIndentLen;
 
                             int iCurPos = (int)SendMessage(hwndEdit, SCI_GETCURRENTPOS, 0, 0);
@@ -5537,7 +5532,7 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                                 {
                                     SendMessage(hwndEdit, SCI_GETLINE, iCurLine - 1, (LPARAM)pLineBuf);
                                     *(pLineBuf + iPrevLineLength) = '\0';
-                                    for (pPos = pLineBuf; *pPos; pPos++)
+                                    for (char* pPos = pLineBuf; *pPos; pPos++)
                                     {
                                         if (*pPos != ' ' && *pPos != '\t')
                                             *pPos = '\0';
@@ -5581,8 +5576,6 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                         //if (iLexer == SCLEX_HTML || iLexer == SCLEX_XML)
                         {
                             char tchBuf[512] = { '\0' };
-                            char tchIns[516] = "</";
-                            int  cchIns = 2;
                             int  iCurPos = (int)SendMessage(hwndEdit, SCI_GETCURRENTPOS, 0, 0);
                             int  iHelper = iCurPos - (COUNTOF(tchBuf) - 1);
                             int  iStartPos = max(0, iHelper);
@@ -5607,6 +5600,8 @@ LRESULT MsgNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)
                                     while (pCur > pBegin && *pCur != '<' && *pCur != '>')
                                         --pCur;
 
+                                    int  cchIns = 2;
+                                    char tchIns[516] = "</";
                                     if (*pCur == '<')
                                     {
                                         pCur++;
@@ -7062,7 +7057,6 @@ void UpdateStatusbar()
     int iLn;
     int iLines;
     int iCol;
-    int iSel;
     WCHAR tchLn[32];
     WCHAR tchLines[32];
     WCHAR tchCol[32];
@@ -7113,7 +7107,7 @@ void UpdateStatusbar()
 
     if (SC_SEL_RECTANGLE != SendMessage(hwndEdit, SCI_GETSELECTIONMODE, 0, 0))
     {
-        iSel = (int)SendMessage(hwndEdit, SCI_GETSELECTIONEND, 0, 0) - (int)SendMessage(hwndEdit, SCI_GETSELECTIONSTART, 0, 0);
+        int iSel = (int)SendMessage(hwndEdit, SCI_GETSELECTIONEND, 0, 0) - (int)SendMessage(hwndEdit, SCI_GETSELECTIONSTART, 0, 0);
         wsprintf(tchSel, L"%i", iSel);
         FormatNumberStr(tchSel);
     }
@@ -7185,16 +7179,13 @@ void UpdateStatusbar()
 //
 void UpdateLineNumberWidth()
 {
-    char tchLines[32];
-    int  iLineMarginWidthNow;
-    int  iLineMarginWidthFit;
-
     if (bShowLineNumbers)
     {
+        char tchLines[32];
         wsprintfA(tchLines, "_%i_", (int)SendMessage(hwndEdit, SCI_GETLINECOUNT, 0, 0));
 
-        iLineMarginWidthNow = (int)SendMessage(hwndEdit, SCI_GETMARGINWIDTHN, 0, 0);
-        iLineMarginWidthFit = (int)SendMessage(hwndEdit, SCI_TEXTWIDTH, STYLE_LINENUMBER, (LPARAM)tchLines);
+        int iLineMarginWidthNow = (int)SendMessage(hwndEdit, SCI_GETMARGINWIDTHN, 0, 0);
+        int iLineMarginWidthFit = (int)SendMessage(hwndEdit, SCI_TEXTWIDTH, STYLE_LINENUMBER, (LPARAM)tchLines);
 
         if (iLineMarginWidthNow != iLineMarginWidthFit)
         {
@@ -7202,7 +7193,6 @@ void UpdateLineNumberWidth()
             SendMessage(hwndEdit, SCI_SETMARGINWIDTHN, 0, iLineMarginWidthFit);
         }
     }
-
     else
         SendMessage(hwndEdit, SCI_SETMARGINWIDTHN, 0, 0);
 }
