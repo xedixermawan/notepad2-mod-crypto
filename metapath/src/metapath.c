@@ -229,10 +229,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
     OleUninitialize();
 
     return(int)(msg.wParam);
-
-    hPrevInst;
-    lpCmdLine;
-
 }
 
 

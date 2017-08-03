@@ -826,13 +826,13 @@ int rijndaelKeySetupEnc(u32 rk[/*4*(Nr + 1)*/], const u8 cipherKey[], int keyBit
 int rijndaelKeySetupDec(u32 rk[/*4*(Nr + 1)*/], const u8 cipherKey[], int keyBits)
 {
     int Nr, i, j;
-    u32 temp;
 
     /* expand the cipher key: */
     Nr = rijndaelKeySetupEnc(rk, cipherKey, keyBits);
     /* invert the order of the round keys: */
     for (i = 0, j = 4 * Nr; i < j; i += 4, j -= 4)
     {
+        u32 temp;
         temp = rk[i]; rk[i] = rk[j]; rk[j] = temp;
         temp = rk[i + 1]; rk[i + 1] = rk[j + 1]; rk[j + 1] = temp;
         temp = rk[i + 2]; rk[i + 2] = rk[j + 2]; rk[j + 2] = temp;

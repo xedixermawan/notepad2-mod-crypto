@@ -258,7 +258,6 @@ INT_PTR CALLBACK GetKeysDlgProc(HWND hDlg, UINT umsg, WPARAM wParam, LPARAM lPar
                     EndDialog(hDlg, IDOK);
 
                     return(TRUE);
-                    break;
                 }
 
                 case IDCANCEL:

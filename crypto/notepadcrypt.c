@@ -75,7 +75,7 @@ long ROpen_AES
             switch (lbuf[1])
             {
                 default:
-                    printf("File %s is encrypted with an unsupported format: %d", name, lbuf[1]);
+                    printf("File %s is encrypted with an unsupported format: %lu", name, lbuf[1]);
                     fclose(file);
                     return(1);
                 case MASTERKEY_FORMAT:

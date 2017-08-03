@@ -89,8 +89,6 @@ int CALLBACK BFFCallBack(HWND hwnd, UINT umsg, LPARAM lParam, LPARAM lpData)
         SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
 
     return(0);
-
-    lParam;
 }
 
 
@@ -1354,10 +1352,7 @@ INT_PTR CALLBACK GetFilterDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lP
         case IDC_BROWSEFILTER:
         {
             HMENU hMenu;
-            WCHAR *pIniSection = NULL;
             int   cbIniSection = 0;
-            WCHAR *pszFilterName;
-            WCHAR *pszFilterValue;
             WCHAR  szTypedFilter[512];
             DWORD dwIndex = 0;
             DWORD dwCheck = 0xFFFF; // index of current filter
@@ -1366,13 +1361,13 @@ INT_PTR CALLBACK GetFilterDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lP
 
             hMenu = CreatePopupMenu();
 
-            pIniSection = LocalAlloc(LPTR, sizeof(WCHAR) * 32 * 1024);
+            WCHAR *pIniSection = LocalAlloc(LPTR, sizeof(WCHAR) * 32 * 1024);
             cbIniSection = (int)LocalSize(pIniSection) / sizeof(WCHAR);
             LoadIniSection(L"Filters", pIniSection, cbIniSection);
 
-            pszFilterName = pIniSection;
+            WCHAR *pszFilterName = pIniSection;
             while (*pszFilterName) {
-                pszFilterValue = CharNext(StrChr(pszFilterName, L'='));
+                WCHAR *pszFilterValue = CharNext(StrChr(pszFilterName, L'='));
                 if (*pszFilterValue) {
 
                     *CharPrev(pszFilterName, pszFilterValue) = 0;

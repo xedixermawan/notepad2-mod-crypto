@@ -179,11 +179,38 @@ int IniSectionGetInt(
     return(iDefault);
 }
 
+UINT IniSectionGetUInt(
+    LPCWSTR lpCachedIniSection,
+    LPCWSTR lpName,
+    UINT uDefault) {
+    WCHAR* p = (WCHAR*)lpCachedIniSection;
+    WCHAR tch[256];
+    int  ich;
+    UINT u;
+
+    if (p) {
+        lstrcpy(tch, lpName);
+        lstrcat(tch, L"=");
+        ich = lstrlen(tch);
+
+        while (*p) {
+            if (StrCmpNI(p, tch, ich) == 0) {
+                if (swscanf_s(p + ich, L"%u", &u) == 1)
+                    return(u);
+                else
+                    return(uDefault);
+            }
+            else
+                p = StringEnd(p) + 1;
+        }
+    }
+    return(uDefault);
+}
 
 BOOL IniSectionSetString(LPWSTR lpCachedIniSection, LPCWSTR lpName, LPCWSTR lpString)
 {
     WCHAR tch[32 + 512 * 3 + 32];
-    WCHAR *p = lpCachedIniSection;
+    WCHAR* p = lpCachedIniSection;
 
     if (p)
     {
