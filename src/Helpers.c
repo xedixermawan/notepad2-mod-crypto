@@ -1166,8 +1166,11 @@ void PathAbsoluteFromApp(LPWSTR lpszSrc, LPWSTR lpszDest, int cchDest, BOOL bExp
         SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, wchPath);
         PathAppend(wchPath, lpszSrc + CSTRLEN("%CSIDL:MYDOCUMENTS%"));
     }
-    else
-        (void)StringCchCopy(wchPath, COUNTOF(wchPath), lpszSrc);
+  else {
+    if (lpszSrc) {
+      (void)StringCchCopy(wchPath, COUNTOF(wchPath), lpszSrc);
+    }
+  }
 
     if (bExpandEnv)
         ExpandEnvironmentStringsEx(wchPath, COUNTOF(wchPath));
