@@ -89,7 +89,7 @@ BEGIN
             MENUITEM "&ANSI",                       IDM_ENCODING_ANSI
             MENUITEM "&Unicode",                    IDM_ENCODING_UNICODE
             MENUITEM "Unicode &Big Endian",         IDM_ENCODING_UNICODEREV
-            MENUITEM "UTF-&8",                      IDM_ENCODING_UTF8
+            MENUITEM "UTF-&8\tShift+F8",            IDM_ENCODING_UTF8
             MENUITEM "UTF-8 with &Signature",       IDM_ENCODING_UTF8SIGN
             MENUITEM "&More...\tF9",                IDM_ENCODING_SELECT
             MENUITEM SEPARATOR
@@ -100,7 +100,7 @@ BEGIN
         POPUP "Line Endin&gs"
         BEGIN
             MENUITEM "&Windows (CR+LF)",            IDM_LINEENDINGS_CRLF
-            MENUITEM "&Unix (LF)",                  IDM_LINEENDINGS_LF
+            MENUITEM "&Unix (LF)\tAlt+F8",          IDM_LINEENDINGS_LF
             MENUITEM "&Mac (CR)",                   IDM_LINEENDINGS_CR
             MENUITEM SEPARATOR
             MENUITEM "&Default...",                 IDM_LINEENDINGS_SETDEFAULT
@@ -199,7 +199,7 @@ BEGIN
             MENUITEM "&Filename\tCtrl+F9",          IDM_EDIT_INSERT_FILENAME
             MENUITEM "&Path and Filename\tCtrl+Shift+F9", IDM_EDIT_INSERT_PATHNAME
             MENUITEM SEPARATOR
-            MENUITEM "&GUID\tCtrl+Shift+."          IDM_EDIT_INSERT_GUID
+            MENUITEM "&GUID\tCtrl+Shift+.",         IDM_EDIT_INSERT_GUID
         END
         POPUP "Spec&ial"
         BEGIN
@@ -500,7 +500,7 @@ BEGIN
     VK_F8,          IDM_ENCODING_RECODE,    VIRTKEY, NOINVERT
     VK_F8,          IDM_EDIT_INSERT_ENCODING, VIRTKEY, CONTROL, NOINVERT
     VK_F8,          CMD_RELOADNOFILEVARS,   VIRTKEY, ALT, NOINVERT
-    VK_F8,          CMD_RELOADASCIIASUTF8,  VIRTKEY, SHIFT, NOINVERT
+    VK_F8,          IDM_ENCODING_UTF8,      VIRTKEY, SHIFT, NOINVERT
     VK_F9,          IDM_ENCODING_SELECT,    VIRTKEY, NOINVERT
     VK_F9,          IDM_EDIT_INSERT_FILENAME, VIRTKEY, CONTROL, NOINVERT
     VK_F9,          IDM_FILE_MANAGEFAV,     VIRTKEY, ALT, NOINVERT
@@ -1442,8 +1442,8 @@ BEGIN
     IDS_FIND_WRAPRE         "Reached the beginning of the document, restarting search at the end."
     IDS_NOTFOUND            "The specified text was not found."
     IDS_REPLCOUNT           "%i occurrences of the specified text have been replaced."
-    IDS_ASK_ENCODING        "Switching the file encoding from ANSI to non-ANSI (and vice versa) may replace unsupported text with default characters, and the undo history will be cleared. Continue?"
-    IDS_ASK_ENCODING2       "You are about to change the encoding of an empty file from ANSI to non-ANSI. Note that this will clear the undo history, as it can't be synchronized with the new encoding. Continue?"
+    IDS_ASK_ENCODING        "Switching the file encoding from one encoding to another may replace unsupported text with default characters, and the undo history will be cleared. Continue?"
+    IDS_ASK_ENCODING2       "You are about to change the encoding of an empty file. Note that this will clear the undo history, as it can't be synchronized with the new encoding. Continue?"
     IDS_ERR_ENCODINGNA      "Code page conversion tables for the selected encoding are not available on your system."
     IDS_ERR_UNICODE         "Error converting this Unicode file.\nData will be lost if the file is saved!"
     IDS_ERR_ACCESSDENIED    "The file ""%s"" cannot be saved and may be protected.\n\nDo you want to launch Notepad2-mod as Administrator?"

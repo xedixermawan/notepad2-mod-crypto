@@ -16,9 +16,9 @@ set /a "VERSION_BUILD+=1"
 set /p SCI_BUILD=<.\scintilla\version.txt
 
 :: define notepad2-mod based version
-set VMAJ=5.2
-set VMIN=25
-set VREV=985
+set VMAJ=5.0
+set VMIN=0
+set VREV=1
 @echo. #define VERSION_MAJOR %VMAJ% > %VERREV_H%
 @echo. #define VERSION_MINOR %VMIN% >> %VERREV_H%
 @echo. #define VERSION_REV %VREV% >> %VERREV_H%

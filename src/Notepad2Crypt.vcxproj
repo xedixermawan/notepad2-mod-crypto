@@ -146,6 +146,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -174,6 +175,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -207,6 +209,7 @@
       <SetChecksum>true</SetChecksum>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <LinkStatus>false</LinkStatus>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -240,6 +243,7 @@
       <SetChecksum>true</SetChecksum>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <LinkStatus>true</LinkStatus>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>

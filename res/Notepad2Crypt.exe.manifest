@@ -3,7 +3,7 @@
   <assemblyIdentity
     name="Notepad2Crypt"
     processorArchitecture="*"
-    version="5.2.25.985"
+    version="5.0.0.1"
     type="win32"
   />
   <description>Notepad2Crypt</description>

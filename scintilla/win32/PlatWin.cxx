@@ -173,11 +173,11 @@ struct FormatAndMetrics {
 	}
 #if defined(USE_D2D)
 	FormatAndMetrics(IDWriteTextFormat *pTextFormat_,
-			int extraFontFlag_,
-			int characterSet_,
-			FLOAT yAscent_,
-			FLOAT yDescent_,
-			FLOAT yInternalLeading_) :
+	        int extraFontFlag_,
+	        int characterSet_,
+	        FLOAT yAscent_,
+	        FLOAT yDescent_,
+	        FLOAT yInternalLeading_) :
 		technology(SCWIN_TECH_DIRECTWRITE),
 		hfont(0),
 		pTextFormat(pTextFormat_),
@@ -782,15 +782,15 @@ void SurfaceGDI::AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fil
 
 			DWORD valEmpty = dwordFromBGRA(0,0,0,0);
 			DWORD valFill = dwordFromBGRA(
-				LOBYTE(fill.GetBlue() * alphaFill / 255),
-				LOBYTE(fill.GetGreen() * alphaFill / 255),
-				LOBYTE(fill.GetRed() * alphaFill / 255),
-				LOBYTE(alphaFill));
+				static_cast<byte>(fill.GetBlue() * alphaFill / 255),
+				static_cast<byte>(fill.GetGreen() * alphaFill / 255),
+				static_cast<byte>(fill.GetRed() * alphaFill / 255),
+				static_cast<byte>(alphaFill));
 			DWORD valOutline = dwordFromBGRA(
-				LOBYTE(outline.GetBlue() * alphaFill / 255),
-				LOBYTE(outline.GetGreen() * alphaFill / 255),
-				LOBYTE(outline.GetRed() * alphaFill / 255),
-				LOBYTE(alphaOutline));
+				static_cast<byte>(outline.GetBlue() * alphaFill / 255),
+				static_cast<byte>(outline.GetGreen() * alphaFill / 255),
+				static_cast<byte>(outline.GetRed() * alphaFill / 255),
+				static_cast<byte>(alphaOutline));
 			DWORD *pixels = static_cast<DWORD *>(image);
 			for (int y=0; y<height; y++) {
 				for (int x=0; x<width; x++) {
@@ -1370,8 +1370,8 @@ void SurfaceD2D::RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired 
 void SurfaceD2D::FillRectangle(PRectangle rc, ColourDesired back) {
 	if (pRenderTarget) {
 		D2DPenColour(back);
-		D2D1_RECT_F rectangle1 = D2D1::RectF(RoundFloat(rc.left), rc.top, RoundFloat(rc.right), rc.bottom);
-		pRenderTarget->FillRectangle(&rectangle1, pBrush);
+        D2D1_RECT_F rectangle1 = D2D1::RectF(RoundFloat(rc.left), rc.top, RoundFloat(rc.right), rc.bottom);
+        pRenderTarget->FillRectangle(&rectangle1, pBrush);
 	}
 }
 
@@ -1385,7 +1385,7 @@ void SurfaceD2D::FillRectangle(PRectangle rc, Surface &surfacePattern) {
 	if (SUCCEEDED(hr)) {
 		ID2D1BitmapBrush *pBitmapBrush = NULL;
 		D2D1_BITMAP_BRUSH_PROPERTIES brushProperties =
-			D2D1::BitmapBrushProperties(D2D1_EXTEND_MODE_WRAP, D2D1_EXTEND_MODE_WRAP,
+	        D2D1::BitmapBrushProperties(D2D1_EXTEND_MODE_WRAP, D2D1_EXTEND_MODE_WRAP,
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 		// Create the bitmap brush.
 		hr = pRenderTarget->CreateBitmapBrush(pBitmap, brushProperties, &pBitmapBrush);
@@ -1469,9 +1469,9 @@ void SurfaceD2D::DrawRGBAImage(PRectangle rc, int width, int height, const unsig
 		ID2D1Bitmap *bitmap = 0;
 		D2D1_SIZE_U size = D2D1::SizeU(width, height);
 		D2D1_BITMAP_PROPERTIES props = {{DXGI_FORMAT_B8G8R8A8_UNORM,
-			D2D1_ALPHA_MODE_PREMULTIPLIED}, 72.0, 72.0};
+		    D2D1_ALPHA_MODE_PREMULTIPLIED}, 72.0, 72.0};
 		const HRESULT hr = pRenderTarget->CreateBitmap(size, &image[0],
-				  width * 4, &props, &bitmap);
+                  width * 4, &props, &bitmap);
 		if (SUCCEEDED(hr)) {
 			D2D1_RECT_F rcDestination = {rc.left, rc.top, rc.right, rc.bottom};
 			pRenderTarget->DrawBitmap(bitmap, rcDestination);
@@ -2840,7 +2840,7 @@ LRESULT ListBoxX::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam
 }
 
 LRESULT PASCAL ListBoxX::StaticWndProc(
-	HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
+    HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	if (iMessage == WM_CREATE) {
 		CREATESTRUCT *pCreate = reinterpret_cast<CREATESTRUCT *>(lParam);
 		SetWindowPointer(hWnd, pCreate->lpCreateParams);
@@ -3035,7 +3035,7 @@ bool Platform::IsDBCSLeadByte(int codePage, char ch) {
 	case 932:
 		// Shift_jis
 		return ((uch >= 0x81) && (uch <= 0x9F)) ||
-			   ((uch >= 0xE0) && (uch <= 0xEF));
+		       ((uch >= 0xE0) && (uch <= 0xEF));
 	case 936:
 		// GBK
 		return (uch >= 0x81) && (uch <= 0xFE);
@@ -3048,16 +3048,16 @@ bool Platform::IsDBCSLeadByte(int codePage, char ch) {
 	case 1361:
 		// Korean Johab KS C-5601-1992
 		return
-			((uch >= 0x84) && (uch <= 0xD3)) ||
-			((uch >= 0xD8) && (uch <= 0xDE)) ||
-			((uch >= 0xE0) && (uch <= 0xF9));
+		    ((uch >= 0x84) && (uch <= 0xD3)) ||
+		    ((uch >= 0xD8) && (uch <= 0xDE)) ||
+		    ((uch >= 0xE0) && (uch <= 0xF9));
 	}
 	return false;
 }
 
 int Platform::DBCSCharLength(int codePage, const char *s) {
 	if (codePage == 932 || codePage == 936 || codePage == 949 ||
-			codePage == 950 || codePage == 1361) {
+	        codePage == 950 || codePage == 1361) {
 		return Platform::IsDBCSLeadByte(codePage, s[0]) ? 2 : 1;
 	} else {
 		return 1;
