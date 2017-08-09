@@ -2841,6 +2841,9 @@ void SaveSettings(BOOL bSaveSettingsNow)
       SaveSettingsNow(): query Window Dimensions
     */
 
+    int ResX = GetSystemMetrics(SM_CXSCREEN);
+    int ResY = GetSystemMetrics(SM_CYSCREEN);
+
     if (bSaveSettingsNow) {
         WINDOWPLACEMENT wndpl;
 
@@ -2856,8 +2859,6 @@ void SaveSettings(BOOL bSaveSettingsNow)
 
     {
         WCHAR tchPosX[32], tchPosY[32], tchSizeX[32], tchSizeY[32], tchMaximized[32];
-        int ResX = GetSystemMetrics(SM_CXSCREEN);
-        int ResY = GetSystemMetrics(SM_CYSCREEN);
 
         wsprintf(tchPosX, L"%ix%i PosX", ResX, ResY);
         wsprintf(tchPosY, L"%ix%i PosY", ResX, ResY);

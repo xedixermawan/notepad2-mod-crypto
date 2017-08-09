@@ -975,9 +975,6 @@ BOOL DirList_SelectItem(HWND hwnd, LPCWSTR lpszDisplayName, LPCWSTR lpszFullPath
 void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
                           BOOL bExcludeFilter)
 {
-
-    WCHAR *p;
-
     ZeroMemory(pdlf, sizeof(DL_FILTER));
     //lstrcpyn(pdlf->tFilterBuf,lpszFileSpec,(DL_FILTER_BUFSIZE-1));
     if (lpszFileSpec)
@@ -991,6 +988,7 @@ void DirList_CreateFilter(PDL_FILTER pdlf, LPCWSTR lpszFileSpec,
     pdlf->nCount = 1;
     pdlf->pFilter[0] = &pdlf->tFilterBuf[0];    // Zeile zum Ausprobieren
 
+    WCHAR* p;
     while ((p = StrChr(pdlf->pFilter[pdlf->nCount - 1], L';')) != NULL)
     {
         *p = L'\0';                              // Replace L';' by L'\0'
