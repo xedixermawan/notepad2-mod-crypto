@@ -6140,18 +6140,8 @@ void LoadSettings()
     dwFileCheckInverval = IniSectionGetInt(pIniSection, L"FileCheckInverval", 2000);
     dwAutoReloadTimeout = IniSectionGetInt(pIniSection, L"AutoReloadTimeout", 2000);
 
-    int ResX = GetSystemMetrics(SM_CXSCREEN);
-    int ResY = GetSystemMetrics(SM_CYSCREEN);
-
     LoadIniSection(L"Toolbar Images", pIniSection, cchIniSection);
 
-    iHighDpiToolBar = IniSectionGetInt(pIniSection, L"HighDpiToolBar", -1);
-    iHighDpiToolBar = max(min(iHighDpiToolBar, 1), -1);
-    if (iHighDpiToolBar < 0) { // undefined: derermine high DPI (higher than Full-HD)
-      if ((ResX > 1920) && (ResY > 1080))
-        iHighDpiToolBar = 1;
-    }
-   
     IniSectionGetString(pIniSection, L"BitmapDefault", L"",
                         tchToolbarBitmap, COUNTOF(tchToolbarBitmap));
     IniSectionGetString(pIniSection, L"BitmapHot", L"",
@@ -6159,6 +6149,20 @@ void LoadSettings()
     IniSectionGetString(pIniSection, L"BitmapDisabled", L"",
                         tchToolbarBitmapDisabled, COUNTOF(tchToolbarBitmap));
 
+    int ResX = GetSystemMetrics(SM_CXSCREEN);
+    int ResY = GetSystemMetrics(SM_CYSCREEN);
+
+    LoadIniSection(L"Window", pIniSection, cchIniSection);
+
+    WCHAR tchHighDpiToolBar[32];
+    wsprintf(tchHighDpiToolBar, L"%ix%i HighDpiToolBar", ResX, ResY);
+    iHighDpiToolBar = IniSectionGetInt(pIniSection, tchHighDpiToolBar, -1);
+    iHighDpiToolBar = max(min(iHighDpiToolBar, 1), -1);
+    if (iHighDpiToolBar < 0) { // undefined: derermine high DPI (higher than Full-HD)
+      if ((ResX > 1920) && (ResY > 1080))
+        iHighDpiToolBar = 1;
+    }
+   
     if (!flagPosParam /*|| bStickyWinPos*/)
     { // ignore window position if /p was specified
 
@@ -6169,8 +6173,6 @@ void LoadSettings()
         wsprintf(tchSizeX, L"%ix%i SizeX", ResX, ResY);
         wsprintf(tchSizeY, L"%ix%i SizeY", ResX, ResY);
         wsprintf(tchMaximized, L"%ix%i Maximized", ResX, ResY);
-
-        LoadIniSection(L"Window", pIniSection, cchIniSection);
 
         wi.x = IniSectionGetInt(pIniSection, tchPosX, CW_USEDEFAULT);
         wi.y = IniSectionGetInt(pIniSection, tchPosY, CW_USEDEFAULT);
@@ -6335,13 +6337,16 @@ void SaveSettings(BOOL bSaveSettingsNow)
         wi.max = (IsZoomed(hwndMain) || (wndpl.flags & WPF_RESTORETOMAXIMIZED));
     }
 
+    int ResX = GetSystemMetrics(SM_CXSCREEN);
+    int ResY = GetSystemMetrics(SM_CYSCREEN);
+
+    WCHAR tchHighDpiToolBar[32];
+    wsprintf(tchHighDpiToolBar, L"%ix%i HighDpiToolBar", ResX, ResY);
+    IniSetInt(L"Window", tchHighDpiToolBar, iHighDpiToolBar);
+
     if (!IniGetInt(L"Settings2", L"StickyWindowPosition", 0))
     {
-
         WCHAR tchPosX[32], tchPosY[32], tchSizeX[32], tchSizeY[32], tchMaximized[32];
-
-        int ResX = GetSystemMetrics(SM_CXSCREEN);
-        int ResY = GetSystemMetrics(SM_CYSCREEN);
 
         wsprintf(tchPosX, L"%ix%i PosX", ResX, ResY);
         wsprintf(tchPosY, L"%ix%i PosY", ResX, ResY);
