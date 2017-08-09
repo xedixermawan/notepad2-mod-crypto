@@ -50,7 +50,7 @@
 #include "helpers.h"
 #include "SciCall.h"
 #include "resource.h"
-#include "crypto.h"
+#include "../crypto/crypto.h"
 
 
 
@@ -3562,7 +3562,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                 wsprintf(tchDateTime, L"%s %s", tchTime, tchDate);
             }
 
-            uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
+            uCP = (UINT)SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0);
             WideCharToMultiByte(uCP, 0, tchDateTime, -1, mszBuf, COUNTOF(mszBuf), NULL, NULL);
             //iSelStart = SendMessage(hwndEdit,SCI_GETSELECTIONSTART,0,0);
             SendMessage(hwndEdit, SCI_REPLACESEL, 0, (LPARAM)mszBuf);
@@ -3598,7 +3598,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                 pszInsert = tchUntitled;
             }
 
-            uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
+            uCP = (UINT)SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0);
             WideCharToMultiByte(uCP, 0, pszInsert, -1, mszBuf, COUNTOF(mszBuf), NULL, NULL);
             //iSelStart = SendMessage(hwndEdit,SCI_GETSELECTIONSTART,0,0);
             SendMessage(hwndEdit, SCI_REPLACESEL, 0, (LPARAM)mszBuf);
@@ -3619,7 +3619,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                     char mszGuid[40 * 4] = { '\0' };; // UTF-8 max of 4 bytes per char
                     WCHAR* pwszGuid = wszGuid + 1; // trim first brace char
                     wszGuid[wcslen(wszGuid) - 1] = L'\0'; // trim last brace char 
-                    UINT uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
+                    UINT uCP = (UINT)SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0);
                     if (WideCharToMultiByte(uCP, 0, pwszGuid, -1, mszGuid, COUNTOF(mszGuid), NULL, NULL))
                     {
                         SendMessage(hwndEdit, SCI_REPLACESEL, 0, (LPARAM)mszGuid);
@@ -4758,7 +4758,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                 else
                     iSrcEncoding = iDefaultEncoding;
                 StringCchCopy(tchCurFile2, COUNTOF(tchCurFile2), szCurFile);
-                FileLoad(FALSE, FALSE, TRUE, FALSE, tchCurFile2);
+                FileLoad(FALSE, FALSE, TRUE, TRUE, tchCurFile2);
             }
         }
         break;
@@ -4771,7 +4771,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
             {
                 iSrcEncoding = CPI_ANSI_DEFAULT;
                 StringCchCopy(tchCurFile2, COUNTOF(tchCurFile2), szCurFile);
-                FileLoad(FALSE, FALSE, TRUE, FALSE, tchCurFile2);
+                FileLoad(FALSE, FALSE, TRUE, TRUE, tchCurFile2);
             }
         }
         break;
@@ -4784,7 +4784,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
             {
                 iSrcEncoding = CPI_OEM;
                 StringCchCopy(tchCurFile2, COUNTOF(tchCurFile2), szCurFile);
-                FileLoad(FALSE, FALSE, TRUE, FALSE, tchCurFile2);
+                FileLoad(FALSE, FALSE, TRUE, TRUE, tchCurFile2);
             }
         }
         break;
@@ -4952,7 +4952,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
                     {
 
                         WCHAR wszSelection[512];
-                        UINT uCP = (SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8) ? CP_UTF8 : CP_ACP;
+                        UINT uCP = (UINT)SendMessage(hwndEdit, SCI_GETCODEPAGE, 0, 0);
                         MultiByteToWideChar(uCP, 0, mszSelection, -1, wszSelection, COUNTOF(wszSelection));
 
                         lpszCommand = AllocMem(sizeof(WCHAR)*(512 + COUNTOF(szCmdTemplate) + MAX_PATH + 32), HEAP_ZERO_MEMORY);
@@ -7410,7 +7410,7 @@ BOOL FileLoad(BOOL bDontSave, BOOL bNew, BOOL bReload, BOOL bNoEncDetect, LPCWST
                 Style_SetLexer(hwndEdit, NULL);
                 iEOLMode = iLineEndings[iDefaultEOLMode];
                 SendMessage(hwndEdit, SCI_SETEOLMODE, iLineEndings[iDefaultEOLMode], 0);
-                if (iSrcEncoding != -1)
+                if (iSrcEncoding != CPI_NONE)
                 {
                     iEncoding = iSrcEncoding;
                     iOriginalEncoding = iSrcEncoding;

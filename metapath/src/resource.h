@@ -2,7 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by metapath.rc
 //
-#define IDR_RT_MANIFEST                 1
+#define IDR_RT_MANIFEST                   1
 #define IDR_MAINWND                     100
 #define IDC_COMMANDLINE                 100
 #define IDD_ABOUT                       100
@@ -212,10 +212,10 @@
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        0
-#define _APS_NEXT_COMMAND_VALUE         0
-#define _APS_NEXT_CONTROL_VALUE         0
-#define _APS_NEXT_SYMED_VALUE           0
+#define _APS_NO_MFC                     200
+#define _APS_NEXT_RESOURCE_VALUE        300
+#define _APS_NEXT_COMMAND_VALUE         400
+#define _APS_NEXT_CONTROL_VALUE         500
+#define _APS_NEXT_SYMED_VALUE           600
 #endif
 #endif

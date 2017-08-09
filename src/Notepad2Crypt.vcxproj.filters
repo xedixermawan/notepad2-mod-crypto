@@ -138,6 +138,12 @@
     <Image Include="..\res\Notepad2Crypt.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\res\Toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\res\ToolbarHiDPI.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Notepad2.rc">

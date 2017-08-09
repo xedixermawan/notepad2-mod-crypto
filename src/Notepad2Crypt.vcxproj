@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{BAAD32AB-CD47-12FD-873C-0BBC204B7641}</ProjectGuid>
     <ProjectName>Notepad2Crypt</ProjectName>
@@ -29,18 +30,13 @@
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14.0'">v140</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14.0'">v140</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -48,18 +44,13 @@
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14.0'">v140</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='10.0'">v100</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='12.0'">v120</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)'=='14.0'">v140</PlatformToolset>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -81,56 +72,34 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\obj\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\obj\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <TargetName>$(ProjectName)$(PlatformTarget)</TargetName>
+    <IntDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\obj\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <IntDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <IntDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\obj\</IntDir>
-    <OutDir>..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='10.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='12.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <OutDir Condition="'$(VisualStudioVersion)'=='14.0'">..\bin\$(PlatformToolset)\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <TargetName>$(ProjectName)$(PlatformTarget)</TargetName>
+    <IntDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\obj\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Bin\$(Configuration)_$(PlatformShortName)_$(PlatformToolset)\</OutDir>
+    <TargetName>$(ProjectName)_$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\crypto;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -140,13 +109,20 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>
+      </EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;scintilla.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <LinkStatus>false</LinkStatus>
+      <AdditionalLibraryDirectories>$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -155,11 +131,23 @@
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;BOOKMARK_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Manifest>
+      <InputResourceManifests>$(ProjectDir)\res\Notepad3.exe.manifest#1</InputResourceManifests>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\crypto;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -169,13 +157,20 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>
+      </EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;scintilla.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <LinkStatus>false</LinkStatus>
+      <AdditionalLibraryDirectories>$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -184,11 +179,23 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_WIN64;BOOKMARK_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Manifest>
+      <InputResourceManifests>$(ProjectDir)\res\Notepad3.exe.manifest#1</InputResourceManifests>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\crypto;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet Condition="'$(VisualStudioVersion)'&gt;'10.0'">NoExtensions</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Full</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x600;STATIC_BUILD;SCI_LEXER;BOOKMARK_EDITION;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -199,17 +206,20 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;scintilla.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
       <MergeSections>.rdata=.text</MergeSections>
       <OptimizeReferences>true</OptimizeReferences>
       <SetChecksum>true</SetChecksum>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <LinkStatus>false</LinkStatus>
+      <AdditionalLibraryDirectories>$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -218,10 +228,22 @@
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;BOOKMARK_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Manifest>
+      <InputResourceManifests>$(ProjectDir)\res\MiniPath.exe.manifest#1</InputResourceManifests>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\crypto;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Full</Optimization>
       <PreprocessorDefinitions>_WIN32_WINNT=0x600;STATIC_BUILD;SCI_LEXER;BOOKMARK_EDITION;_WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -233,17 +255,22 @@
       <OmitFramePointers>false</OmitFramePointers>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <EnableEnhancedInstructionSet>
+      </EnableEnhancedInstructionSet>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msimg32.lib;comctl32.lib;imm32.lib;shlwapi.lib;scintilla.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
       <MergeSections>.rdata=.text</MergeSections>
       <OptimizeReferences>true</OptimizeReferences>
       <SetChecksum>true</SetChecksum>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
-      <LinkStatus>true</LinkStatus>
+      <AdditionalLibraryDirectories>$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>..\update_rev.bat</Command>
@@ -252,6 +279,18 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_WIN64;BOOKMARK_EDITION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Manifest>
+      <InputResourceManifests>$(ProjectDir)\res\MiniPath.exe.manifest#1</InputResourceManifests>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\crypto\crypto.c" />
@@ -310,6 +349,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\Notepad2Crypt.ico" />
+    <Image Include="..\res\Toolbar1.bmp" />
+    <Image Include="..\res\ToolbarHiDPI.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

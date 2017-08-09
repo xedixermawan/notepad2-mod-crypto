@@ -18,7 +18,7 @@
 *
 ******************************************************************************/
 
-#include <versionhelpers.h>
+#include <VersionHelpers.h>
 #include "scintilla.h"
 
 extern HINSTANCE g_hInstance;
@@ -26,6 +26,19 @@ extern HINSTANCE g_hInstance;
 #define UNUSED(expr) (void)(expr)
 #define COUNTOF(ar) ARRAYSIZE(ar)   //#define COUNTOF(ar) (sizeof(ar)/sizeof(ar[0]))
 #define CSTRLEN(s)  (COUNTOF(s)-1)
+
+#ifdef GetRValue
+#undef GetRValue
+#define GetRValue(rgb)      (LOBYTE(rgb))
+#endif
+#ifdef GetGValue
+#undef GetGValue
+#define GetGValue(rgb)      (LOBYTE((LOWORD((rgb))) >> 8))
+#endif
+#ifdef GetBValue
+#undef GetBValue
+#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
+#endif
 
 extern WCHAR szIniFile[MAX_PATH];
 #define IniGetString(lpSection,lpName,lpDefault,lpReturnedStr,nSize) \
@@ -36,8 +49,7 @@ extern WCHAR szIniFile[MAX_PATH];
   WritePrivateProfileString(lpSection,lpName,lpString,szIniFile)
 #define IniDeleteSection(lpSection) \
   WritePrivateProfileSection(lpSection,NULL,szIniFile)
-__inline BOOL IniSetInt(LPCWSTR lpSection, LPCWSTR lpName, int i)
-{
+__inline BOOL IniSetInt(LPCWSTR lpSection, LPCWSTR lpName, int i) {
     WCHAR tch[32]; wsprintf(tch, L"%i", i); return IniSetString(lpSection, lpName, tch);
 }
 #define LoadIniSection(lpSection,lpBuf,cchBuf) \
@@ -48,8 +60,7 @@ int IniSectionGetString(LPCWSTR, LPCWSTR, LPCWSTR, LPWSTR, int);
 int IniSectionGetInt(LPCWSTR, LPCWSTR, int);
 UINT IniSectionGetUInt(LPCWSTR,LPCWSTR,UINT);
 BOOL IniSectionSetString(LPWSTR, LPCWSTR, LPCWSTR);
-__inline BOOL IniSectionSetInt(LPWSTR lpCachedIniSection, LPCWSTR lpName, int i)
-{
+__inline BOOL IniSectionSetInt(LPWSTR lpCachedIniSection, LPCWSTR lpName, int i) {
     WCHAR tch[32]; wsprintf(tch, L"%i", i); return IniSectionSetString(lpCachedIniSection, lpName, tch);
 }
 
@@ -202,8 +213,7 @@ UINT CodePageFromCharSet(UINT);
 #define MRU_NOCASE    1
 #define MRU_UTF8      2
 
-typedef struct _mrulist
-{
+typedef struct _mrulist {
 
     WCHAR  szRegKey[256];
     int   iFlags;
@@ -228,8 +238,7 @@ BOOL      MRU_MergeSave(LPMRULIST, BOOL, BOOL, BOOL);
 //==== Themed Dialogs =========================================================
 #ifndef DLGTEMPLATEEX
 #pragma pack(push, 1)
-typedef struct
-{
+typedef struct {
     WORD      dlgVer;
     WORD      signature;
     DWORD     helpID;

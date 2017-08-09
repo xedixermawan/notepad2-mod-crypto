@@ -3,6 +3,7 @@
 // Used by Notepad2.rc
 //
 #define IDC_STATIC                      -1
+#define IDR_RT_MANIFEST                   1
 #define IDR_MAINWND                     100
 #define IDC_FINDTEXT                    100
 #define IDC_LINENUM                     100
@@ -56,11 +57,11 @@
 #define IDC_ENCODINGFROMFILEVARS        103
 #define IDC_WEBPAGE2                    103
 #define IDC_SCIWEBPAGE                  104
-#define IDC_SCIWEBPAGE2					105
+#define IDC_SCIWEBPAGE2                 105
 #define IDC_MODWEBPAGE                  106
-#define IDC_MODWEBPAGE2					107
-#define IDC_DEELXWEBPAGE				108
-#define IDC_DEELXWEBPAGE2				109
+#define IDC_MODWEBPAGE2                 107
+#define IDC_DEELXWEBPAGE                108
+#define IDC_DEELXWEBPAGE2               109
 #define IDD_ENCODING                    104
 #define IDC_MOD_PAGE2                   104
 #define IDC_FINDSTART                   104

@@ -385,9 +385,9 @@ BOOL BitmapAlphaBlend(HBITMAP hbmp, COLORREF crDest, BYTE alpha)
             {
                 for (x = 0; x < bmp.bmWidth; x++)
                 {
-                    prgba[x].rgbRed = ((prgba[x].rgbRed * alpha) + (GetRValue(crDest) * (255 - alpha))) >> 8;
-                    prgba[x].rgbGreen = ((prgba[x].rgbGreen * alpha) + (GetGValue(crDest) * (255 - alpha))) >> 8;
-                    prgba[x].rgbBlue = ((prgba[x].rgbBlue * alpha) + (GetBValue(crDest) * (255 - alpha))) >> 8;
+                    prgba[x].rgbRed = LOBYTE(((prgba[x].rgbRed * alpha) + (GetRValue(crDest) * (255 - alpha))) >> 8);
+                    prgba[x].rgbGreen = LOBYTE(((prgba[x].rgbGreen * alpha) + (GetGValue(crDest) * (255 - alpha))) >> 8);
+                    prgba[x].rgbBlue = LOBYTE(((prgba[x].rgbBlue * alpha) + (GetBValue(crDest) * (255 - alpha))) >> 8);
                 }
                 prgba = (RGBQUAD*)((LPBYTE)prgba + bmp.bmWidthBytes);
             }
