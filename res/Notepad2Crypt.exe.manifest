@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <assemblyIdentity
-    name="Notepad2Crypt"
-    processorArchitecture="*"
-    version="5.0.0.1"
-    type="win32"
-  />
-  <description>Notepad2Crypt</description>
   <dependency>
     <dependentAssembly>
       <assemblyIdentity
@@ -37,7 +30,7 @@
   </compatibility>
   <asmv3:application xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
     <asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
-      <dpiAware>true</dpiAware>
+      <dpiAware>false</dpiAware>
     </asmv3:windowsSettings>
   </asmv3:application>
 </assembly>

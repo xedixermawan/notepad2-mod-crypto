@@ -127,9 +127,6 @@
     <None Include="Notepad2.ver">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\update_rev.bat">
-      <Filter>Header Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="..\res\Notepad2Crypt.exe.manifest" />

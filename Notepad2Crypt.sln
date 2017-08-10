@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "np2crypt", "np2crypt\np2cry
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "metapath", "metapath\metapath.vcxproj", "{781B17E7-427F-488F-A8E9-360BA38A10F3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50FFDD53-701E-4F8F-9747-034811D2E525}"
+	ProjectSection(SolutionItems) = preProject
+		update_rev.bat = update_rev.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32

@@ -17,8 +17,8 @@ set /p SCI_BUILD=<.\scintilla\version.txt
 
 :: define notepad2-mod based version
 set VMAJ=5.0
-set VMIN=0
-set VREV=1
+set VMIN=1
+set VREV=0
 @echo. #define VERSION_MAJOR %VMAJ% > %VERREV_H%
 @echo. #define VERSION_MINOR %VMIN% >> %VERREV_H%
 @echo. #define VERSION_REV %VREV% >> %VERREV_H%
@@ -27,8 +27,8 @@ set VREV=1
 @echo. #define SCINTILLA_BUILD L"( Scintilla %SCI_BUILD%* )" >> %VERREV_H%
 
 :: patch manifest file
-set MANIFEST_SRC=.\res\Notepad2Crypt.exe.manifest.conf
-set MANIFEST_DST=.\res\Notepad2Crypt.exe.manifest
+set MANIFEST_SRC=.\res\Notepad2Crypt.exe.manifest.conf.tmpl
+set MANIFEST_DST=.\res\Notepad2Crypt.exe.manifest.conf
 .\tools\far.exe -o "%MANIFEST_SRC%" "%MANIFEST_DST%" "$VERSION$" "%VMAJ%.%VMIN%.%VREV%"
 
 :END
