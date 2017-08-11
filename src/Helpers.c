@@ -488,11 +488,11 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
                     UINT uIDReadOnly, BOOL bReadOnly, LPCWSTR lpszExcerpt)
 {
 
-    WCHAR szUntitled[128];
+    WCHAR szUntitled[256];
     WCHAR szExcrptQuot[256];
     WCHAR szExcrptFmt[32];
-    WCHAR szAppName[128];
-    WCHAR szElevatedAppName[128];
+    WCHAR szAppName[256];
+    WCHAR szElevatedAppName[512];
     WCHAR szReadOnly[32];
     WCHAR szTitle[512];
     static WCHAR szCachedFile[MAX_PATH] = { L'\0' };
@@ -511,7 +511,7 @@ BOOL SetWindowTitle(HWND hwnd, UINT uIDAppName, BOOL bIsElevated, UINT uIDUntitl
     if (bIsElevated)
     {
         FormatString(szElevatedAppName, COUNTOF(szElevatedAppName), IDS_APPTITLE_ELEVATED, szAppName);
-        StringCchCopyN(szAppName, 128, szElevatedAppName, COUNTOF(szAppName));
+        StringCchCopyN(szAppName, 256, szElevatedAppName, COUNTOF(szAppName));
     }
 
     if (bModified)

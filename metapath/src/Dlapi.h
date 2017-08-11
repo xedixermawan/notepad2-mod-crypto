@@ -141,7 +141,7 @@ extern "C" { // C-Declarations
 
     //==== DlCreateFilter() and DlMatchFilter() ===================================
 
-#define DL_FILTER_BUFSIZE 128
+#define DL_FILTER_BUFSIZE 256
 
     typedef struct tagDL_FILTER
     { //dlf

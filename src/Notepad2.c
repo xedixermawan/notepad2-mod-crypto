@@ -267,7 +267,7 @@ BOOL      bLastCopyFromMe = FALSE;
 DWORD     dwLastCopyTime;
 
 UINT      uidsAppTitle = IDS_APPTITLE;
-WCHAR     szTitleExcerpt[128] = L"";
+WCHAR     szTitleExcerpt[256] = { L'\0' };
 int       fKeepTitleExcerpt = 0;
 
 HANDLE    hChangeHandle = NULL;
@@ -6596,7 +6596,7 @@ void ParseCommandLine()
                 case L'T':
                     if (ExtractFirstArgument(lp2, lp1, lp2))
                     {
-                        StringCchCopyN(szTitleExcerpt, 128, lp1, COUNTOF(szTitleExcerpt));
+                        StringCchCopyN(szTitleExcerpt, 256, lp1, COUNTOF(szTitleExcerpt));
                         fKeepTitleExcerpt = 1;
                     }
                     break;
@@ -7353,7 +7353,7 @@ BOOL FileLoad(BOOL bDontSave, BOOL bNew, BOOL bReload, BOOL bNoEncDetect, LPCWST
         SetDlgItemText(hwndMain, IDC_FILENAME, szCurFile);
         SetDlgItemInt(hwndMain, IDC_REUSELOCK, GetTickCount_UINT(), FALSE);
         if (!fKeepTitleExcerpt)
-            StringCchCopy(szTitleExcerpt, 128, L"");
+            StringCchCopy(szTitleExcerpt, 256, L"");
         FileVars_Init(NULL, 0, &fvCurFile);
         EditSetNewText(hwndEdit, "", 0);
         Style_SetLexer(hwndEdit, NULL);
@@ -7458,7 +7458,7 @@ BOOL FileLoad(BOOL bDontSave, BOOL bNew, BOOL bReload, BOOL bNoEncDetect, LPCWST
         SetDlgItemText(hwndMain, IDC_FILENAME, szCurFile);
         SetDlgItemInt(hwndMain, IDC_REUSELOCK, GetTickCount_UINT(), FALSE);
         if (!fKeepTitleExcerpt)
-            StringCchCopy(szTitleExcerpt, 128, L"");
+            StringCchCopy(szTitleExcerpt, 256, L"");
         if (!flagLexerSpecified) // flag will be cleared
             Style_SetLexerFromFile(hwndEdit, szCurFile);
         UpdateLineNumberWidth();
@@ -7598,7 +7598,7 @@ BOOL FileSave(BOOL bSaveAlways, BOOL bAsk, BOOL bSaveAs, BOOL bSaveCopy)
                     SetDlgItemText(hwndMain, IDC_FILENAME, szCurFile);
                     SetDlgItemInt(hwndMain, IDC_REUSELOCK, GetTickCount_UINT(), FALSE);
                     if (!fKeepTitleExcerpt)
-                        StringCchCopy(szTitleExcerpt, 128, L"");
+                        StringCchCopy(szTitleExcerpt, 256, L"");
                     Style_SetLexerFromFile(hwndEdit, szCurFile);
                     UpdateStatusbar();
                     UpdateLineNumberWidth();
@@ -8331,7 +8331,7 @@ void SetNotifyIconTitle(HWND hwnd)
 
     NOTIFYICONDATA nid;
     SHFILEINFO shfi;
-    WCHAR tchTitle[128];
+    WCHAR tchTitle[256];
     WCHAR tchFormat[32];
 
     ZeroMemory(&nid, sizeof(NOTIFYICONDATA));

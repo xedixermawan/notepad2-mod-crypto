@@ -296,8 +296,8 @@ extern "C" BOOL EditPrint(HWND hwnd, LPCWSTR pszDocTitle, LPCWSTR pszPageFormat)
     // Get current time...
     if (iPrintHeader == 0)
     {
-        WCHAR timeString[128];
-        GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, timeString, 128);
+        WCHAR timeString[256];
+        GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, timeString, 256);
         StringCchCat(dateString, 256, L" ");
         StringCchCat(dateString, 256, timeString);
     }

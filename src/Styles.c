@@ -3103,7 +3103,7 @@ void Style_SetLexer(HWND hwnd, PEDITLEXER pLexNew)
                 (int)GetRValue(rgb),
                      (int)GetGValue(rgb),
                      (int)GetBValue(rgb));
-            StringCchCat(lexDefault.Styles[7 + iIdx].szValue, 128, tch);
+            StringCchCat(lexDefault.Styles[7 + iIdx].szValue, 256, tch);
         }
 
         if (Style_StrGetColor(FALSE, wchStyle, &rgb))
@@ -3112,7 +3112,7 @@ void Style_SetLexer(HWND hwnd, PEDITLEXER pLexNew)
                 (int)GetRValue(rgb),
                      (int)GetGValue(rgb),
                      (int)GetBValue(rgb));
-            StringCchCat(lexDefault.Styles[7 + iIdx].szValue, 128, tch);
+            StringCchCat(lexDefault.Styles[7 + iIdx].szValue, 256, tch);
         }
     }
     SendMessage(hwnd, SCI_SETWHITESPACESIZE, iValue, 0);
@@ -4470,7 +4470,7 @@ int Style_GetLexerIconId(PEDITLEXER plex)
 HTREEITEM Style_AddLexerToTreeView(HWND hwnd, PEDITLEXER plex)
 {
     int i = 0;
-    WCHAR tch[128];
+    WCHAR tch[256];
 
     HTREEITEM hTreeNode;
 
@@ -4518,7 +4518,7 @@ HTREEITEM Style_AddLexerToTreeView(HWND hwnd, PEDITLEXER plex)
 //
 void Style_AddLexerToListView(HWND hwnd, PEDITLEXER plex)
 {
-    WCHAR tch[128];
+    WCHAR tch[256];
     LVITEM lvi;
     ZeroMemory(&lvi, sizeof(LVITEM));
 
@@ -4632,14 +4632,15 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
 
                         else if (pCurrentLexer)
                         {
-                            if (!GetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions, COUNTOF(pCurrentLexer->szExtensions)))
-                                StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                            WCHAR szBuf[256] = { L'\0' };
+                            if (GetDlgItemText(hwnd, IDC_STYLEEDIT, szBuf, COUNTOF(szBuf)))
+                                StringCchCopy(pCurrentLexer->szExtensions, 256, szBuf);
                         }
 
                         // a lexer has been selected
                         if (!TreeView_GetParent(hwndTV, lpnmtv->itemNew.hItem))
                         {
-                            WCHAR wch[128];
+                            WCHAR wch[256];
 
                             GetDlgItemText(hwnd, IDC_STYLELABELS, wch, COUNTOF(wch));
                             if (StrChr(wch, L'|')) *StrChr(wch, L'|') = 0;
@@ -4686,7 +4687,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                         // a style has been selected
                         else
                         {
-                            WCHAR wch[128];
+                            WCHAR wch[256];
 
                             GetDlgItemText(hwnd, IDC_STYLELABELS, wch, COUNTOF(wch));
                             if (StrChr(wch, L'|')) *StrChr(wch, L'|') = 0;
@@ -4813,7 +4814,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     // after select, this is new current item
                     if (pCurrentStyle)
                     {
-                        StringCchCopy(pCurrentStyle->szValue, 128, tchCopy);
+                        StringCchCopy(pCurrentStyle->szValue, 256, tchCopy);
                         SetDlgItemText(hwnd, IDC_STYLEEDIT, tchCopy);
                         //CheckDlgButton(hwnd,IDC_STYLEBOLD,(Style_StrGetAttribute(tchCopy,L"bold") ? BST_CHECKED : BST_UNCHECKED));
                         //CheckDlgButton(hwnd,IDC_STYLEITALIC,(Style_StrGetAttribute(tchCopy,L"italic") ? BST_CHECKED : BST_UNCHECKED));
@@ -4918,7 +4919,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                 case IDC_STYLEDEFAULT:
                     if (pCurrentStyle)
                     {
-                        StringCchCopy(pCurrentStyle->szValue, 128, pCurrentStyle->pszDefault);
+                        StringCchCopy(pCurrentStyle->szValue, 256, pCurrentStyle->pszDefault);
                         SetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentStyle->szValue);
                         //CheckDlgButton(hwnd,IDC_STYLEBOLD,(Style_StrGetAttribute(pCurrentStyle->szValue,L"bold") ? BST_CHECKED : BST_UNCHECKED));
                         //CheckDlgButton(hwnd,IDC_STYLEITALIC,(Style_StrGetAttribute(pCurrentStyle->szValue,L"italic") ? BST_CHECKED : BST_UNCHECKED));
@@ -4927,7 +4928,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     }
                     else if (pCurrentLexer)
                     {
-                        StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                        StringCchCopy(pCurrentLexer->szExtensions, 256, pCurrentLexer->pszDefExt);
                         SetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions);
                     }
                     PostMessage(hwnd, WM_NEXTDLGCTL, (WPARAM)(GetDlgItem(hwnd, IDC_STYLEEDIT)), 1);
@@ -5002,7 +5003,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     else if (pCurrentLexer)
                     {
                         if (!GetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions, COUNTOF(pCurrentLexer->szExtensions)))
-                            StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                            StringCchCopy(pCurrentLexer->szExtensions, 256, pCurrentLexer->pszDefExt);
                     }
 
                     if (Style_Import(hwnd))
@@ -5025,7 +5026,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     else if (pCurrentLexer)
                     {
                         if (!GetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions, COUNTOF(pCurrentLexer->szExtensions)))
-                            StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                            StringCchCopy(pCurrentLexer->szExtensions, 256, pCurrentLexer->pszDefExt);
                     }
 
                     Style_Export(hwnd);
@@ -5044,7 +5045,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     else if (pCurrentLexer)
                     {
                         if (!GetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions, COUNTOF(pCurrentLexer->szExtensions)))
-                            StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                            StringCchCopy(pCurrentLexer->szExtensions, 256, pCurrentLexer->pszDefExt);
                     }
 
                     Style_SetLexer(hwndEdit, pLexCurrent);
@@ -5058,7 +5059,7 @@ INT_PTR CALLBACK Style_ConfigDlgProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM
                     else if (pCurrentLexer)
                     {
                         if (!GetDlgItemText(hwnd, IDC_STYLEEDIT, pCurrentLexer->szExtensions, COUNTOF(pCurrentLexer->szExtensions)))
-                            StringCchCopy(pCurrentLexer->szExtensions, 128, pCurrentLexer->pszDefExt);
+                            StringCchCopy(pCurrentLexer->szExtensions, 256, pCurrentLexer->pszDefExt);
                     }
                     EndDialog(hwnd, IDOK);
                     break;
@@ -5114,11 +5115,11 @@ void Style_ConfigDlg(HWND hwnd)
         c = 0;
         for (iLexer = 0; iLexer < COUNTOF(pLexArray); iLexer++)
         {
-            StringCchCopy(pLexArray[iLexer]->szExtensions, 128, StyleBackup[c++]);
+            StringCchCopy(pLexArray[iLexer]->szExtensions, 256, StyleBackup[c++]);
             i = 0;
             while (pLexArray[iLexer]->Styles[i].u.iStyle != -1)
             {
-                StringCchCopy(pLexArray[iLexer]->Styles[i].szValue, 128, StyleBackup[c++]);
+                StringCchCopy(pLexArray[iLexer]->Styles[i].szValue, 256, StyleBackup[c++]);
                 i++;
             }
         }

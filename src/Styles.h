@@ -29,7 +29,7 @@ typedef struct _editstyle
     int rid;
     WCHAR* pszName;
     WCHAR* pszDefault;
-    WCHAR  szValue[128];
+    WCHAR  szValue[256];
 
 } EDITSTYLE, *PEDITSTYLE;
 
@@ -48,7 +48,7 @@ typedef struct _editlexer
     int rid;
     WCHAR* pszName;
     WCHAR* pszDefExt;
-    WCHAR  szExtensions[128];
+    WCHAR  szExtensions[256];
     PKEYWORDLIST pKeyWords;
     EDITSTYLE   Styles[];
 

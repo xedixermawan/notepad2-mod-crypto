@@ -1422,7 +1422,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
         OPENFILENAME ofn;
         HANDLE       hFile;
         WCHAR szNewFile[MAX_PATH];
-        WCHAR szFilter[128];
+        WCHAR szFilter[256];
         WCHAR szTitle[32];
         WCHAR szPath[MAX_PATH];
 
@@ -1514,7 +1514,7 @@ LRESULT MsgCommand(HWND hwnd, WPARAM wParam, LPARAM lParam)
         OPENFILENAME ofn;
         WCHAR szNewFile[MAX_PATH];
         WCHAR tch[MAX_PATH];
-        WCHAR szFilter[128];
+        WCHAR szFilter[256];
         BOOL bSuccess = FALSE;
 
         if (!DirList_IsFileSelected(hwndDirList)) {

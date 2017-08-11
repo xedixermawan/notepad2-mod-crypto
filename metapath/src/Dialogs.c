@@ -1212,7 +1212,7 @@ INT_PTR CALLBACK ProgPageProc(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam
 extern HWND hwndStatus;
 extern int nIdFocus;
 
-extern WCHAR tchFilter[128];
+extern WCHAR tchFilter[DL_FILTER_BUFSIZE];
 extern BOOL bNegFilter;
 
 INT_PTR OptionsPropSheet(HWND hwnd, HINSTANCE hInstance)
