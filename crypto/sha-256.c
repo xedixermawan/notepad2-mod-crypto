@@ -56,10 +56,10 @@ void Hexify
 
 #define PUT_UINT32(n,b,i)                       \
 {                                               \
-    (b)[(i)    ] = (uint8) ( (n) >> 24 );       \
-    (b)[(i) + 1] = (uint8) ( (n) >> 16 );       \
-    (b)[(i) + 2] = (uint8) ( (n) >>  8 );       \
-    (b)[(i) + 3] = (uint8) ( (n)       );       \
+    (b)[(i)    ] = (uint8) ( (n) >> 24   & 0xFF) ;      \
+    (b)[(i) + 1] = (uint8) ( (n) >> 16   & 0xFF) ;      \
+    (b)[(i) + 2] = (uint8) ( (n) >>  8   & 0xFF) ;      \
+    (b)[(i) + 3] = (uint8) ( (n)         & 0xFF) ;      \
 }
 /* @func
 initialize a sha256 structure
